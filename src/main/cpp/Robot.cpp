@@ -1,86 +1,86 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
 
-void Robot::ThreeBall()
-{
-    using namespace AUTO::THREE_BALL;
+// void Robot::ThreeBall()
+// {
+//     using namespace AUTO::THREE_BALL;
 
-    ngr::Timer timer;
+//     ngr::Timer timer;
 
-    // Start BangBang and indexer
-    std::thread run_shooter_wheel { [this] {
-        while(IsAutonomous() && IsEnabled())
-        {
-            shooter_wheel.bangbang();
-            std::this_thread::sleep_for(5ms); // don't spam the CAN network
-        }
-    } };
+//     // Start BangBang and indexer
+//     std::thread run_shooter_wheel { [this] {
+//         while(IsAutonomous() && IsEnabled())
+//         {
+//             shooter_wheel.bangbang();
+//             std::this_thread::sleep_for(5ms); // don't spam the CAN network
+//         }
+//     } };
 
-    while(drivetrain.driveDistanceForward(drive_distance) && IsAutonomous() && IsEnabled())
-    {
-        aim(TURRET::POSITION::BACK);
-        std::this_thread::sleep_for(10ms);
-    }
+//     while(drivetrain.driveDistanceForward(drive_distance) && IsAutonomous() && IsEnabled())
+//     {
+//         aim(TURRET::POSITION::BACK);
+//         std::this_thread::sleep_for(10ms);
+//     }
 
 
-    limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
-    while(IsAutonomous() && IsEnabled())
-    {
-        std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK) && timer.Get() > minimum_shoot_time)
-            hopper.shoot();
-    }
+//     limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
+//     while(IsAutonomous() && IsEnabled())
+//     {
+//         std::this_thread::sleep_for(10ms);
+//         if(aim(TURRET::POSITION::BACK) && timer.Get() > minimum_shoot_time)
+//             hopper.shoot();
+//     }
 
-    run_shooter_wheel.join();
-}
+//     run_shooter_wheel.join();
+// }
 
-void Robot::FiveBall()
-{
-    using namespace AUTO::FIVE_BALL;
+// void Robot::FiveBall()
+// {
+//     using namespace AUTO::FIVE_BALL;
 
-    // Start BangBang and indexer
-    std::thread run_shooter_wheel_and_index_balls { [this] {
-        using namespace std::literals::chrono_literals;
-        while(IsAutonomous() && IsEnabled())
-        {
-            shooter_wheel.bangbang();
-            hopper.index(false);              // don't warn when called while shooting
-            std::this_thread::sleep_for(5ms); // don't spam the CAN network
-        }
-    } };
+//     // Start BangBang and indexer
+//     std::thread run_shooter_wheel_and_index_balls { [this] {
+//         using namespace std::literals::chrono_literals;
+//         while(IsAutonomous() && IsEnabled())
+//         {
+//             shooter_wheel.bangbang();
+//             hopper.index(false);              // don't warn when called while shooting
+//             std::this_thread::sleep_for(5ms); // don't spam the CAN network
+//         }
+//     } };
 
-    // drive back / intake
-    intake.deploy(true);
-    intake.drive(INTAKE::DIRECTION::IN);
-    drivetrain.reset();
-    while(! drivetrain.driveDistanceForward(PICKUP_DISTANCE))
-        std::this_thread::sleep_for(20ms); // don't spam the CAN network
+//     // drive back / intake
+//     intake.deploy(true);
+//     intake.drive(INTAKE::DIRECTION::IN);
+//     drivetrain.reset();
+//     while(! drivetrain.driveDistanceForward(PICKUP_DISTANCE))
+//         std::this_thread::sleep_for(20ms); // don't spam the CAN network
 
-    // turn
-    drivetrain.drive(.3, 0);
-    std::this_thread::sleep_for(TURN_TIME);
-    // drive forward and target back, shoot when ready
-    drivetrain.drive(.5, .5);
-    std::thread aim_and_shoot { [this] {
-        limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
-        while(IsAutonomous() && IsEnabled())
-        {
-            std::this_thread::sleep_for(10ms);
-            if(aim(TURRET::POSITION::BACK))
-                hopper.shoot();
-        }
-    } };
-    std::this_thread::sleep_for(TIME_BACKWARD);
-    drivetrain.drive(0, 0);
+//     // turn
+//     drivetrain.drive(.3, 0);
+//     std::this_thread::sleep_for(TURN_TIME);
+//     // drive forward and target back, shoot when ready
+//     drivetrain.drive(.5, .5);
+//     std::thread aim_and_shoot { [this] {
+//         limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
+//         while(IsAutonomous() && IsEnabled())
+//         {
+//             std::this_thread::sleep_for(10ms);
+//             if(aim(TURRET::POSITION::BACK))
+//                 hopper.shoot();
+//         }
+//     } };
+//     std::this_thread::sleep_for(TIME_BACKWARD);
+//     drivetrain.drive(0, 0);
 
-    // wait for threads to exit
-    run_shooter_wheel_and_index_balls.join();
-    aim_and_shoot.join();
-}
+//     // wait for threads to exit
+//     run_shooter_wheel_and_index_balls.join();
+//     aim_and_shoot.join();
+// }
 
 void Robot::AutonomousInit()
 {
-    FiveBall();
+    // FiveBall();
 }
 
 void Robot::AutonomousPeriodic()
@@ -96,8 +96,8 @@ void Robot::TeleopPeriodic()
 {
     shooter_wheel.bangbang();
     ButtonManager();
-    drivetrain.drive(BUTTON::lStick.GetY(), BUTTON::rStick.GetY());
-    drivetrain.shift();
+    // drivetrain.drive(BUTTON::lStick.GetY(), BUTTON::rStick.GetY());
+    // drivetrain.shift();
 }
 
 void Robot::TestPeriodic()

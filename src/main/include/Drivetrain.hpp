@@ -1,35 +1,23 @@
-#pragma once
+#ifndef __DRIVETRAIN_H__
+#define __DRIVETRAIN_H__
 
-#include "Constants.hpp"
-#include "ctre\phoenix\music\Orchestra.h"
-#include "transmission.hpp"
-#include <frc\Solenoid.h>
+#include "Twist.hpp"
+#include "Wheel.hpp"
+#include <array>
+#include <memory>
 
 class Drivetrain
 {
-    Transmission rdrive { TRANSMISSION::RIGHT_MOTOR };
-    Transmission ldrive { TRANSMISSION::LEFT_MOTOR };
-
-    frc::Solenoid shifter { TRANSMISSION::SHIFTER };
-public:
-
-    struct DriveDistance
-    {
-        double rDist;
-        double lDist;
-        double netDist;
+    std::array<std::unique_ptr<Wheel>,4> wheels {
+        std::make_unique<Wheel>(WHEELS::WHEEL_1),
+        std::make_unique<Wheel>(WHEELS::WHEEL_2),
+        std::make_unique<Wheel>(WHEELS::WHEEL_3),
+        std::make_unique<Wheel>(WHEELS::WHEEL_4)
     };
 
-    Drivetrain();
-    void drive(double lval, double rval);
-
-    bool driveDistanceForward(double distance, bool reset = false);
-    bool driveDistanceBackward(double distance, bool reset = false);
-
-    void          printDistance();
-    DriveDistance getDistance();
-
-    void reset();
-
-    void shift();
+public:
+    double get_angle(); // pull from rio
+    void   drive(Twist_I const& twist);
 };
+
+#endif // __DRIVETRAIN_H__
