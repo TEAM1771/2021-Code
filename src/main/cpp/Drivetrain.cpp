@@ -1,16 +1,35 @@
 #include "drivetrain.hpp"
 // #include <cmath>
+Drivetrain::Drivetrain()
+{
+    navx->ZeroYaw();
+    navx->GetYaw();
+
+}
 
 // get robot orientation from rio / navX
 double Drivetrain::get_angle()
 {
-    return pi;
+    return navx->GetYaw();
 }
-
+#include <thread>
 // drive in specified direction
 void Drivetrain::drive(Twist_I const &twist)
 {
     Twist_R const twist_r { twist, get_angle() };
+    // std::cout  << "Yaw: " << twist_r.dtheta << '\n';
+    std::vector<std::thread> t;
+    for(auto &&wheel : wheels)
+        t.emplace_back([&]{wheel->drive(twist_r);});
+    for(auto & ts : t)
+    {
+        ts.join();
+    }
+}
+
+void Drivetrain::print()
+{
+    int i = 0;
     for(auto &wheel : wheels)
-        wheel->drive(twist_r);
+        std::cout << "Wheel " << ++i << ": " << wheel->get_angle()+wheel->alpha+wheel->beta << '\n';
 }

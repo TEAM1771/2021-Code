@@ -91,19 +91,40 @@ void Robot::TeleopInit()
 {
     hopper.stop(); // eliminates need to shoot at start of teleop
 }
-
+// const int sthing(int(*functopoint)())
+// {
+    // auto*    a             = functopoint;
+    // const* sthingpointer = &a;
+    // return sthingpointer;
+// }
 void Robot::TeleopPeriodic()
 {
-    shooter_wheel.bangbang();
+    // shooter_wheel.bangbang();
     ButtonManager();
-    // drivetrain.drive(BUTTON::lStick.GetY(), BUTTON::rStick.GetY());
-    // drivetrain.shift();
+    //      -------MYCODE
+    Twist_I drivet1 {
+        BUTTON::lStick.GetX()*100,
+        BUTTON::lStick.GetY()*100,
+        0
+    };
+
+    // const int sthing(int functopoint) {
+    // int a = functopoint;
+    // const* sthingpointer = &a;
+    // return sthingpointer;
+    // };
+    // const int aslfkd = sthing(1);
+    //      -------MYCODE
+    drivetrain.drive(drivet1);
+    
+    // drivetrain.drive(); //Supposed to be the second one, idk if we even needed a second one...?
 }
 
 void Robot::TestPeriodic()
 {
-    intake.deploy(true);
-    turret.visionTrack(TURRET::POSITION::BACK);
+    // intake.deploy(true);
+    // turret.visionTrack(TURRET::POSITION::BACK);
+    drivetrain.print();
 }
 
 void Robot::DisabledInit()

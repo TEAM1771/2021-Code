@@ -29,7 +29,8 @@ Wheel::polar_velocity Wheel::get_vector_for(Twist_R const& twist)
 
 Wheel::float_t Wheel::get_angle()
 {
-    return pi / 2; // return turner encoder converted to radians
+    return direction.GetAbsolutePosition(); // return turner encoder converted to radians
+    
 }
 
 Wheel::polar_velocity Wheel::check_alternate_direction(Wheel::polar_velocity const& dir)
@@ -51,5 +52,8 @@ void Wheel::drive(Twist_R const& twist)
 {
     auto const vect = check_alternate_direction(get_vector_for(twist));
     driver.Set(TalonFXControlMode::Velocity, vect.speed);
-    // turner.SetPosition(vect.direction);
+    turner.Set(TalonFXControlMode::Position, vect.direction);
 }
+    void Wheel::printAngle(){
+std::cout << "Angle: " << get_angle() << std::endl;
+    }

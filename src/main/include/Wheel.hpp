@@ -16,7 +16,6 @@ class Wheel
     TalonFX driver, turner;
     CANCoder direction;
 
-    float_t const alpha, beta, l, radius;
 
     // helper values
     std::complex<float_t> const eia  = std::exp(1i * alpha);
@@ -30,10 +29,11 @@ class Wheel
     polar_velocity get_vector_for(Twist_R const &twist);
     polar_velocity check_alternate_direction(polar_velocity const &angle);
 public:
+    float_t const alpha, beta, l, radius;
     Wheel(WHEELS::WheelInfo const &wheel_info);
     Wheel(Wheel const&) = delete;
     Wheel(Wheel &&) = delete;
-
+    void printAngle();
     float_t get_angle();
     void drive(Twist_R const &twist);
 };

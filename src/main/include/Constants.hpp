@@ -55,11 +55,11 @@ namespace WHEELS
             , radius { d_in / 2 }
         {}
     };
-    constexpr WheelInfo WHEEL_1 { 1, 5, 4, 45, -45, 16, 2 };
-    constexpr WheelInfo WHEEL_2 { 2, 6, 1, 135, -135, 16, 2 };
-    constexpr WheelInfo WHEEL_3 { 3, 7, 2, -135, 135, 16, 2 };
-    constexpr WheelInfo WHEEL_4 { 4, 8, 3, -45, 45, 16, 2 };
-} // namespace WHEELS (change these to the real Can addresses!)
+    constexpr WheelInfo WHEEL_1 { 30, 31, 32, 45, -45-262.881, 15.573, 2 };
+    constexpr WheelInfo WHEEL_2 { 40, 41, 42, 135, -135-161.895, 15.573, 2 };
+    constexpr WheelInfo WHEEL_3 { 50, 51, 52, -135, 135-269.121, 15.573, 2 };
+    constexpr WheelInfo WHEEL_4 { 60, 61, 62, -45, 45-287.227, 15.573, 2 };
+} // namespace WHEELS (change these to the real Can addresses!) EDIT: Changed!
 
 namespace TRANSMISSION
 {
