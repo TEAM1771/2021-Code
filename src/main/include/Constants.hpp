@@ -59,20 +59,9 @@ namespace WHEELS
     constexpr WheelInfo WHEEL_2 { 40, 41, 42, 135, -135-161.895, 15.573, 2 };
     constexpr WheelInfo WHEEL_3 { 50, 51, 52, -135, 135-269.121, 15.573, 2 };
     constexpr WheelInfo WHEEL_4 { 60, 61, 62, -45, 45-287.227, 15.573, 2 };
-} // namespace WHEELS (change these to the real Can addresses!) EDIT: Changed!
 
-namespace TRANSMISSION
-{
-    constexpr can_adr RIGHT_MOTOR = 15;
-    constexpr can_adr LEFT_MOTOR  = 17;
-
-    constexpr auto IDLE_MODE = NeutralMode::Coast;
-
-    constexpr can_adr SHIFTER = 0;
-
-    constexpr int SHIFT_UP_POINT   = 16000;
-    constexpr int SHIFT_DOWN_POINT = 6000;
-} // namespace TRANSMISSION
+    constexpr double turning_ratio = 12.8 * 360 / 2048;
+} // namespace WHEELS
 
 namespace CAMERA
 {
@@ -132,11 +121,8 @@ namespace TURRET
 
 namespace SHOOTER_WHEEL
 {
-    constexpr can_adr PORT_1 = 4;
-    constexpr can_adr PORT_2 = 5;
-
+    constexpr can_adr PORT_1 = 5;
     constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
-
     constexpr double SHOOTING_RPM = 8000;
 } // namespace SHOOTER_WHEEL
 

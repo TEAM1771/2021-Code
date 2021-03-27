@@ -10,12 +10,14 @@
 
 using namespace std::complex_literals; // makes '1i' work
 
+// steering ratio 12.8:1
 class Wheel
 {
     using float_t = double;
     TalonFX driver, turner;
     CANCoder direction;
 
+    double set_pos = 0; // degrees
 
     // helper values
     std::complex<float_t> const eia  = std::exp(1i * alpha);

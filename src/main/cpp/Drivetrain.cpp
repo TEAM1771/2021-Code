@@ -1,27 +1,27 @@
 #include "drivetrain.hpp"
+#include <thread>
 // #include <cmath>
 Drivetrain::Drivetrain()
 {
     navx->ZeroYaw();
     navx->GetYaw();
-
+    
 }
 
 // get robot orientation from rio / navX
 double Drivetrain::get_angle()
 {
-    return navx->GetYaw();
+    return ngr::deg2rad(navx->GetYaw());
 }
-#include <thread>
 // drive in specified direction
-void Drivetrain::drive(Twist_I const &twist)
+void Drivetrain::drive(Twist_I const& twist)
 {
     Twist_R const twist_r { twist, get_angle() };
     // std::cout  << "Yaw: " << twist_r.dtheta << '\n';
     std::vector<std::thread> t;
-    for(auto &&wheel : wheels)
-        t.emplace_back([&]{wheel->drive(twist_r);});
-    for(auto & ts : t)
+    for(auto&& wheel : wheels)
+        t.emplace_back([&] { wheel->drive(twist_r); });
+    for(auto& ts : t)
     {
         ts.join();
     }
@@ -30,6 +30,7 @@ void Drivetrain::drive(Twist_I const &twist)
 void Drivetrain::print()
 {
     int i = 0;
-    for(auto &wheel : wheels)
-        std::cout << "Wheel " << ++i << ": " << wheel->get_angle()+wheel->alpha+wheel->beta << '\n';
+    for(auto& wheel : wheels)
+
+        std::cout << "Wheel " << ++i << ": " << ngr::rad2deg(wheel->get_angle() + wheel->alpha + wheel->beta) << '\n';
 }
