@@ -6,9 +6,9 @@ ShooterWheel::ShooterWheel()
     shooter_1.SetIdleMode(SHOOTER_WHEEL::IDLE_MODE);
 }
 
-void ShooterWheel::bangbang() // origional code with commented code removed
+void ShooterWheel::bangbang() //origional code with commented code removed
 {   
-    return; 
+    // return;
     if(abs(shooter_encoder.GetVelocity() > SHOOTER_WHEEL::SHOOTING_RPM - 1200))
         shooter_1.SetOpenLoopRampRate(0);
     else

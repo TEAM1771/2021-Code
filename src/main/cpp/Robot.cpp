@@ -93,7 +93,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-    // shooter_wheel.bangbang();
+    shooter_wheel.bangbang();
     ButtonManager();
     
     drivetrain.drive({
@@ -113,7 +113,7 @@ void Robot::TestPeriodic()
     // intake.deploy(true);
     // turret.visionTrack(TURRET::POSITION::BACK);
     drivetrain.print();
-    shooter_wheel.bangbang();
+    //shooter_wheel.bangbang();
 }
 
 void Robot::DisabledInit()
