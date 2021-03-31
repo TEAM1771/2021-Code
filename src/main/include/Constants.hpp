@@ -121,7 +121,7 @@ namespace TURRET
 
 namespace SHOOTER_WHEEL
 {
-    constexpr can_adr PORT_1 = 5;
+    constexpr can_adr PORT_1 = 18;
     constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
     constexpr double SHOOTING_RPM = 8000;
 } // namespace SHOOTER_WHEEL
@@ -178,7 +178,7 @@ namespace HOPPER
 
 namespace CLIMBER
 {
-    constexpr int PORT_1 = 47;
+    constexpr int PORT_1 = 35;
     constexpr int PORT_2 = 9;
 
     constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;

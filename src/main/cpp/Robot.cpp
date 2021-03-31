@@ -93,14 +93,14 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-    shooter_wheel.bangbang();
+    //shooter_wheel.bangbang();
     ButtonManager();
     
-    drivetrain.drive({
+   /* drivetrain.drive({
         BUTTON::lStick.GetX()*100,
         BUTTON::lStick.GetY()*100,
         0
-    });
+    });*/
 }
 void Robot::TestInit()
 {
@@ -112,8 +112,8 @@ void Robot::TestPeriodic()
 
     // intake.deploy(true);
     // turret.visionTrack(TURRET::POSITION::BACK);
-    drivetrain.print();
-    //shooter_wheel.bangbang();
+    //drivetrain.print();
+    shooter_wheel.bangbang();
 }
 
 void Robot::DisabledInit()
