@@ -56,3 +56,13 @@ rev::CANPIDController PID_CANSparkMax::GetPIDController()
 {
     return rev::CANSparkMax::GetPIDController();
 }
+
+void PID_CANSparkMax::SetDFilter(double gain, int slotID)
+{
+    pid_controller.SetDFilter(gain);
+}
+
+void PID_CANSparkMax::SetFF(double gain, int slotID)
+{
+    pid_controller.SetFF(gain);
+}

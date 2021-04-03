@@ -65,4 +65,6 @@ public:
     void SetP(double P);
     void SetI(double I);
     void SetD(double D);
+    void SetDFilter(double gain, int slotID = 0);
+    void SetFF(double gain, int slotID = 0);
 };
