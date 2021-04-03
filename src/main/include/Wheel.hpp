@@ -13,9 +13,12 @@ using namespace std::complex_literals; // makes '1i' work
 // steering ratio 12.8:1
 class Wheel
 {
+    inline static int wheelid_ = 0;
+    int wheelid = wheelid_++;
     using float_t = double;
     TalonFX driver, turner;
     CANCoder direction;
+    can_adr cancoder_adr;
 
     double set_pos = 0; // degrees
 
@@ -31,7 +34,7 @@ class Wheel
     polar_velocity get_vector_for(Twist_R const &twist);
     polar_velocity check_alternate_direction(polar_velocity const &angle);
 public:
-    float_t const alpha, beta, l, radius;
+    float_t const alpha, beta, beta_offset, l, radius;
     Wheel(WHEELS::WheelInfo const &wheel_info);
     Wheel(Wheel const&) = delete;
     Wheel(Wheel &&) = delete;

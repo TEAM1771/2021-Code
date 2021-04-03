@@ -2,7 +2,7 @@
 
 Hopper::Hopper()
 {
-    indexer.Set(HOPPER::INDEXER::SPEED);
+    // indexer.Set(HOPPER::INDEXER::SPEED);
 
     indexer.SetIdleMode(HOPPER::INDEXER::IDLE_MODE);
     transport.SetIdleMode(HOPPER::TRANSPORT::IDLE_MODE);

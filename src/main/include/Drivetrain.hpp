@@ -24,6 +24,7 @@ public:
     double get_angle(); // pull from rio
     void print();
     void   drive(Twist_I const& twist);
+    void gotoZero();
 };
 
 #endif // __DRIVETRAIN_H__

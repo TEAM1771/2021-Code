@@ -34,6 +34,11 @@ namespace BUTTON
     {
         inline JoystickButton RAISE { BUTTON::oStick, 11 };
     }
+
+    namespace DRIVETRAIN
+    {
+        inline JoystickButton ZERO { BUTTON::lStick,10};
+    }
 } // namespace BUTTON
 
 namespace WHEELS
@@ -42,25 +47,32 @@ namespace WHEELS
     {
         // stored in radians and inches
         int    driver, turner, cancoder;
-        double alpha, beta, l, radius;
+        double alpha, beta, beta_offset, l, radius;
 
         // inputs in degrees and inches
-        constexpr WheelInfo(int d, int t, int c, double a_d, double b_d, double l_in, double d_in)
+        constexpr WheelInfo(int d, int t, int c, double a_d, double b_d, double b_offset_d, double l_in, double d_in)
             : driver { d }
             , turner { t }
             , cancoder { c }
             , alpha { ngr::deg2rad(a_d) }
             , beta { ngr::deg2rad(b_d) }
+            , beta_offset { b_offset_d}
             , l { l_in }
             , radius { d_in / 2 }
         {}
     };
-    constexpr WheelInfo WHEEL_1 { 30, 31, 32, 45, -45-262.881, 15.573, 2 };
-    constexpr WheelInfo WHEEL_2 { 40, 41, 42, 135, -135-161.895, 15.573, 2 };
-    constexpr WheelInfo WHEEL_3 { 50, 51, 52, -135, 135-269.121, 15.573, 2 };
-    constexpr WheelInfo WHEEL_4 { 60, 61, 62, -45, 45-287.227, 15.573, 2 };
+    constexpr WheelInfo WHEEL_1 { 30, 31, 32, 45, -45,262, 15.573, 2 };
+    constexpr WheelInfo WHEEL_2 { 40, 41, 42, 135, -135,169, 15.573, 2 };
+    constexpr WheelInfo WHEEL_3 { 50, 51, 52, -135, 135,274, 15.573, 2 };
+    constexpr WheelInfo WHEEL_4 { 60, 61, 62, -45, 45,180, 15.573, 2 };
 
-    constexpr double turning_ratio = 12.8 * 360 / 2048;
+    // constexpr WheelInfo WHEEL_1 { 30, 31, 32, 45, 45,0, 15.573, 2 };
+    // constexpr WheelInfo WHEEL_2 { 40, 41, 42, 135, -135,0, 15.573, 2 };
+    // constexpr WheelInfo WHEEL_3 { 50, 51, 52, -135, 135,0, 15.573, 2 };
+    // constexpr WheelInfo WHEEL_4 { 60, 61, 62, -45, 45,0, 15.573, 2 };
+
+    constexpr double driver_ratio  = .25 * 8.16 * 2048;
+    constexpr double turning_ratio = .25 * 12.8 * 2048 / 360;
 } // namespace WHEELS
 
 namespace CAMERA
@@ -121,9 +133,9 @@ namespace TURRET
 
 namespace SHOOTER_WHEEL
 {
-    constexpr can_adr PORT_1 = 18;
-    constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
-    constexpr double SHOOTING_RPM = 8000;
+    constexpr can_adr PORT_1       = 18;
+    constexpr auto    IDLE_MODE    = rev::CANSparkMax::IdleMode::kCoast;
+    constexpr double  SHOOTING_RPM = 8000;
 } // namespace SHOOTER_WHEEL
 
 namespace AUTO
