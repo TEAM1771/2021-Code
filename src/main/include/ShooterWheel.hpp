@@ -1,6 +1,6 @@
 #pragma once
-#include "PID_CANSparkMax.hpp"
 #include "Constants.hpp"
+#include "PID_CANSparkMax.hpp"
 
 class ShooterWheel
 {
@@ -9,5 +9,6 @@ class ShooterWheel
 public:
     ShooterWheel();
 
+    void print();
     void bangbang();
 };

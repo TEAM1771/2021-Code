@@ -95,6 +95,7 @@ void Robot::TeleopPeriodic()
 {
     //shooter_wheel.bangbang();
     ButtonManager();
+    shooter_wheel.print();
     
    /* drivetrain.drive({
         BUTTON::lStick.GetX()*100,

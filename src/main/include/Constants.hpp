@@ -124,11 +124,11 @@ namespace SHOOTER_WHEEL
     constexpr can_adr PORT_1 = 18;
     constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
     constexpr double SHOOTING_RPM = 8000;
-    constexpr double P = 0.1;
+    constexpr double P = 0.2;
     constexpr double I = 0.0;
     constexpr double D = 0.0;
-    constexpr double F = 0;
-    constexpr double FF = 1;
+    constexpr double F = .1;
+    constexpr double FF = 2;
 } // namespace SHOOTER_WHEEL
 
 namespace AUTO
@@ -166,7 +166,7 @@ namespace HOPPER
 
         constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
 
-        constexpr double SPEED       = 0.7;
+        constexpr double SPEED       = 1;
         constexpr double SHOOT_SPEED = 1.0;
 
         constexpr double DISTANCE  = 73.0 / 3;
@@ -216,6 +216,6 @@ namespace INTAKE
         IN
     };
 
-    constexpr double IN_SPEED  = -1;
-    constexpr double OUT_SPEED = 1;
+    constexpr double IN_SPEED  = -.5;
+    constexpr double OUT_SPEED = .5;
 } // namespace INTAKE

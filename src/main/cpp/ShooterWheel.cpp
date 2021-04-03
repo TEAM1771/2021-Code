@@ -13,6 +13,11 @@ ShooterWheel::ShooterWheel()
 
 }
 
+void ShooterWheel::print()
+{
+    std::cout << shooter_1.encoder.GetVelocity() << "rpm\n";
+}
+
 [[depricated]] void ShooterWheel::bangbang() //origional code with commented code removed
 {   
     return;
