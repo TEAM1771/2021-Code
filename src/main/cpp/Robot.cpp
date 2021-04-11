@@ -106,6 +106,7 @@ void Robot::TestPeriodic()
     // turret.visionTrack(TURRET::POSITION::BACK);
     //drivetrain.print();
     // shooter_wheel.bangbang();
+    
 }
 
 void Robot::DisabledInit()
@@ -174,9 +175,11 @@ void Robot::ButtonManager()
 
     if(BUTTON::DRIVETRAIN::ZERO)
         drivetrain.gotoZero();
+    else if(BUTTON::DRIVETRAIN::REVERSE)
+        drivetrain.goto180();
     else
-        drivetrain.drive({ BUTTON::lStick.GetX(),
-                           BUTTON::lStick.GetY(),
+        drivetrain.drive({ BUTTON::oStick.GetX(),
+                           BUTTON::oStick.GetY(),
                            0 });
 }
 

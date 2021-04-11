@@ -12,6 +12,11 @@ void Drivetrain::gotoZero()
     for(auto&& wheel : wheels)
         wheel->drive({{0,0,0},0});
 }
+void Drivetrain::goto180()
+{
+    for(auto&& wheel : wheels)
+        wheel->drive({{0,1,0},0});
+}
 
 // get robot orientation from rio / navX
 double Drivetrain::get_angle()

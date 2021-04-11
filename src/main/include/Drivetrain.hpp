@@ -25,6 +25,7 @@ public:
     void print();
     void   drive(Twist_I const& twist);
     void gotoZero();
+    void goto180();
 };
 
 #endif // __DRIVETRAIN_H__

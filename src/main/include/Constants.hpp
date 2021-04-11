@@ -38,6 +38,7 @@ namespace BUTTON
     namespace DRIVETRAIN
     {
         inline JoystickButton ZERO { BUTTON::lStick,10};
+        inline JoystickButton REVERSE { BUTTON::lStick,11};
     }
 } // namespace BUTTON
 
@@ -61,10 +62,10 @@ namespace WHEELS
             , radius { d_in / 2 }
         {}
     };
-    constexpr WheelInfo WHEEL_1 { 30, 31, 32, 45, -45,262, 15.573, 2 };
-    constexpr WheelInfo WHEEL_2 { 40, 41, 42, 135, -135,169, 15.573, 2 };
-    constexpr WheelInfo WHEEL_3 { 50, 51, 52, -135, 135,274, 15.573, 2 };
-    constexpr WheelInfo WHEEL_4 { 60, 61, 62, -45, 45,180, 15.573, 2 };
+    constexpr WheelInfo WHEEL_1 { 30, 31, 11, 45, -45,262, 15.573, 2 };
+    constexpr WheelInfo WHEEL_2 { 40, 41, 12, 135, -135,169, 15.573, 2 };
+    constexpr WheelInfo WHEEL_3 { 50, 51, 13, -135, 135,274, 15.573, 2 };
+    constexpr WheelInfo WHEEL_4 { 60, 61, 14, -45, 45,180, 15.573, 2 };
 
     // constexpr WheelInfo WHEEL_1 { 30, 31, 32, 45, 45,0, 15.573, 2 };
     // constexpr WheelInfo WHEEL_2 { 40, 41, 42, 135, -135,0, 15.573, 2 };
@@ -72,7 +73,7 @@ namespace WHEELS
     // constexpr WheelInfo WHEEL_4 { 60, 61, 62, -45, 45,0, 15.573, 2 };
 
     constexpr double driver_ratio  = .25 * 8.16 * 2048;
-    constexpr double turning_ratio = .25 * 12.8 * 2048 / 360;
+    constexpr double turning_ratio = 1;//4096.0/360;//.125 * 12.8 * 2048 / 360;
 } // namespace WHEELS
 
 namespace CAMERA
@@ -213,7 +214,7 @@ namespace CLIMBER
 namespace INTAKE
 {
     constexpr can_adr PCM_PORT = 1;
-    constexpr can_adr PORT     = 12;
+    constexpr can_adr PORT     = 22;
 
     constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
 
