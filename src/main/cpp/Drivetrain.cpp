@@ -40,20 +40,11 @@ void Drivetrain::drive(Twist_I const& twist)
         wheel->drive(twist_r);
 }
 
-<<<<<<< Updated upstream
 void Drivetrain::print()
 {
     int i = 0;
     for(auto& wheel : wheels)
 
-        std::cout << "Wheel " << ++i << ": " << ngr::rad2deg(wheel->get_angle() + wheel->alpha + wheel->beta) << '\n';
-=======
-// void Drivetrain::print()
-// {
-    // int i = 0;
-    // for(auto& wheel : wheels)
-// 
-    // std::cout << "Wheel " << ++i << ": " << ngr::rad2deg(wheel->get_angle() + wheel->alpha + wheel->beta) << '\n';
->>>>>>> Stashed changes
+    std::cout << "Wheel " << ++i << ": " << ngr::rad2deg(wheel->get_angle() + wheel->alpha + wheel->beta) << '\n';
     // std::cout << "Twist R is: " << Wheel::get_vector_for() << '\n';
-// } 
+} 

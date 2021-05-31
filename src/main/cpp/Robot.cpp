@@ -104,14 +104,9 @@ void Robot::TestPeriodic()
 {
     // intake.deploy(true);
     // turret.visionTrack(TURRET::POSITION::BACK);
-<<<<<<< Updated upstream
     //drivetrain.print();
     // shooter_wheel.bangbang();
     
-=======
-    // drivetrain.print();
-    //shooter_wheel.bangbang();
->>>>>>> Stashed changes
 }
 
 void Robot::DisabledInit()
