@@ -22,19 +22,19 @@ frc::SwerveDriveKinematics<4> m_kinematics{
 // counterclockwise.
 frc::ChassisSpeeds speeds{1_mps, 3_mps, 1.5_rad_per_s};
 
-class m_turningEncoder
+class mturningEncoder
 {
   public:
-    int m_turningEncoder;
+    double GetDistance();
 };
-
-
+mturningEncoder a;
+int m_turningEncoder = 0;
 // Convert to module states. Here, we can use C++17's structured
 // bindings feature to automatically split up the array into its
 // individual SwerveModuleState components.
 auto [fl, fr, bl, br] = m_kinematics.ToSwerveModuleStates(speeds);
 
-auto flOptimized = frc::SwerveModuleState::Optimize(fl, units::radian_t(m_turningEncoder.GetDistance()));
+auto flOptimized = frc::SwerveModuleState::Optimize(fl, units::radian_t(a.GetDistance()));
 
 // The desired field relative speed here is 2 meters per second
 // toward the opponent's alliance station wall, and 2 meters per
