@@ -22,6 +22,13 @@ frc::SwerveDriveKinematics<4> m_kinematics{
 // counterclockwise.
 frc::ChassisSpeeds speeds{1_mps, 3_mps, 1.5_rad_per_s};
 
+class m_turningEncoder
+{
+  public:
+    int m_turningEncoder;
+};
+
+
 // Convert to module states. Here, we can use C++17's structured
 // bindings feature to automatically split up the array into its
 // individual SwerveModuleState components.
