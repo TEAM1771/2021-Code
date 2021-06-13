@@ -13,11 +13,8 @@
 #include "Limelight.hpp"
 #include "ShooterWheel.hpp"
 #include "Turret.hpp"
-#include <frc/Joystick.h>
-#include <frc/PWMVictorSPX.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
-#include <frc/drive/DifferentialDrive.h>
 #include <frc/livewindow/LiveWindow.h>
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
@@ -27,7 +24,7 @@ class Robot : public frc::TimedRobot
 public:
     void AutonomousInit() override;
     void AutonomousPeriodic() override;
-    
+
     void TeleopInit() override;
     void TeleopPeriodic() override;
 

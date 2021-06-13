@@ -106,7 +106,6 @@ void Robot::TestPeriodic()
     // turret.visionTrack(TURRET::POSITION::BACK);
     //drivetrain.print();
     // shooter_wheel.bangbang();
-    
 }
 
 void Robot::DisabledInit()
@@ -178,9 +177,9 @@ void Robot::ButtonManager()
     else if(BUTTON::DRIVETRAIN::REVERSE)
         drivetrain.goto180();
     else
-        drivetrain.drive({ BUTTON::oStick.GetX(),
-                           BUTTON::oStick.GetY(),
-                           0 });
+        drivetrain.drive(frc::ChassisSpeeds { units::meters_per_second_t { BUTTON::oStick.GetX() },
+                                              units::meters_per_second_t { BUTTON::oStick.GetY() },
+                                              units::radians_per_second_t { 0 } });
 }
 
 bool Robot::aim(TURRET::POSITION direction)

@@ -7,6 +7,9 @@
 #include <ctre/Phoenix.h>
 #include <frc/Joystick.h>
 #include <rev/CANSparkMax.h>
+
+#include <frc/geometry/Transform2d.h>
+
 using can_adr = unsigned;
 
 
@@ -37,9 +40,9 @@ namespace BUTTON
 
     namespace DRIVETRAIN
     {
-        inline JoystickButton ZERO { BUTTON::lStick,10};
-        inline JoystickButton REVERSE { BUTTON::lStick,11};
-    }
+        inline JoystickButton ZERO { BUTTON::lStick, 10 };
+        inline JoystickButton REVERSE { BUTTON::lStick, 11 };
+    } // namespace DRIVETRAIN
 } // namespace BUTTON
 
 namespace WHEELS
@@ -47,33 +50,27 @@ namespace WHEELS
     struct WheelInfo
     {
         // stored in radians and inches
-        int    driver, turner, cancoder;
-        double alpha, beta, beta_offset, l, radius;
+        can_adr const            driver, turner, cancoder;
+        frc::Translation2d const wheel_pos;
+        units::inch_t const      radius;
 
         // inputs in degrees and inches
-        constexpr WheelInfo(int d, int t, int c, double a_d, double b_d, double b_offset_d, double l_in, double d_in)
+        constexpr WheelInfo(can_adr d, can_adr t, can_adr c, frc::Translation2d wheel_position, units::inch_t diameter_)
             : driver { d }
             , turner { t }
             , cancoder { c }
-            , alpha { ngr::deg2rad(a_d) }
-            , beta { ngr::deg2rad(b_d) }
-            , beta_offset { b_offset_d}
-            , l { l_in }
-            , radius { d_in / 2 }
+            , wheel_pos { wheel_position }
+            , radius { diameter_ / 2 }
         {}
     };
-    constexpr WheelInfo WHEEL_1 { 30, 31, 11, 45, -45,262, 15.573, 2 };
-    constexpr WheelInfo WHEEL_2 { 40, 41, 12, 135, -135,169, 15.573, 2 };
-    constexpr WheelInfo WHEEL_3 { 50, 51, 13, -135, 135,274, 15.573, 2 };
-    constexpr WheelInfo WHEEL_4 { 60, 61, 14, -45, 45,180, 15.573, 2 };
+    WheelInfo const WHEEL_1 { 30, 31, 11, { 11_in, 11_in }, 4_in };
+    WheelInfo const WHEEL_2 { 40, 41, 12, { 11_in, 11_in }, 4_in };
+    WheelInfo const WHEEL_3 { 50, 51, 13, { 11_in, 11_in }, 4_in };
+    WheelInfo const WHEEL_4 { 60, 61, 14, { 11_in, 11_in }, 4_in };
 
-    // constexpr WheelInfo WHEEL_1 { 30, 31, 32, 45, 45,0, 15.573, 2 };
-    // constexpr WheelInfo WHEEL_2 { 40, 41, 42, 135, -135,0, 15.573, 2 };
-    // constexpr WheelInfo WHEEL_3 { 50, 51, 52, -135, 135,0, 15.573, 2 };
-    // constexpr WheelInfo WHEEL_4 { 60, 61, 62, -45, 45,0, 15.573, 2 };
 
     constexpr double driver_ratio  = .25 * 8.16 * 2048;
-    constexpr double turning_ratio = 1;//4096.0/360;//.125 * 12.8 * 2048 / 360;
+    constexpr double turning_ratio = 1; //4096.0/360;//.125 * 12.8 * 2048 / 360;
 } // namespace WHEELS
 
 namespace CAMERA
