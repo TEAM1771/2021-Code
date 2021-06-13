@@ -23,7 +23,7 @@ public:
     Drivetrain();
     double get_angle(); // pull from rio
     void print();
-    void   drive(Twist_I const& twist);
+    void drive(Twist_I const& twist);
     void gotoZero();
     void goto180();
 };
