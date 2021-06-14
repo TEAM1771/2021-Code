@@ -79,6 +79,25 @@
     "thread": "cpp",
     "cinttypes": "cpp",
     "typeinfo": "cpp",
-    "*.inc": "cpp"
+    "*.inc": "cpp",
+    "cholesky": "cpp",
+    "core": "cpp",
+    "eigenvalues": "cpp",
+    "householder": "cpp",
+    "jacobi": "cpp",
+    "lu": "cpp",
+    "qr": "cpp",
+    "matrixfunctions": "cpp",
+    "cassert": "cpp",
+    "ccomplex": "cpp",
+    "cerrno": "cpp",
+    "cfloat": "cpp",
+    "ciso646": "cpp",
+    "climits": "cpp",
+    "ios": "cpp",
+    "locale": "cpp",
+    "queue": "cpp",
+    "stack": "cpp",
+    "cstdbool": "cpp"
   }
 }

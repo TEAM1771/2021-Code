@@ -5,28 +5,27 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 // #include <cmath>
-Drivetrain::Drivetrain()
-{
-// Locations for the swerve drive modules relative to the robot center.
 
 frc::Translation2d m_frontLeftLocation{0.381_m, 0.381_m};
 frc::Translation2d m_frontRightLocation{0.381_m, -0.381_m};
 frc::Translation2d m_backLeftLocation{-0.381_m, 0.381_m};
 frc::Translation2d m_backRightLocation{-0.381_m, -0.381_m};
+
+
+Drivetrain::Drivetrain()
+{
+// Locations for the swerve drive modules relative to the robot center.
+
+
 // Creating my kinematics object using the module locations.
-frc::SwerveDriveKinematics<4> m_kinematics{
-  m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,
-  m_backRightLocation};
+
 
   navx->ZeroYaw();
   navx->GetYaw();
 }
 
 
-// Example chassis speeds: 1 meter per second forward, 3 meters
-// per second to the left, and rotation at 1.5 radians per second
-// counterclockwise.
-frc::ChassisSpeeds speeds{1_mps, 3_mps, 1.5_rad_per_s};
+
 
 class mturningEncoder
 {
@@ -54,11 +53,6 @@ int m_turningEncoder = 0;
 //  2_mps, 2_mps, units::radians_per_second_t(wpi::math::pi / 2.0), frc::Rotation2d(45_deg));
 
 
-// Example module States
-frc::SwerveModuleState frontLeftState{23.43_mps, frc::Rotation2d(-140.19_deg)};
-frc::SwerveModuleState frontRightState{23.43_mps, frc::Rotation2d(-39.81_deg)};
-frc::SwerveModuleState backLeftState{54.08_mps, frc::Rotation2d(-109.44_deg)};
-frc::SwerveModuleState backRightState{54.08_mps, frc::Rotation2d(-70.56_deg)};
 
 // Convert to chassis speeds. Here, we can use C++17's structured bindings
 // feature to automatically break up the ChassisSpeeds struct into its
@@ -69,22 +63,34 @@ frc::SwerveModuleState backRightState{54.08_mps, frc::Rotation2d(-70.56_deg)};
 
 void Drivetrain::drive(Twist_I const& twist)
 {
+// Example chassis speeds: 1 meter per second forward, 3 meters
+// per second to the left, and rotation at 1.5 radians per second
+// counterclockwise.
 frc::ChassisSpeeds speeds{1_mps, 3_mps, 1.5_rad_per_s};
 }
 
 void Drivetrain::goto180()
 {
+  // Example module States
+
 frc::SwerveModuleState frontLeftState{23.43_mps, frc::Rotation2d(-140.19_deg)};
 frc::SwerveModuleState frontRightState{23.43_mps, frc::Rotation2d(-39.81_deg)};
 frc::SwerveModuleState backLeftState{54.08_mps, frc::Rotation2d(-109.44_deg)};
 frc::SwerveModuleState backRightState{54.08_mps, frc::Rotation2d(-70.56_deg)};
+frc::SwerveDriveKinematics<4> m_kinematics{
+  m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,
+  m_backRightLocation};
 }
 
 void Drivetrain::gotoZero()
 {
+  // Example module States
+
 frc::SwerveModuleState frontLeftState{23.43_mps, frc::Rotation2d(-140.19_deg)};
 frc::SwerveModuleState frontRightState{23.43_mps, frc::Rotation2d(-39.81_deg)};
 frc::SwerveModuleState backLeftState{54.08_mps, frc::Rotation2d(-109.44_deg)};
 frc::SwerveModuleState backRightState{54.08_mps, frc::Rotation2d(-70.56_deg)};
+frc::SwerveDriveKinematics<4> m_kinematics{
+  m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,
+  m_backRightLocation};
 }
-
