@@ -73,10 +73,10 @@ void Drivetrain::goto180()
 {
   // Example module States
 
-frc::SwerveModuleState frontLeftState{23.43_mps, frc::Rotation2d(-140.19_deg)};
-frc::SwerveModuleState frontRightState{23.43_mps, frc::Rotation2d(-39.81_deg)};
-frc::SwerveModuleState backLeftState{54.08_mps, frc::Rotation2d(-109.44_deg)};
-frc::SwerveModuleState backRightState{54.08_mps, frc::Rotation2d(-70.56_deg)};
+frc::SwerveModuleState frontLeftState{23.43_mps, frc::Rotation2d(-180_deg)};
+frc::SwerveModuleState frontRightState{23.43_mps, frc::Rotation2d(-180_deg)};
+frc::SwerveModuleState backLeftState{54.08_mps, frc::Rotation2d(-180_deg)};
+frc::SwerveModuleState backRightState{54.08_mps, frc::Rotation2d(-180_deg)};
 frc::SwerveDriveKinematics<4> m_kinematics{
   m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation,
   m_backRightLocation};
