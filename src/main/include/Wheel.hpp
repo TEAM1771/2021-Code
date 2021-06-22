@@ -5,6 +5,12 @@
 #include <complex>
 #include "Twist.hpp"
 #include <iostream>
+#include "drivetrain.hpp"
+#include <thread>
+#include <frc/geometry/Translation2d.h>
+#include <frc/kinematics/SwerveDriveKinematics.h>
+#include <frc/kinematics/SwerveModuleState.h>
+#include <frc/kinematics/ChassisSpeeds.h>
 
 #include <ctre\Phoenix.h>
 
@@ -19,27 +25,12 @@ class Wheel
     TalonFX driver, turner;
     CANCoder direction;
     can_adr cancoder_adr;
-
-    double set_pos = 0; // degrees
-
-    // helper values
-    std::complex<float_t> const eia  = std::exp(1i * alpha);
-    std::complex<float_t> const ieia = 1.0 / eia;
-
-    struct polar_velocity
-    {
-        float_t speed;
-        float_t direction;
-    };
-    polar_velocity get_vector_for(Twist_R const &twist);
-    polar_velocity check_alternate_direction(polar_velocity const &angle);
 public:
-    float_t const alpha, beta, beta_offset, l, radius;
     Wheel(WHEELS::WheelInfo const &wheel_info);
     Wheel(Wheel const&) = delete;
     Wheel(Wheel &&) = delete;
     void printAngle();
     float_t get_angle();
-    void drive(Twist_R const &twist);
+    void drive(frc::SwerveModuleState const &twist);
 };
 #endif // __WHEEL_H__
