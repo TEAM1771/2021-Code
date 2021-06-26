@@ -1,5 +1,7 @@
 #include "Wheel.hpp"
 #include <iomanip>
+
+
 Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     : driver { wheel_info.driver }
     , turner { wheel_info.turner }
@@ -44,28 +46,6 @@ Wheel::float_t Wheel::get_angle()
     return direction.GetAbsolutePosition(); // return turner encoder converted to radians
 }
 
-class Wheel{
-using float_t = double;
-
-TalonFX driver, turner;
-CANCoder direction;
-can_adr cancoder_adr;
-
-frc::Translation2d const wheel_pos;
-units::meter_t radius;
-public:
-Wheel(WHEELS::WheelInfo const& wheel_info);
-Wheel(Wheel const&) = delete;
-Wheel(Wheel&&)      = delete;
-
-constexpr operator frc::Translation2d() const
-{
-    return wheel_pos;
-}
-void    printAngle();
-float_t get_angle();
-void    drive(frc::SwerveModuleState const& state);
-};
 
 void Wheel::printAngle()
 {

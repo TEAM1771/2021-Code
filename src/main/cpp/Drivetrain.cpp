@@ -15,13 +15,17 @@ frc::Translation2d m_backRightLocation{-0.381_m, -0.381_m};
 Drivetrain::Drivetrain()
 {
 // Locations for the swerve drive modules relative to the robot center.
+frc::Translation2d m_frontLeftLocation{0.381_m, 0.381_m};
+frc::Translation2d m_frontRightLocation{0.381_m, -0.381_m};
+frc::Translation2d m_backLeftLocation{-0.381_m, 0.381_m};
+frc::Translation2d m_backRightLocation{-0.381_m, -0.381_m};
 
 
 // Creating my kinematics object using the module locations.
 
 
-  navx->ZeroYaw();
-  navx->GetYaw();
+  // navx->ZeroYaw();
+  // navx->GetYaw();
 }
 
 

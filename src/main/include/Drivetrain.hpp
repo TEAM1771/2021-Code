@@ -8,16 +8,15 @@
 #include <memory>
 #include <frc/SPI.h>
 #include <iostream>
-
 class Drivetrain
 {
-    std::array<std::unique_ptr<Wheel>,4> wheels {
-        std::make_unique<Wheel>(WHEELS::WHEEL_1),
-        std::make_unique<Wheel>(WHEELS::WHEEL_2),
-        std::make_unique<Wheel>(WHEELS::WHEEL_3),
-        std::make_unique<Wheel>(WHEELS::WHEEL_4)
-    };
-    std::unique_ptr<AHRS> navx { std::make_unique<AHRS>(frc::SPI::Port::kMXP)};
+    // std::array<std::unique_ptr<wheel>,4> wheels {
+        // std::make_unique<wheel>(WHEELS::WHEEL_1),
+        // std::make_unique<wheel>(WHEELS::WHEEL_2),
+        // std::make_unique<wheel>(WHEELS::WHEEL_3),
+        // std::make_unique<wheel>(WHEELS::WHEEL_4)
+    // };
+    // std::unique_ptr<AHRS> navx { std::make_unique<AHRS>(frc::SPI::Port::kMXP)};
 
 public:
     Drivetrain();
