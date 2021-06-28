@@ -10,29 +10,28 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     , wheel_pos { wheel_info.wheel_pos }
 {
     direction.ConfigSensorInitializationStrategy(SensorInitializationStrategy::BootToAbsolutePosition);
-    // set_pos = direction.GetAbsolutePosition();
 
-    turner.SetNeutralMode(NeutralMode::Coast);
-    turner.ConfigSelectedFeedbackSensor(FeedbackDevice::RemoteSensor0, 0, 10);
-    // turner.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0,  10);
-    turner.ConfigRemoteFeedbackFilter(static_cast<int>(cancoder_adr), RemoteSensorSource::RemoteSensorSource_CANCoder, 0);
-    turner.SetStatusFramePeriod(StatusFrameEnhanced::Status_13_Base_PIDF0, 10, 10);
-    turner.SelectProfileSlot(0, 0);
-    turner.Config_kF(0, 0.3, 10);
-    turner.Config_kP(0, 1.5, 10);
-    turner.Config_kI(0, 0.0, 10);
-    turner.Config_kD(0, 0.3, 10);
+    TalonFXConfiguration turner_config {};
+    turner_config.slot0.kP                           = 1.5;
+    turner_config.slot0.kI                           = 0;
+    turner_config.slot0.kD                           = .3;
+    turner_config.slot0.kF                           = .3;
+    turner_config.remoteFilter0.remoteSensorDeviceID = direction.GetDeviceNumber();
+    turner_config.remoteFilter0.remoteSensorSource   = RemoteSensorSource::RemoteSensorSource_CANCoder;
+    turner_config.primaryPID.selectedFeedbackSensor  = FeedbackDevice::RemoteSensor0;
+    turner.ConfigAllSettings(turner_config);
 
-    // turner.SetSelectedSensorPosition((direction.GetAbsolutePosition()-beta_offset)*WHEELS::turning_ratio, 0, 10);
+    TalonFXConfiguration driver_config {};
+    driver_config.slot0.kP = 0.1;
+    driver_config.slot0.kI = 0;
+    driver_config.slot0.kD = 0;
+    driver_config.slot0.kF = .3;
+    turner.ConfigAllSettings(turner_config);
 
-
-    driver.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor, 0, 10);
-    driver.SetStatusFramePeriod(StatusFrameEnhanced::Status_13_Base_PIDF0, 10, 10);
-    driver.SelectProfileSlot(0, 0);
-    driver.Config_kF(0, 0.3, 10);
-    driver.Config_kP(0, 0.1, 10);
-    driver.Config_kI(0, 0.0, 10);
-    driver.Config_kD(0, 0.0, 10);
+    CANCoderConfiguration direction_config {};
+    direction_config.magnetOffsetDegrees    = wheel_info.offset.to<double>();
+    direction_config.initializationStrategy = SensorInitializationStrategy::BootToAbsolutePosition;
+    direction.ConfigAllSettings(direction_config);
 }
 
 Wheel::float_t Wheel::get_angle()
