@@ -40,6 +40,9 @@ public:
     bool aim(TURRET::POSITION);
     void ThreeBall();
     void FiveBall();
+    void EightBall();
+    void TenBall();
+    void ThirteenBall();
 
 private:
     Drivetrain   drivetrain;

@@ -3,7 +3,7 @@
 Hopper::Hopper()
 {
     // indexer.Set(HOPPER::INDEXER::SPEED);
-    indexer.Set(0);
+
 
     indexer.SetIdleMode(HOPPER::INDEXER::IDLE_MODE);
     transport.SetIdleMode(HOPPER::TRANSPORT::IDLE_MODE);
@@ -28,7 +28,7 @@ bool Hopper::index(bool warn_if_shooting)
     }
 
     if(! limitSwitch.Get() && numberOfBalls < 3 && ! isTransporting)
-    {        
+    {
         pidController.SetReference(targetDistance, rev::ControlType::kPosition);
         numberOfBalls++;
         isTransporting = true;
@@ -40,10 +40,10 @@ bool Hopper::index(bool warn_if_shooting)
         isTransporting = false;
     }
 
-    // if( limitSwitch.Get() && numberOfBalls < 4)
-    //     indexer.Set(HOPPER::INDEXER::SPEED);
-    // else
-    //     indexer.Set(0);
+    if(limitSwitch.Get() && numberOfBalls < 4)
+        indexer.Set(HOPPER::INDEXER::SPEED);
+    else
+        indexer.Set(0);
     return true;
 }
 
@@ -62,6 +62,6 @@ void Hopper::stop()
     targetDistance  = HOPPER::TRANSPORT::DISTANCE;
     encoder.SetPosition(0);
 
-   
+
     transport.Set(0);
 }
