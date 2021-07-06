@@ -9,6 +9,7 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     , direction { wheel_info.cancoder }
     , cancoder_adr { wheel_info.cancoder }
     , wheel_pos { wheel_info.wheel_pos }
+    , offset { wheel_info.offset }
 {
     direction.ConfigSensorInitializationStrategy(SensorInitializationStrategy::BootToAbsolutePosition);
 
@@ -27,12 +28,13 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     driver_config.slot0.kI = 0;
     driver_config.slot0.kD = 0;
     driver_config.slot0.kF = 0;
-    turner.ConfigAllSettings(turner_config);
+    driver.ConfigAllSettings(turner_config);
+    driver.SetNeutralMode(NeutralMode::Brake);
 
-    CANCoderConfiguration direction_config {};
-    direction_config.magnetOffsetDegrees    = wheel_info.offset.to<double>();
-    direction_config.initializationStrategy = SensorInitializationStrategy::BootToAbsolutePosition;
-    direction.ConfigAllSettings(direction_config);
+    // CANCoderConfiguration direction_config {};
+    // direction_config.magnetOffsetDegrees    = wheel_info.offset.to<double>(); // DO NOT UNCOMMENT
+    // direction_config.initializationStrategy = SensorInitializationStrategy::BootToAbsolutePosition;
+    // direction.ConfigAllSettings(direction_config);
 }
 
 
@@ -62,6 +64,7 @@ std::thread Wheel::drive(frc::SwerveModuleState const& state)
         if(id == 0)
         {
             // printf("speed: %f\n", velocity);
+            // printAngle();
         }
 
         driver.Set(ControlMode::PercentOutput, velocity);

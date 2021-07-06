@@ -31,12 +31,14 @@ class Drivetrain
 
 public:
     Drivetrain();
-    double      get_angle(); // pull from rio
-    void        print();
-    void        drive(frc::ChassisSpeeds const& feild_speeds);
-    void drive(wpi::array<frc::SwerveModuleState, 4> const& states);
-    void        gotoZero();
-    void        goto180();
+    double get_angle(); // pull from rio
+    void   print();
+    void   drive(frc::ChassisSpeeds const& feild_speeds);
+    void   drive(wpi::array<frc::SwerveModuleState, 4> const& states);
+    void   gotoZero();
+    void   goto180();
+    void   PrintWheelAngle(int);
+    void   reset_gyro();
 };
 
 #endif // __DRIVETRAIN_H__

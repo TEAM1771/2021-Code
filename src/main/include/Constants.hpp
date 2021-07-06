@@ -64,10 +64,10 @@ namespace WHEELS
             , offset { offset_ }
         {}
     };
-    WheelInfo const WHEEL_1 { 30, 31, 11, { 11_in, -11_in }, 4_in, 360_deg - 275_deg };
-    WheelInfo const WHEEL_2 { 40, 41, 12, { 11_in, 11_in }, 4_in, 15_deg };
-    WheelInfo const WHEEL_3 { 50, 51, 13, { -11_in, 11_in }, 4_in, 360_deg - 87_deg };
-    WheelInfo const WHEEL_4 { 60, 61, 14, { -11_in, -11_in }, 4_in, 75_deg };
+    WheelInfo const WHEEL_1 { 30, 31, 11, { 11_in, -11_in }, 4_in, 0_deg };  // 360-275
+    WheelInfo const WHEEL_2 { 40, 41, 12, { 11_in, 11_in }, 4_in, 0_deg };   // 15
+    WheelInfo const WHEEL_3 { 50, 51, 13, { -11_in, 11_in }, 4_in, 0_deg };  // 360-83.9
+    WheelInfo const WHEEL_4 { 60, 61, 14, { -11_in, -11_in }, 4_in, 0_deg }; // 75
 
 
     constexpr double kEncoderTicksPerRotation = 4096;
@@ -97,7 +97,7 @@ namespace HOOD
     typedef enum {
         BOTTOM       = 0,
         TRAVERSE     = -9,
-        SAFE_TO_TURN = -42,
+        SAFE_TO_TURN = -38,
         MIDPOINT     = -26,
         BATTER       = -89
     } POSITION;
@@ -137,7 +137,7 @@ namespace SHOOTER_WHEEL
 {
     constexpr can_adr PORT_1       = 18;
     constexpr auto    IDLE_MODE    = rev::CANSparkMax::IdleMode::kCoast;
-    constexpr double  SHOOTING_RPM = 7500;
+    constexpr double  SHOOTING_RPM = 7000;
 } // namespace SHOOTER_WHEEL
 
 namespace HOPPER
@@ -206,7 +206,7 @@ namespace INTAKE
         IN
     };
 
-    constexpr double IN_SPEED  = -1;
+    constexpr double IN_SPEED  = -.5;
     constexpr double OUT_SPEED = 1;
 } // namespace INTAKE
 
@@ -224,10 +224,18 @@ namespace AUTO
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto PICKUP_DRIVE_TIME = 5s;
-        constexpr auto TURN_TIME         = 0.2s;
-        constexpr auto TIME_BACKWARD     = 1.5s;
+        constexpr auto PICKUP_DRIVE_TIME = 3.35s;
+        constexpr auto TIME_BACKWARD     = 2s;
     } // namespace FIVE_BALL
+    namespace SIX_BALL
+    {
+        using namespace std::literals::chrono_literals;
+        constexpr auto SPIN_UP_TIME      = 4.5s;
+        constexpr auto PICKUP_DRIVE_TIME = 2.8s;
+        constexpr auto SHOOT_TIME_1      = 1s;
+        constexpr auto TIME_BACKWARD     = 1.8s;
+        constexpr auto SHOOT_WAIT_TIME   = 1s;
+    } // namespace SIX_BALL
 
     namespace EIGHT_BALL
     {

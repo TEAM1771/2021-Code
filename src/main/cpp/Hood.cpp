@@ -44,6 +44,14 @@ bool Hood::goToPosition(HOOD::POSITION position, double tolerance)
         { -5.88120, -21.6297 },
         { -9.15754, -21.3750 }
     };
+    // constexpr table_row lookup_table[] { // origional values
+    //     { 20.0104, -13.1929 },
+    //     { 10.4538, -17.0433 },
+    //     { 1.97857, -21.3750 },
+    //     { -3.02635, -22.0117 },
+    //     { -5.88120, -21.6297 },
+    //     { -9.15754, -21.3750 }
+    // };
 
     auto find_value_in_table = [](auto yval, auto begin, auto end) {
         return std::find_if(std::next(begin), end, [=](auto const& val) {
@@ -81,8 +89,8 @@ bool Hood::visionTrack(double tolerance)
 {
     if(limelight_.hasTarget())
     {
-        double const target = getTrackingValue(limelight_.getY());
-        hood_.SetTarget(target);
+        double target = getTrackingValue(limelight_.getY());
+        hood_.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood_.encoder.GetPosition()) < tolerance;
     }
     else
@@ -99,4 +107,19 @@ void Hood::manualPositionControl(double position)
                                      HOOD::POSITION::TRAVERSE,
                                      HOOD::POSITION::SAFE_TO_TURN,
                                      std::clamp(position, 0.0, 1.0)));
+}
+
+void Hood::print_angle()
+{
+    printf("hood angle: %f\n", hood_.encoder.GetPosition());
+}
+
+double Hood::get_angle()
+{
+    return hood_.encoder.GetPosition();
+}
+
+double Hood::get_camera_Y()
+{
+    return limelight_.getY();
 }

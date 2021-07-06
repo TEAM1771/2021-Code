@@ -6,9 +6,13 @@
 // #include <cmath>
 Drivetrain::Drivetrain()
 {
-    navx->ZeroYaw();
+    reset_gyro();
 }
 
+void Drivetrain::reset_gyro()
+{
+    navx->ZeroYaw();
+}
 
 double Drivetrain::get_angle()
 {
@@ -57,4 +61,9 @@ void Drivetrain::gotoZero()
         frc::SwerveModuleState { 0_mps, frc::Rotation2d { units::degree_t { 0 } } }
     };
     drive(states);
+}
+
+void Drivetrain::PrintWheelAngle(int wheelid)
+{
+    wheels[wheelid]->printAngle();
 }

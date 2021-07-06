@@ -27,7 +27,8 @@ class Wheel
 
     frc::Translation2d const wheel_pos;
 
-    units::meter_t radius;
+    units::meter_t  radius;
+    units::degree_t offset;
 
 public:
     Wheel(WHEELS::WheelInfo const& wheel_info);

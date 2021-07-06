@@ -24,4 +24,8 @@ public:
 
     /// used for tuning interpolation tables
     void manualPositionControl(double position);
+
+    void   print_angle();
+    double get_angle();
+    double get_camera_Y();
 };

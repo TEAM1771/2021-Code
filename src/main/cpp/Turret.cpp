@@ -75,6 +75,7 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         return { true, fabs(xOffsetDeg) < tolerance };
     }
 
+    // return { true, true };
     return { false, false };
 }
 
