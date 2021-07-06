@@ -173,8 +173,8 @@ namespace HOPPER
 
 namespace CLIMBER
 {
-    constexpr int PORT_1 = 35;
-    constexpr int PORT_2 = 9;
+    constexpr int PORT_1 = 9;
+    constexpr int PORT_2 = 35;
 
     constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
 
