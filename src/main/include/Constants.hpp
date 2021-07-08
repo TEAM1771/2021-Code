@@ -206,7 +206,7 @@ namespace INTAKE
         IN
     };
 
-    constexpr double IN_SPEED  = -.5;
+    constexpr double IN_SPEED  = -1;
     constexpr double OUT_SPEED = 1;
 } // namespace INTAKE
 
@@ -233,8 +233,8 @@ namespace AUTO
         constexpr auto SPIN_UP_TIME      = 4.5s;
         constexpr auto PICKUP_DRIVE_TIME = 2.8s;
         constexpr auto SHOOT_TIME_1      = 1s;
-        constexpr auto TIME_BACKWARD     = 1.8s;
-        constexpr auto SHOOT_WAIT_TIME   = 1s;
+        constexpr auto TIME_BACKWARD     = 2.3s;
+        constexpr auto SHOOT_WAIT_TIME   = 1.5s;
     } // namespace SIX_BALL
 
     namespace EIGHT_BALL

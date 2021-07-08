@@ -121,8 +121,8 @@ void Robot::SixBall()
     }
 
     // turn and move back toward goal
-    drivetrain.drive({ -0.25_mps * WHEELS::speed_mult, ////////////////////////////////////////////////////
-                       0.55_mps * WHEELS::speed_mult,  ////////////////////////////////////////////////////////
+    drivetrain.drive({ -0.15_mps * WHEELS::speed_mult, ////////////////////////////////////////////////////
+                       0.45_mps * WHEELS::speed_mult,  ////////////////////////////////////////////////////////
                        0_rad_per_s });
     std::this_thread::sleep_for(TIME_BACKWARD);
     drivetrain.gotoZero();
