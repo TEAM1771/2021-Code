@@ -216,16 +216,22 @@ namespace AUTO
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto DRIVE_FORWARD_TIME = 1s;
-        constexpr auto MINIMUM_SHOOT_TIME = 10s;
+        constexpr auto DRIVE_TIME      = 1s;
+        constexpr auto SHOOT_WAIT_TIME = 1s;
+        constexpr auto SPINUP_TIME     = 4.5s;
+
     } // namespace THREE_BALL
 
     namespace FIVE_BALL
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto PICKUP_DRIVE_TIME = 3.35s;
-        constexpr auto TIME_BACKWARD     = 2s;
+        constexpr auto MOVE_TO_BALLS     = 1s;
+        constexpr auto PICKUP_TIME       = 2s;
+        constexpr auto MOVE_TO_GOAL_TIME = 2s;
+        constexpr auto SHOOT_WAIT_TIME   = 1s;
+
+
     } // namespace FIVE_BALL
     namespace SIX_BALL
     {
