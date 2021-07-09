@@ -44,17 +44,17 @@ void Robot::FiveBall()
     // move to balls
     drivetrain.drive({ 0_mps * WHEELS::speed_mult,
                        -0.35_mps * WHEELS::speed_mult,
-                       0.1_rad_per_s });
+                       .0_rad_per_s });
     std::this_thread::sleep_for(MOVE_TO_BALLS);
 
     // pickup balls
-    drivetrain.drive({ .2_mps * WHEELS::speed_mult,
-                       0_mps * WHEELS::speed_mult,
-                       0_rad_per_s });
+    drivetrain.drive({ -.2_mps * WHEELS::speed_mult,
+                       -.10_mps * WHEELS::speed_mult,
+                       .1_rad_per_s });
     std::this_thread::sleep_for(PICKUP_TIME);
 
     // move to goal
-    drivetrain.drive({ -.4_mps * WHEELS::speed_mult,
+    drivetrain.drive({ .4_mps * WHEELS::speed_mult,
                        .1_mps * WHEELS::speed_mult,
                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_TIME);
@@ -66,7 +66,7 @@ void Robot::FiveBall()
     while(IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK) && timer.Get() < SHOOT_WAIT_TIME)
+        if(aim(TURRET::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
             hopper.shoot();
     }
 }
@@ -81,12 +81,12 @@ void Robot::SixBall()
     // drive back / intake
     intake.deploy(true);
     intake.drive(INTAKE::DIRECTION::IN);
-
-
+    
     timer.Reset();
     timer.Start();
     while(timer.Get() < SPIN_UP_TIME)
         aim(TURRET::POSITION::BACK);
+
     // std::this_thread::sleep_for(SPIN_UP_TIME);
 
     // std::thread aim_and_shoot_ { [this] {
@@ -129,7 +129,7 @@ void Robot::SixBall()
         while(IsAutonomous() && IsEnabled())
         {
             std::this_thread::sleep_for(10ms);
-            if(aim(TURRET::POSITION::BACK) && timer.Get() < SHOOT_WAIT_TIME)
+            if(aim(TURRET::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
                 hopper.shoot();
         }
     } };
@@ -284,8 +284,8 @@ void Robot::AutonomousInit()
     } };
     intake.deploy(true);
 
-    SixBall();
-
+    //SixBall();
+    FiveBall();
 
     run_shooter_wheel_and_index_balls.join();
 }

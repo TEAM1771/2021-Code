@@ -226,9 +226,9 @@ namespace AUTO
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto MOVE_TO_BALLS     = 1s;
-        constexpr auto PICKUP_TIME       = 2s;
-        constexpr auto MOVE_TO_GOAL_TIME = 2s;
+        constexpr auto MOVE_TO_BALLS     = 3.93s;
+        constexpr auto PICKUP_TIME       = 1.s;
+        constexpr auto MOVE_TO_GOAL_TIME = 1.2s;
         constexpr auto SHOOT_WAIT_TIME   = 1s;
 
 
