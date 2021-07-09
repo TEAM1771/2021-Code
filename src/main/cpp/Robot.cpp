@@ -59,6 +59,10 @@ void Robot::FiveBall()
                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_TIME);
 
+
+    // don't drive forever
+    drivetrain.gotoZero();
+
     // shoot
     timer.Reset();
     timer.Start();
@@ -81,7 +85,7 @@ void Robot::SixBall()
     // drive back / intake
     intake.deploy(true);
     intake.drive(INTAKE::DIRECTION::IN);
-    
+
     timer.Reset();
     timer.Start();
     while(timer.Get() < SPIN_UP_TIME)
