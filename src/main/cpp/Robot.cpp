@@ -287,9 +287,10 @@ void Robot::AutonomousInit()
         }
     } };
     intake.deploy(true);
-
+    
+    ThreeBall();
     //SixBall();
-    FiveBall();
+    //FiveBall();
 
     run_shooter_wheel_and_index_balls.join();
 }
