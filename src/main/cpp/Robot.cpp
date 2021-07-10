@@ -287,7 +287,7 @@ void Robot::AutonomousInit()
         }
     } };
     intake.deploy(true);
-    
+
     ThreeBall();
     //SixBall();
     //FiveBall();
@@ -305,7 +305,8 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-    shooter_wheel.bangbang();
+    if(BUTTON::oStick.GetThrottle() < 0)
+        shooter_wheel.bangbang();
     // printf("speed: %f\n", shooter_wheel.get_speed());
     ButtonManager();
 }
@@ -400,6 +401,7 @@ void Robot::ButtonManager()
         intake.drive(INTAKE::DIRECTION::OFF);
 
     climber.ButtonManager();
+
 
     double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
     if(fabs(x) < .1)
