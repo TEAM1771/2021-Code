@@ -185,7 +185,7 @@ void Robot::EightBall()
 
     // Go to traverse
     while(IsAutonomous() && IsEnabled() &&
-          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)) && turret.goToPosition(TURRET::POSITION::ZERO)))
+          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)) && Turret::goToPosition(TURRET::POSITION::ZERO)))
         std::this_thread::sleep_for(10ms);
 
     ///////////////////////
@@ -332,7 +332,7 @@ void Robot::TestPeriodic()
     printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
 
-    auto targetLocked = turret.visionTrack(TURRET::BACK);
+    auto targetLocked = Turret::visionTrack(TURRET::BACK);
 
     if(BUTTON::SHOOTER::SHOOT.getRawButtonReleased())
         Hopper::stop();
@@ -342,7 +342,7 @@ void Robot::TestPeriodic()
         Hopper::index();
 
     // Intake::deploy(true);
-    // turret.visionTrack(TURRET::POSITION::BACK);
+    // Turret::visionTrack(TURRET::POSITION::BACK);
     //Drivetrain::print();
     // shooter_wheel.bangbang();
 }
@@ -374,7 +374,7 @@ void Robot::ButtonManager()
         deployIntake = true;
 
         // turret_in_pos is true when it's safe to deploy hood
-        bool const turret_in_pos = turret.goToPosition(TURRET::POSITION::FRONT,
+        bool const turret_in_pos = Turret::goToPosition(TURRET::POSITION::FRONT,
                                                        fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
         if(turret_in_pos)
             targetLocked = Hood::goToPosition(HOOD::POSITION::BATTER);
@@ -390,7 +390,7 @@ void Robot::ButtonManager()
     {
         deployIntake = false;
         if(Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)))
-            turret.goToPosition(TURRET::POSITION::ZERO);
+            Turret::goToPosition(TURRET::POSITION::ZERO);
     }
 
     Intake::deploy(BUTTON::INTAKE::DEPLOY || deployIntake);
@@ -440,7 +440,7 @@ void Robot::ButtonManager()
 
 bool Robot::aim(TURRET::POSITION direction)
 {
-    if(auto [is_tracking, readyToShoot] = turret.visionTrack(direction); is_tracking)
+    if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
         return Hood::visionTrack() && readyToShoot;
     Hood::goToPosition(HOOD::POSITION::TRAVERSE);
     return false;

@@ -1,7 +1,15 @@
 #include "Turret.hpp"
 #include <cmath>
-Turret::Turret(LimeLight const& limelight)
-    : limelight_ { limelight }
+
+//private variables
+extern LimeLight limelight;
+
+inline static PID_CANSparkMax turretTurnyTurny_ { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+inline static TURRET::POSITION position_ = TURRET::POSITION::ZERO;
+inline static bool tracking_ = false;
+
+//public function definitions
+void Turret::init()
 {
     turretTurnyTurny_.RestoreFactoryDefaults();
 
@@ -37,9 +45,9 @@ Turret::visionState Turret::visionTrack_v1(TURRET::POSITION initPosition, double
         return { false, false };
     }
 
-    if(limelight_.hasTarget())
+    if(limelight.hasTarget())
     {
-        double const xOffset = limelight_.getX() + CAMERA::X_OFFSET;
+        double const xOffset = limelight.getX() + CAMERA::X_OFFSET;
         double const output  = xOffset / 35;
         turretTurnyTurny_.Set(output);
         return { true, fabs(xOffset) < tolerance };
@@ -56,9 +64,9 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         return { false, false };
     }
 
-    if(limelight_.hasTarget())
+    if(limelight.hasTarget())
     {
-        double const xOffsetDeg = limelight_.getX() + CAMERA::X_OFFSET;
+        double const xOffsetDeg = limelight.getX() + CAMERA::X_OFFSET;
         double const xOffsetRad = ngr::deg2rad(xOffsetDeg);
         double const xOffset    = xOffsetRad * TURRET::TICKS_PER_RADIAN;
 

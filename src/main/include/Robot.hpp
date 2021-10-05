@@ -49,7 +49,6 @@ public:
     void ThirteenBall();
 
 private:
-    Turret       turret { limelight };
     ShooterWheel shooter_wheel;
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 };
