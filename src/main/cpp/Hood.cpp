@@ -3,8 +3,12 @@
 #include <cmath>
 #include <vector>
 
-Hood::Hood(LimeLight const& limelight)
-    : limelight_ { limelight }
+extern LimeLight limelight;
+
+static inline PID_CANSparkMax hood_ { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+static inline HOOD::POSITION position_ = HOOD::POSITION::BOTTOM;
+
+void Hood::init()
 {
     hood_.RestoreFactoryDefaults();
     hood_.SetIdleMode(HOOD::IDLE_MODE);
@@ -87,9 +91,9 @@ bool Hood::goToPosition(HOOD::POSITION position, double tolerance)
 
 bool Hood::visionTrack(double tolerance)
 {
-    if(limelight_.hasTarget())
+    if(limelight.hasTarget())
     {
-        double target = getTrackingValue(limelight_.getY());
+        double target = getTrackingValue(limelight.getY());
         hood_.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood_.encoder.GetPosition()) < tolerance;
     }
@@ -121,5 +125,5 @@ double Hood::get_angle()
 
 double Hood::get_camera_Y()
 {
-    return limelight_.getY();
+    return limelight.getY();
 }

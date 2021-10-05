@@ -24,6 +24,7 @@ LimeLight limelight;
 class Robot : public frc::TimedRobot
 {
 public:
+    Robot();
     void AutonomousInit() override;
     void AutonomousPeriodic() override;
 
@@ -48,7 +49,6 @@ public:
     void ThirteenBall();
 
 private:
-    Hood         hood { limelight };
     Turret       turret { limelight };
     Hopper       hopper;
     Intake       intake;

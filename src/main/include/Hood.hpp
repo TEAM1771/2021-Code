@@ -5,16 +5,9 @@
 #include <PID_CANSparkMax.hpp>
 #include <frc/Joystick.h>
 
-class Hood
+namespace Hood
 {
-    LimeLight const& limelight_;
-
-    PID_CANSparkMax hood_ { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
-
-    HOOD::POSITION position_ = HOOD::POSITION::BOTTOM;
-
-public:
-    explicit Hood(LimeLight const& limelight);
+    void init();
 
     /// returns true if tolerance is met
     bool goToPosition(HOOD::POSITION position, double tolerance = HOOD::TOLERANCE);
