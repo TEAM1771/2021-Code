@@ -1,7 +1,10 @@
 #include "Climber.hpp"
 #include "Constants.hpp"
 
-Climber::Climber()
+inline static PID_CANSparkMax climber_1 { CLIMBER::PORT_1, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+inline static PID_CANSparkMax climber_2 { CLIMBER::PORT_2, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+
+void Climber::init()
 {
     climber_1.RestoreFactoryDefaults();
     climber_2.RestoreFactoryDefaults();

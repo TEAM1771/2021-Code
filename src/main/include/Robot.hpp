@@ -19,6 +19,8 @@
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
 
+LimeLight limelight;
+
 class Robot : public frc::TimedRobot
 {
 public:
@@ -46,12 +48,9 @@ public:
     void ThirteenBall();
 
 private:
-    Drivetrain   drivetrain;
-    LimeLight    limelight;
     Hood         hood { limelight };
     Turret       turret { limelight };
     Hopper       hopper;
-    Climber      climber;
     Intake       intake;
     ShooterWheel shooter_wheel;
 

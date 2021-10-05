@@ -15,11 +15,11 @@ void Robot::ThreeBall()
     timer.Start();
     while(timer.Get() < DRIVE_TIME && IsAutonomous() && IsEnabled())
     {
-        drivetrain.drive(frc::ChassisSpeeds { 0_mps, -.25_mps * WHEELS::speed_mult, 0_rad_per_s });
+        Drivetrain::drive(frc::ChassisSpeeds { 0_mps, -.25_mps * WHEELS::speed_mult, 0_rad_per_s });
         aim(TURRET::POSITION::BACK);
         std::this_thread::sleep_for(10ms);
     }
-    drivetrain.gotoZero();
+    Drivetrain::gotoZero();
 
     limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
@@ -42,26 +42,26 @@ void Robot::FiveBall()
     intake.drive(INTAKE::DIRECTION::IN);
 
     // move to balls
-    drivetrain.drive({ 0_mps * WHEELS::speed_mult,
+    Drivetrain::drive({ 0_mps * WHEELS::speed_mult,
                        -0.35_mps * WHEELS::speed_mult,
                        .0_rad_per_s });
     std::this_thread::sleep_for(MOVE_TO_BALLS);
 
     // pickup balls
-    drivetrain.drive({ -.2_mps * WHEELS::speed_mult,
+    Drivetrain::drive({ -.2_mps * WHEELS::speed_mult,
                        -.10_mps * WHEELS::speed_mult,
                        .1_rad_per_s });
     std::this_thread::sleep_for(PICKUP_TIME);
 
     // move to goal
-    drivetrain.drive({ .4_mps * WHEELS::speed_mult,
+    Drivetrain::drive({ .4_mps * WHEELS::speed_mult,
                        .1_mps * WHEELS::speed_mult,
                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_TIME);
 
 
     // don't drive forever
-    drivetrain.gotoZero();
+    Drivetrain::gotoZero();
 
     // shoot
     timer.Reset();
@@ -112,18 +112,18 @@ void Robot::SixBall()
     timer.Start();
     while(timer.Get() < PICKUP_DRIVE_TIME && IsAutonomous() && IsEnabled())
     {
-        drivetrain.drive({ 0_mps,
+        Drivetrain::drive({ 0_mps,
                            -0.45_mps * WHEELS::speed_mult,
                            0_rad_per_s });
         std::this_thread::sleep_for(20ms); // don't spam the CAN network
     }
 
     // turn and move back toward goal
-    drivetrain.drive({ -0.15_mps * WHEELS::speed_mult, ////////////////////////////////////////////////////
+    Drivetrain::drive({ -0.15_mps * WHEELS::speed_mult, ////////////////////////////////////////////////////
                        0.45_mps * WHEELS::speed_mult,  ////////////////////////////////////////////////////////
                        0_rad_per_s });
     std::this_thread::sleep_for(TIME_BACKWARD);
-    drivetrain.gotoZero();
+    Drivetrain::gotoZero();
 
 
     timer.Reset();
@@ -182,17 +182,17 @@ void Robot::EightBall()
     ///////////////////////
     // Pickup Trench Run //
     ///////////////////////
-    drivetrain.drive({ 0_mps,
+    Drivetrain::drive({ 0_mps,
                        0.3_mps * WHEELS::speed_mult,
                        0_rad_per_s });
     std::this_thread::sleep_for(TRENCH_RUN_PICKUP_TIME);
 
 
-    drivetrain.drive({ 0_mps,
+    Drivetrain::drive({ 0_mps,
                        0.5_mps * WHEELS::speed_mult,
                        0_rad_per_s });
     std::this_thread::sleep_for(TRENCH_RUN_RETURN_TIME);
-    drivetrain.gotoZero();
+    Drivetrain::gotoZero();
 
     limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
@@ -212,20 +212,20 @@ void Robot::TenBall()
 
     FiveBall();
 
-    drivetrain.drive({ 0_mps,
+    Drivetrain::drive({ 0_mps,
                        -0.5_mps * WHEELS::speed_mult,
                        0.5_rad_per_s });
     std::this_thread::sleep_for(RETURN_PICKUP_TIME);
-    drivetrain.drive({ -.3_mps * WHEELS::speed_mult,
+    Drivetrain::drive({ -.3_mps * WHEELS::speed_mult,
                        0_mps,
                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_MOVE_TIME);
-    drivetrain.drive({ .3_mps * WHEELS::speed_mult,
+    Drivetrain::drive({ .3_mps * WHEELS::speed_mult,
                        0_mps,
                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_RETURN_TIME);
 
-    drivetrain.drive({ 0_mps,
+    Drivetrain::drive({ 0_mps,
                        0.5_mps * WHEELS::speed_mult,
                        -0.5_rad_per_s });
     std::this_thread::sleep_for(GOAL_RETURN_TIME);
@@ -244,20 +244,20 @@ void Robot::ThirteenBall()
 
     EightBall();
 
-    drivetrain.drive({ 0_mps,
+    Drivetrain::drive({ 0_mps,
                        -0.5_mps * WHEELS::speed_mult,
                        0.5_rad_per_s });
     std::this_thread::sleep_for(RETURN_PICKUP_TIME);
-    drivetrain.drive({ -.3_mps * WHEELS::speed_mult,
+    Drivetrain::drive({ -.3_mps * WHEELS::speed_mult,
                        0_mps,
                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_MOVE_TIME);
-    drivetrain.drive({ .3_mps * WHEELS::speed_mult,
+    Drivetrain::drive({ .3_mps * WHEELS::speed_mult,
                        0_mps,
                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_RETURN_TIME);
 
-    drivetrain.drive({ 0_mps,
+    Drivetrain::drive({ 0_mps,
                        0.5_mps * WHEELS::speed_mult,
                        -0.5_rad_per_s });
     std::this_thread::sleep_for(GOAL_RETURN_TIME);
@@ -271,10 +271,10 @@ void Robot::ThirteenBall()
 
 void Robot::AutonomousInit()
 {
-    drivetrain.reset_gyro();
+    Drivetrain::reset_gyro();
     using namespace std::literals::chrono_literals;
 
-    drivetrain.gotoZero();
+    Drivetrain::gotoZero();
     std::this_thread::sleep_for(0.1s);
     // Start BangBang and indexer
     std::thread run_shooter_wheel_and_index_balls { [this] {
@@ -316,10 +316,10 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-    // printf("angle: %f\n", drivetrain.get_angle());
+    // printf("angle: %f\n", Drivetrain::get_angle());
 
-    // climber.printStatus();
-    // drivetrain.PrintWheelAngle(2);
+    // Climber::printStatus();
+    // Drivetrain::PrintWheelAngle(2);
     printf("CamY: %f\tAngle: ", hood.get_camera_Y(), hood.get_angle());
     hood.manualPositionControl(BUTTON::oStick.GetThrottle());
 
@@ -334,7 +334,7 @@ void Robot::TestPeriodic()
 
     // intake.deploy(true);
     // turret.visionTrack(TURRET::POSITION::BACK);
-    //drivetrain.print();
+    //Drivetrain::print();
     // shooter_wheel.bangbang();
 }
 
@@ -400,7 +400,7 @@ void Robot::ButtonManager()
     else
         intake.drive(INTAKE::DIRECTION::OFF);
 
-    climber.ButtonManager();
+    Climber::ButtonManager();
 
 
     double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
@@ -420,11 +420,11 @@ void Robot::ButtonManager()
         rotate = 0;
 
     // if(BUTTON::DRIVETRAIN::ZERO)
-    //     drivetrain.gotoZero();
+    //     Drivetrain::gotoZero();
     // else if(BUTTON::DRIVETRAIN::REVERSE)
-    //     drivetrain.goto180();
+    //     Drivetrain::goto180();
     // else
-    drivetrain.drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
+    Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
                                           units::meters_per_second_t { y },
                                           units::radians_per_second_t { rotate } });
 }

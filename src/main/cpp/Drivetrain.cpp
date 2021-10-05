@@ -4,7 +4,24 @@
 
 #include <thread>
 // #include <cmath>
-Drivetrain::Drivetrain()
+
+inline static std::array<std::unique_ptr<Wheel>, 4> wheels {
+    std::make_unique<Wheel>(WHEELS::WHEEL_1),
+    std::make_unique<Wheel>(WHEELS::WHEEL_2),
+    std::make_unique<Wheel>(WHEELS::WHEEL_3),
+    std::make_unique<Wheel>(WHEELS::WHEEL_4)
+};
+
+inline static frc::SwerveDriveKinematics<4> const m_kinematics {
+    *wheels[0],
+    *wheels[1],
+    *wheels[2],
+    *wheels[3]
+};
+
+inline static std::unique_ptr<AHRS> navx { std::make_unique<AHRS>(frc::SPI::Port::kMXP) };
+
+void Drivetrain::init()
 {
     reset_gyro();
 }
