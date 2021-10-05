@@ -6,6 +6,7 @@ Robot::Robot()
     Climber::init();
     Drivetrain::init();
     Hood::init();
+    Hopper::init();
 }
 
 void Robot::ThreeBall()
@@ -35,7 +36,7 @@ void Robot::ThreeBall()
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::BACK) && spinup_timer.Get() > SPINUP_TIME && timer.Get() < SHOOT_WAIT_TIME)
-            hopper.shoot();
+            Hopper::shoot();
     }
 }
 
@@ -78,7 +79,7 @@ void Robot::FiveBall()
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
-            hopper.shoot();
+            Hopper::shoot();
     }
 }
 
@@ -110,9 +111,9 @@ void Robot::SixBall()
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::BACK))
-            hopper.shoot();
+            Hopper::shoot();
     }
-    hopper.stop();
+    Hopper::stop();
     // } };
 
     timer.Reset();
@@ -141,7 +142,7 @@ void Robot::SixBall()
         {
             std::this_thread::sleep_for(10ms);
             if(aim(TURRET::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
-                hopper.shoot();
+                Hopper::shoot();
         }
     } };
 
@@ -178,7 +179,7 @@ void Robot::EightBall()
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::BACK))
-            hopper.shoot();
+            Hopper::shoot();
     }
 
     // Go to traverse
@@ -208,7 +209,7 @@ void Robot::EightBall()
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::BACK))
-            hopper.shoot();
+            Hopper::shoot();
     }
 }
 
@@ -240,7 +241,7 @@ void Robot::TenBall()
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::BACK))
-            hopper.shoot();
+            Hopper::shoot();
     }
 }
 
@@ -272,7 +273,7 @@ void Robot::ThirteenBall()
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::BACK))
-            hopper.shoot();
+            Hopper::shoot();
     }
 }
 
@@ -289,7 +290,7 @@ void Robot::AutonomousInit()
         while(IsAutonomous() && IsEnabled())
         {
             shooter_wheel.bangbang();
-            hopper.index(false);              // don't warn when called while shooting
+            Hopper::index(false);              // don't warn when called while shooting
             std::this_thread::sleep_for(5ms); // don't spam the CAN network
         }
     } };
@@ -308,7 +309,7 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
-    hopper.stop(); // eliminates need to shoot at start of teleop
+    Hopper::stop(); // eliminates need to shoot at start of teleop
 }
 void Robot::TeleopPeriodic()
 {
@@ -333,11 +334,11 @@ void Robot::TestPeriodic()
     auto targetLocked = turret.visionTrack(TURRET::BACK);
 
     if(BUTTON::SHOOTER::SHOOT.getRawButtonReleased())
-        hopper.stop();
+        Hopper::stop();
     if(targetLocked.readyToShoot && BUTTON::SHOOTER::SHOOT)
-        hopper.shoot();
+        Hopper::shoot();
     else if(! BUTTON::SHOOTER::SHOOT)
-        hopper.index();
+        Hopper::index();
 
     // intake.deploy(true);
     // turret.visionTrack(TURRET::POSITION::BACK);
@@ -394,11 +395,11 @@ void Robot::ButtonManager()
     intake.deploy(BUTTON::INTAKE::DEPLOY || deployIntake);
 
     if(BUTTON::SHOOTER::SHOOT.getRawButtonReleased())
-        hopper.stop();
+        Hopper::stop();
     if(targetLocked && BUTTON::SHOOTER::SHOOT)
-        hopper.shoot();
+        Hopper::shoot();
     else if(! BUTTON::SHOOTER::SHOOT)
-        hopper.index();
+        Hopper::index();
 
     if(BUTTON::INTAKE::INTAKE)
         intake.drive(INTAKE::DIRECTION::IN);

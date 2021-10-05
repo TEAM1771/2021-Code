@@ -50,7 +50,6 @@ public:
 
 private:
     Turret       turret { limelight };
-    Hopper       hopper;
     Intake       intake;
     ShooterWheel shooter_wheel;
 
