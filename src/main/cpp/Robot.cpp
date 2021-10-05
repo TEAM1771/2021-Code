@@ -7,6 +7,7 @@ Robot::Robot()
     Drivetrain::init();
     Hood::init();
     Hopper::init();
+    Intake::init();
 }
 
 void Robot::ThreeBall()
@@ -46,8 +47,8 @@ void Robot::FiveBall()
     ngr::Timer timer;
 
     // drive back / intake
-    intake.deploy(true);
-    intake.drive(INTAKE::DIRECTION::IN);
+    Intake::deploy(true);
+    Intake::drive(INTAKE::DIRECTION::IN);
 
     // move to balls
     Drivetrain::drive({ 0_mps * WHEELS::speed_mult,
@@ -91,8 +92,8 @@ void Robot::SixBall()
 
 
     // drive back / intake
-    intake.deploy(true);
-    intake.drive(INTAKE::DIRECTION::IN);
+    Intake::deploy(true);
+    Intake::drive(INTAKE::DIRECTION::IN);
 
     timer.Reset();
     timer.Start();
@@ -158,8 +159,8 @@ void Robot::EightBall()
     ngr::Timer timer;
 
 
-    intake.deploy(true);
-    intake.drive(INTAKE::DIRECTION::IN);
+    Intake::deploy(true);
+    Intake::drive(INTAKE::DIRECTION::IN);
 
 
     /////////////////////////
@@ -294,7 +295,7 @@ void Robot::AutonomousInit()
             std::this_thread::sleep_for(5ms); // don't spam the CAN network
         }
     } };
-    intake.deploy(true);
+    Intake::deploy(true);
 
     ThreeBall();
     //SixBall();
@@ -340,7 +341,7 @@ void Robot::TestPeriodic()
     else if(! BUTTON::SHOOTER::SHOOT)
         Hopper::index();
 
-    // intake.deploy(true);
+    // Intake::deploy(true);
     // turret.visionTrack(TURRET::POSITION::BACK);
     //Drivetrain::print();
     // shooter_wheel.bangbang();
@@ -392,7 +393,7 @@ void Robot::ButtonManager()
             turret.goToPosition(TURRET::POSITION::ZERO);
     }
 
-    intake.deploy(BUTTON::INTAKE::DEPLOY || deployIntake);
+    Intake::deploy(BUTTON::INTAKE::DEPLOY || deployIntake);
 
     if(BUTTON::SHOOTER::SHOOT.getRawButtonReleased())
         Hopper::stop();
@@ -402,11 +403,11 @@ void Robot::ButtonManager()
         Hopper::index();
 
     if(BUTTON::INTAKE::INTAKE)
-        intake.drive(INTAKE::DIRECTION::IN);
+        Intake::drive(INTAKE::DIRECTION::IN);
     else if(BUTTON::INTAKE::RETRACT)
-        intake.drive(INTAKE::DIRECTION::OUT);
+        Intake::drive(INTAKE::DIRECTION::OUT);
     else
-        intake.drive(INTAKE::DIRECTION::OFF);
+        Intake::drive(INTAKE::DIRECTION::OFF);
 
     Climber::ButtonManager();
 

@@ -50,8 +50,6 @@ public:
 
 private:
     Turret       turret { limelight };
-    Intake       intake;
     ShooterWheel shooter_wheel;
-
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 };

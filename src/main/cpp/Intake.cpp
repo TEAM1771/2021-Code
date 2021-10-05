@@ -1,7 +1,14 @@
 #include "Intake.hpp"
 #include <iostream>
 
-Intake::Intake()
+//private variables
+    frc::Solenoid intakeair { INTAKE::PCM_PORT };
+    bool          intakeDeployed = false;
+
+    rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+
+//public function definitions
+void Intake::init()
 {
     wheels.SetIdleMode(INTAKE::IDLE_MODE);
 }
@@ -30,7 +37,7 @@ void Intake::deploy(bool val)
     intakeDeployed = val;
 }
 
-bool Intake::isIntakeDown() const
+bool Intake::isIntakeDown()
 {
     return intakeDeployed;
 }
