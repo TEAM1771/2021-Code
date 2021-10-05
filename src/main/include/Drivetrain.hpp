@@ -23,6 +23,6 @@ namespace Drivetrain
     void   goto180();
     void   PrintWheelAngle(int);
     void   reset_gyro();
-};
+}
 
 #endif // __DRIVETRAIN_H__

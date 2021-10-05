@@ -15,4 +15,4 @@ namespace Climber
     void joystickControl(double);
 
     void printStatus();
-};
+}

@@ -22,4 +22,4 @@ namespace Hood
     void   print_angle();
     double get_angle();
     double get_camera_Y();
-};
+}

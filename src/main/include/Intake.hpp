@@ -10,4 +10,4 @@ namespace Intake
     void deploy(bool val);
 
     [[nodiscard]] bool isIntakeDown();
-};
+}

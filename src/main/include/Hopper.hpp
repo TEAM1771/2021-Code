@@ -13,4 +13,4 @@ namespace Hopper
     bool index(bool warn_if_shooting = true);
     void shoot(); // must call Hopper::stop() to stop shooting
     void stop();
-};
+}
