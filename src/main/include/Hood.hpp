@@ -7,6 +7,7 @@
 
 namespace Hood
 {
+//public function definitions
     void init();
 
     /// returns true if tolerance is met

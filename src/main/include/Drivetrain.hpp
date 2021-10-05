@@ -13,7 +13,7 @@
 
 namespace Drivetrain
 {
-
+//public function declarations
     void init();
     double get_angle(); // pull from rio
     void   print();

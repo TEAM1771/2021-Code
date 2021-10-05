@@ -3,11 +3,14 @@
 #include <cmath>
 #include <vector>
 
+//private variables
 extern LimeLight limelight;
 
 static inline PID_CANSparkMax hood_ { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 static inline HOOD::POSITION position_ = HOOD::POSITION::BOTTOM;
 
+
+//public function declarations
 void Hood::init()
 {
     hood_.RestoreFactoryDefaults();

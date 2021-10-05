@@ -5,6 +5,7 @@
 
 namespace Climber
 {
+//public functions declared
     void init();
 
     void set(CLIMBER::POSITION position);
