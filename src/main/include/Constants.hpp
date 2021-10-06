@@ -7,14 +7,16 @@
 #include <ctre/Phoenix.h>
 #include <frc/Joystick.h>
 #include <rev/CANSparkMax.h>
-using can_adr = unsigned;
+
+#include <frc/geometry/Transform2d.h>
+
+using can_adr = int;
 
 
 namespace BUTTON
 {
-    inline frc::Joystick rStick { 0 },
-        lStick { 1 },
-        oStick { 2 };
+    inline frc::Joystick ps5 { 0 },
+        oStick { 1 };
     namespace INTAKE
     {
         inline JoystickButton DEPLOY { BUTTON::oStick, 3 };
@@ -34,6 +36,12 @@ namespace BUTTON
     {
         inline JoystickButton RAISE { BUTTON::oStick, 11 };
     }
+
+    namespace DRIVETRAIN
+    {
+        // inline JoystickButton ZERO { BUTTON::lStick, 10 };
+        // inline JoystickButton REVERSE { BUTTON::lStick, 11 };
+    } // namespace DRIVETRAIN
 } // namespace BUTTON
 
 namespace WHEELS
@@ -41,38 +49,33 @@ namespace WHEELS
     struct WheelInfo
     {
         // stored in radians and inches
-        int    driver, turner, cancoder;
-        double alpha, beta, l, radius;
+        can_adr const            driver, turner, cancoder;
+        frc::Translation2d const wheel_pos;
+        units::inch_t const      radius;
+        units::degree_t const    offset;
 
         // inputs in degrees and inches
-        constexpr WheelInfo(int d, int t, int c, double a_d, double b_d, double l_in, double d_in)
+        constexpr WheelInfo(can_adr d, can_adr t, can_adr c, frc::Translation2d wheel_position, units::inch_t diameter_, units::degree_t offset_)
             : driver { d }
             , turner { t }
             , cancoder { c }
-            , alpha { ngr::deg2rad(a_d) }
-            , beta { ngr::deg2rad(b_d) }
-            , l { l_in }
-            , radius { d_in / 2 }
+            , wheel_pos { wheel_position }
+            , radius { diameter_ / 2 }
+            , offset { offset_ }
         {}
     };
-    constexpr WheelInfo WHEEL_1 { 1, 5, 4, 45, -45, 16, 2 };
-    constexpr WheelInfo WHEEL_2 { 2, 6, 1, 135, -135, 16, 2 };
-    constexpr WheelInfo WHEEL_3 { 3, 7, 2, -135, 135, 16, 2 };
-    constexpr WheelInfo WHEEL_4 { 4, 8, 3, -45, 45, 16, 2 };
-} // namespace WHEELS (change these to the real Can addresses!)
+    WheelInfo const WHEEL_1 { 30, 31, 11, { 11_in, -11_in }, 4_in, 0_deg };  // 360-275
+    WheelInfo const WHEEL_2 { 40, 41, 12, { 11_in, 11_in }, 4_in, 0_deg };   // 15
+    WheelInfo const WHEEL_3 { 50, 51, 13, { -11_in, 11_in }, 4_in, 0_deg };  // 360-83.9
+    WheelInfo const WHEEL_4 { 60, 61, 14, { -11_in, -11_in }, 4_in, 0_deg }; // 75
 
-namespace TRANSMISSION
-{
-    constexpr can_adr RIGHT_MOTOR = 15;
-    constexpr can_adr LEFT_MOTOR  = 17;
 
-    constexpr auto IDLE_MODE = NeutralMode::Coast;
+    constexpr double kEncoderTicksPerRotation = 4096;
+    constexpr double driver_ratio             = .25 * 8.16 * 2048;
+    constexpr double turning_ratio            = 1; //4096.0/360;//.125 * 12.8 * 2048 / 360;
 
-    constexpr can_adr SHIFTER = 0;
-
-    constexpr int SHIFT_UP_POINT   = 16000;
-    constexpr int SHIFT_DOWN_POINT = 6000;
-} // namespace TRANSMISSION
+    constexpr double speed_mult = 1; // hacky way to deal with joysticks
+} // namespace WHEELS
 
 namespace CAMERA
 {
@@ -94,7 +97,7 @@ namespace HOOD
     typedef enum {
         BOTTOM       = 0,
         TRAVERSE     = -9,
-        SAFE_TO_TURN = -42,
+        SAFE_TO_TURN = -38,
         MIDPOINT     = -26,
         BATTER       = -89
     } POSITION;
@@ -132,33 +135,11 @@ namespace TURRET
 
 namespace SHOOTER_WHEEL
 {
-    constexpr can_adr PORT_1 = 4;
-    constexpr can_adr PORT_2 = 5;
-
-    constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
-
-    constexpr double SHOOTING_RPM = 8000;
+    constexpr can_adr PORT_1       = 18;
+    constexpr auto    IDLE_MODE    = rev::CANSparkMax::IdleMode::kCoast;
+    constexpr double  SHOOTING_RPM = 6750;
 } // namespace SHOOTER_WHEEL
 
-namespace AUTO
-{
-    namespace THREE_BALL
-    {
-        using namespace std::literals::chrono_literals;
-
-        constexpr double drive_distance     = 2;
-        constexpr auto   minimum_shoot_time = 10s;
-    } // namespace THREE_BALL
-
-    namespace FIVE_BALL
-    {
-        using namespace std::literals::chrono_literals;
-
-        constexpr double PICKUP_DISTANCE = 115;
-        constexpr auto   TURN_TIME       = 0.2s;
-        constexpr auto   TIME_BACKWARD   = 1.5s;
-    } // namespace FIVE_BALL
-} // namespace AUTO
 namespace HOPPER
 {
     namespace INDEXER
@@ -192,8 +173,8 @@ namespace HOPPER
 
 namespace CLIMBER
 {
-    constexpr int PORT_1 = 47;
-    constexpr int PORT_2 = 9;
+    constexpr int PORT_1 = 9;
+    constexpr int PORT_2 = 35;
 
     constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
 
@@ -215,7 +196,7 @@ namespace CLIMBER
 namespace INTAKE
 {
     constexpr can_adr PCM_PORT = 1;
-    constexpr can_adr PORT     = 12;
+    constexpr can_adr PORT     = 22;
 
     constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
 
@@ -228,3 +209,65 @@ namespace INTAKE
     constexpr double IN_SPEED  = -1;
     constexpr double OUT_SPEED = 1;
 } // namespace INTAKE
+
+namespace AUTO
+{
+    namespace THREE_BALL
+    {
+        using namespace std::literals::chrono_literals;
+
+        constexpr auto DRIVE_TIME      = 1s;
+        constexpr auto SHOOT_WAIT_TIME = 1s;
+        constexpr auto SPINUP_TIME     = 4.5s;
+
+    } // namespace THREE_BALL
+
+    namespace FIVE_BALL
+    {
+        using namespace std::literals::chrono_literals;
+
+        constexpr auto MOVE_TO_BALLS     = 2.5s;
+        constexpr auto PICKUP_TIME       = 1.5s;
+        constexpr auto MOVE_TO_GOAL_TIME = 4.5s;
+        constexpr auto SHOOT_WAIT_TIME   = 1s;
+
+
+    } // namespace FIVE_BALL
+    namespace SIX_BALL
+    {
+        using namespace std::literals::chrono_literals;
+        constexpr auto SPIN_UP_TIME      = 4.5s;
+        constexpr auto PICKUP_DRIVE_TIME = 2.8s;
+        constexpr auto SHOOT_TIME_1      = 1s;
+        constexpr auto TIME_BACKWARD     = 2.3s;
+        constexpr auto SHOOT_WAIT_TIME   = 1.5s;
+    } // namespace SIX_BALL
+
+    namespace EIGHT_BALL
+    {
+        using namespace std::literals::chrono_literals;
+        constexpr auto SHOOT_TIME_1           = 2s;
+        constexpr auto TRENCH_RUN_PICKUP_TIME = 3s;
+        constexpr auto TRENCH_RUN_RETURN_TIME = 2s;
+        constexpr auto SHOOT_TIME_2           = 3s;
+    } // namespace EIGHT_BALL
+
+    namespace TEN_BALL
+    {
+        using namespace std::literals::chrono_literals;
+
+        constexpr auto RETURN_PICKUP_TIME = 3s;
+        constexpr auto PICKUP_MOVE_TIME   = 2s;
+        constexpr auto PICKUP_RETURN_TIME = 2s;
+        constexpr auto GOAL_RETURN_TIME   = 2s;
+    } // namespace TEN_BALL
+
+    namespace THIRTEEN_BALL
+    {
+        using namespace std::literals::chrono_literals;
+        constexpr auto RETURN_PICKUP_TIME = 3s;
+        constexpr auto PICKUP_MOVE_TIME   = 2s;
+        constexpr auto PICKUP_RETURN_TIME = 2s;
+        constexpr auto GOAL_RETURN_TIME   = 2s;
+    } // namespace THIRTEEN_BALL
+} // namespace AUTO

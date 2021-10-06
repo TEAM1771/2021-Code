@@ -4,37 +4,45 @@
 #include "Constants.hpp"
 #include <complex>
 #include "Twist.hpp"
+#include <thread>
 #include <iostream>
 
 #include <ctre\Phoenix.h>
 
+#include <frc/geometry/Transform2d.h>
+#include <frc/kinematics/SwerveModuleState.h>
+
 using namespace std::complex_literals; // makes '1i' work
 
+// steering ratio 12.8:1
 class Wheel
 {
-    using float_t = double;
-    TalonFX driver, turner;
+    inline static int id_setter = 0;
+    int const         id        = id_setter++;
+    using float_t               = double;
+
+    TalonFX  driver, turner;
     CANCoder direction;
+    can_adr  cancoder_adr;
 
-    float_t const alpha, beta, l, radius;
+    frc::Translation2d const wheel_pos;
 
-    // helper values
-    std::complex<float_t> const eia  = std::exp(1i * alpha);
-    std::complex<float_t> const ieia = 1.0 / eia;
+    units::meter_t  radius;
+    units::degree_t offset;
 
-    struct polar_velocity
-    {
-        float_t speed;
-        float_t direction;
-    };
-    polar_velocity get_vector_for(Twist_R const &twist);
-    polar_velocity check_alternate_direction(polar_velocity const &angle);
 public:
-    Wheel(WHEELS::WheelInfo const &wheel_info);
+    Wheel(WHEELS::WheelInfo const& wheel_info);
     Wheel(Wheel const&) = delete;
-    Wheel(Wheel &&) = delete;
+    Wheel(Wheel&&)      = delete;
 
-    float_t get_angle();
-    void drive(Twist_R const &twist);
+    constexpr operator frc::Translation2d() const
+    {
+        return wheel_pos;
+    }
+
+    // void        zeroEncoder();
+    void        printAngle();
+    float_t     get_angle();
+    std::thread drive(frc::SwerveModuleState const& state);
 };
 #endif // __WHEEL_H__

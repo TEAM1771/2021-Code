@@ -1,31 +1,41 @@
 #include "Hood.hpp"
+#include "LimeLight.hpp"
 #include <algorithm>
 #include <cmath>
 #include <vector>
+#include <PID_CANSparkMax.hpp>
 
-Hood::Hood(LimeLight const& limelight)
-    : limelight_ { limelight }
+extern LimeLight limelight; // limelight from Robot class
+
+static inline PID_CANSparkMax hood { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+static inline HOOD::POSITION  position = HOOD::POSITION::BOTTOM;
+
+/******************************************************************/
+/*                      Non Static Functions                      */
+/******************************************************************/
+
+void Hood::init()
 {
-    hood_.RestoreFactoryDefaults();
-    hood_.SetIdleMode(HOOD::IDLE_MODE);
+    hood.RestoreFactoryDefaults();
+    hood.SetIdleMode(HOOD::IDLE_MODE);
 
-    hood_.SetP(HOOD::P);
-    hood_.SetI(HOOD::I);
-    hood_.SetD(HOOD::D);
+    hood.SetP(HOOD::P);
+    hood.SetI(HOOD::I);
+    hood.SetD(HOOD::D);
 
-    hood_.SetTarget(HOOD::POSITION::BOTTOM);
-    hood_.SetOutputRange(-HOOD::MAX_SPEED, HOOD::MAX_SPEED);
-    hood_.SetPositionRange(HOOD::POSITION::BATTER, HOOD::POSITION::BOTTOM);
+    hood.SetTarget(HOOD::POSITION::BOTTOM);
+    hood.SetOutputRange(-HOOD::MAX_SPEED, HOOD::MAX_SPEED);
+    hood.SetPositionRange(HOOD::POSITION::BATTER, HOOD::POSITION::BOTTOM);
 }
 
-bool Hood::goToPosition(HOOD::POSITION position, double tolerance)
+bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
 {
-    if(position != position_)
+    if(pos != position)
     {
-        hood_.SetTarget(position);
-        position_ = position;
+        hood.SetTarget(pos);
+        position = pos;
     }
-    return std::fabs(hood_.encoder.GetPosition() - position) < tolerance;
+    return std::fabs(hood.encoder.GetPosition() - pos) < tolerance;
 }
 
 [[nodiscard]] inline static double getTrackingValue(double yval)
@@ -44,6 +54,14 @@ bool Hood::goToPosition(HOOD::POSITION position, double tolerance)
         { -5.88120, -21.6297 },
         { -9.15754, -21.3750 }
     };
+    // constexpr table_row lookup_table[] { // origional values
+    //     { 20.0104, -13.1929 },
+    //     { 10.4538, -17.0433 },
+    //     { 1.97857, -21.3750 },
+    //     { -3.02635, -22.0117 },
+    //     { -5.88120, -21.6297 },
+    //     { -9.15754, -21.3750 }
+    // };
 
     auto find_value_in_table = [](auto yval, auto begin, auto end) {
         return std::find_if(std::next(begin), end, [=](auto const& val) {
@@ -79,11 +97,11 @@ bool Hood::goToPosition(HOOD::POSITION position, double tolerance)
 
 bool Hood::visionTrack(double tolerance)
 {
-    if(limelight_.hasTarget())
+    if(limelight.hasTarget())
     {
-        double const target = getTrackingValue(limelight_.getY());
-        hood_.SetTarget(target);
-        return std::fabs(target - hood_.encoder.GetPosition()) < tolerance;
+        double target = getTrackingValue(limelight.getY());
+        hood.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
+        return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }
     else
     {
@@ -92,11 +110,26 @@ bool Hood::visionTrack(double tolerance)
     }
 }
 
-void Hood::manualPositionControl(double position)
+void Hood::manualPositionControl(double pos)
 {
-    hood_.SetTarget(ngr::scaleOutput(0,
-                                     1,
-                                     HOOD::POSITION::TRAVERSE,
-                                     HOOD::POSITION::SAFE_TO_TURN,
-                                     std::clamp(position, 0.0, 1.0)));
+    hood.SetTarget(ngr::scaleOutput(0,
+                                    1,
+                                    HOOD::POSITION::TRAVERSE,
+                                    HOOD::POSITION::SAFE_TO_TURN,
+                                    std::clamp(pos, 0.0, 1.0)));
+}
+
+void Hood::print_angle()
+{
+    printf("hood angle: %f\n", hood.encoder.GetPosition());
+}
+
+double Hood::get_angle()
+{
+    return hood.encoder.GetPosition();
+}
+
+double Hood::get_camera_Y()
+{
+    return limelight.getY();
 }

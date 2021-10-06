@@ -13,26 +13,28 @@
 #include "Limelight.hpp"
 #include "ShooterWheel.hpp"
 #include "Turret.hpp"
-#include <frc/Joystick.h>
-#include <frc/PWMVictorSPX.h>
 #include <frc/TimedRobot.h>
 #include <frc/Timer.h>
-#include <frc/drive/DifferentialDrive.h>
 #include <frc/livewindow/LiveWindow.h>
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
 
+LimeLight limelight;
+
 class Robot : public frc::TimedRobot
 {
 public:
+    Robot();
     void AutonomousInit() override;
     void AutonomousPeriodic() override;
+
     void TeleopInit() override;
     void TeleopPeriodic() override;
 
     void DisabledInit() override;
     void DisabledPeriodic() override;
 
+    void TestInit() override;
     void TestPeriodic() override;
 
     void ButtonManager();
@@ -41,16 +43,11 @@ public:
     bool aim(TURRET::POSITION);
     void ThreeBall();
     void FiveBall();
+    void SixBall();
+    void EightBall();
+    void TenBall();
+    void ThirteenBall();
 
 private:
-    Drivetrain   drivetrain;
-    LimeLight    limelight;
-    Hood         hood { limelight };
-    Turret       turret { limelight };
-    Hopper       hopper;
-    Climber      climber;
-    Intake       intake;
-    ShooterWheel shooter_wheel;
-
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 };

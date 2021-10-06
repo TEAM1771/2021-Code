@@ -3,6 +3,7 @@
 
 #include "Constants.hpp"
 #include <cmath>
+#include <iostream>
 
 // cartesian and rotational velocities in a space relative to the feild
 struct Twist_I
@@ -19,6 +20,12 @@ struct Twist_R
         , dy { twist.dy * std::cos(robot_angle) - twist.dx * std::sin(robot_angle) }
         , dtheta { twist.dtheta }
     {
+    }
+    
+
+    friend std::ostream& operator<< (std::ostream& out, Twist_R const& tw)
+    {
+        return out << "[" << tw.dx << ',' << tw.dy << ',' << tw.dtheta <<']';
     }
 };
 

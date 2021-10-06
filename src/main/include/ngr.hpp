@@ -50,7 +50,7 @@ namespace ngr // North Gwinnett Robotics
     [[nodiscard]] constexpr static double deg2rad(double deg)
     {
         return deg * pi / 180;
-    }
+    }//returns radian 
     static_assert(is_close_to(deg2rad(360), 2 * pi));
     static_assert(is_close_to(deg2rad(0), 0));
 

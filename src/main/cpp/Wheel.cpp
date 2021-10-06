@@ -1,55 +1,77 @@
 #include "Wheel.hpp"
+#include <iomanip>
+#include <thread>
+
+#include <frc/kinematics/SwerveDriveKinematics.h>
 Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     : driver { wheel_info.driver }
     , turner { wheel_info.turner }
-    , direction{ wheel_info.cancoder }
-    , alpha { wheel_info.alpha }
-    , beta { wheel_info.beta }
-    , l { wheel_info.l }
-    , radius { wheel_info.radius }
+    , direction { wheel_info.cancoder }
+    , cancoder_adr { wheel_info.cancoder }
+    , wheel_pos { wheel_info.wheel_pos }
+    , offset { wheel_info.offset }
 {
-    turner.ConfigRemoteFeedbackFilter(direction, 0);
-    turner.ConfigSelectedFeedbackSensor(TalonFXFeedbackDevice::RemoteSensor0);
+    direction.ConfigSensorInitializationStrategy(SensorInitializationStrategy::BootToAbsolutePosition);
+
+    TalonFXConfiguration turner_config {};
+    turner_config.slot0.kP                           = 1.5;
+    turner_config.slot0.kI                           = 0;
+    turner_config.slot0.kD                           = .4;
+    turner_config.slot0.kF                           = 0;
+    turner_config.remoteFilter0.remoteSensorDeviceID = direction.GetDeviceNumber();
+    turner_config.remoteFilter0.remoteSensorSource   = RemoteSensorSource::RemoteSensorSource_CANCoder;
+    turner_config.primaryPID.selectedFeedbackSensor  = FeedbackDevice::RemoteSensor0;
+    turner.ConfigAllSettings(turner_config);
+
+    TalonFXConfiguration driver_config {};
+    driver_config.slot0.kP = 1;
+    driver_config.slot0.kI = 0;
+    driver_config.slot0.kD = 0;
+    driver_config.slot0.kF = 0;
+    driver.ConfigAllSettings(turner_config);
+    driver.SetNeutralMode(NeutralMode::Brake);
+
+    // CANCoderConfiguration direction_config {};
+    // direction_config.magnetOffsetDegrees    = wheel_info.offset.to<double>(); // DO NOT UNCOMMENT
+    // direction_config.initializationStrategy = SensorInitializationStrategy::BootToAbsolutePosition;
+    // direction.ConfigAllSettings(direction_config);
 }
-Wheel::polar_velocity Wheel::get_vector_for(Twist_R const& twist)
-{
-    // get angle
-    auto const itl = 1i * l * twist.dtheta;
 
-    auto const top    = itl + (twist.dx + 1i * twist.dy) * ieia;
-    auto const bottom = itl + (-twist.dx + 1i * twist.dy) * eia;
-
-    double const angle = std::real(-1i * log(top / bottom)) / 2 + beta;
-
-    // get velocity
-    double const velocity = (twist.dx * std::sin(alpha + angle) + twist.dy * std::cos(alpha + angle) + l * twist.dtheta * std::cos(angle)) / radius;
-
-    return { velocity, angle };
-}
 
 Wheel::float_t Wheel::get_angle()
 {
-    return pi / 2; // return turner encoder converted to radians
+    return direction.GetAbsolutePosition(); // return turner encoder converted to radians
 }
 
-Wheel::polar_velocity Wheel::check_alternate_direction(Wheel::polar_velocity const& dir)
+std::thread Wheel::drive(frc::SwerveModuleState const& state)
 {
-    auto alt = dir.direction;
-    if(alt < 0)
-        alt += pi;
-    else
-        alt -= pi;
+    return std::thread { [this, state] {
+        auto const currentRotation = frc::Rotation2d(units::degree_t(direction.GetAbsolutePosition()));
+        auto const [speed, angle]  = frc::SwerveModuleState::Optimize(
+            state,
+            currentRotation);
 
-    auto const angle = get_angle();
-    if((alt - angle) < (dir.direction - angle))
-        return { -dir.speed, alt };
-    else
-        return dir;
+        // Find the difference between our current rotational position + our new rotational position
+        frc::Rotation2d rotationDelta = angle - currentRotation;
+
+        // Find the new absolute position of the module based on the difference in rotation
+        double const deltaTicks = (rotationDelta.Degrees().to<double>() / 360) * WHEELS::kEncoderTicksPerRotation;
+        // Convert the CANCoder from it's position reading back to ticks
+        double const currentTicks = direction.GetPosition() / .0878;
+        double const desiredTicks = currentTicks + deltaTicks;
+
+        double const velocity = speed.to<double>();
+        if(id == 0)
+        {
+            // printf("speed: %f\n", velocity);
+            // printAngle();
+        }
+
+        driver.Set(ControlMode::PercentOutput, velocity);
+        turner.Set(ControlMode::Position, desiredTicks);
+    } };
 }
-
-void Wheel::drive(Twist_R const& twist)
+void Wheel::printAngle()
 {
-    auto const vect = check_alternate_direction(get_vector_for(twist));
-    driver.Set(TalonFXControlMode::Velocity, vect.speed);
-    // turner.SetPosition(vect.direction);
+    std::cout << "Angle: " << get_angle() << std::endl;
 }
