@@ -2,9 +2,9 @@
 #include <iostream>
 
 //private (static) variables
-frc::Solenoid intakeair { INTAKE::PCM_PORT };
-bool intakeDeployed = false;
-rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+inline static frc::Solenoid intakeair { INTAKE::PCM_PORT };
+inline static bool intakeDeployed = false;
+inline static rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 
 //public function definitions
 void Intake::init()
