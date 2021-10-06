@@ -1,11 +1,10 @@
 #include "Intake.hpp"
 #include <iostream>
 
-//private variables
-    frc::Solenoid intakeair { INTAKE::PCM_PORT };
-    bool          intakeDeployed = false;
-
-    rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+//private (static) variables
+frc::Solenoid intakeair { INTAKE::PCM_PORT };
+bool intakeDeployed = false;
+rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 
 //public function definitions
 void Intake::init()

@@ -1,8 +1,8 @@
 #include "Turret.hpp"
 #include <cmath>
 
-//private variables
-extern LimeLight limelight;
+//private (static) variables
+extern LimeLight limelight; //limelight from Robot class
 
 inline static PID_CANSparkMax turretTurnyTurny_ { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static TURRET::POSITION position_ = TURRET::POSITION::ZERO;

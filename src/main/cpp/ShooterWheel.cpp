@@ -1,6 +1,11 @@
 #include "ShooterWheel.hpp"
 
-ShooterWheel::ShooterWheel()
+//private (static) variables
+inline static rev::CANSparkMax shooter_1 { SHOOTER_WHEEL::PORT_1, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+inline static rev::CANEncoder  shooter_encoder = shooter_1.GetEncoder();
+
+//public function definitions
+void ShooterWheel::init()
 {
     // shooter_1.RestoreFactoryDefaults();
     shooter_1.SetIdleMode(SHOOTER_WHEEL::IDLE_MODE);

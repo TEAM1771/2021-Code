@@ -8,6 +8,8 @@ Robot::Robot()
     Hood::init();
     Hopper::init();
     Intake::init();
+    Turret::init();
+    ShooterWheel::init();
 }
 
 void Robot::ThreeBall()
@@ -166,7 +168,7 @@ void Robot::EightBall()
     /////////////////////////
     // Shoot before moving //
     /////////////////////////
-    while(shooter_wheel.get_speed() < SHOOTER_WHEEL::SHOOTING_RPM - 500 && IsAutonomous() && IsEnabled())
+    while(ShooterWheel::get_speed() < SHOOTER_WHEEL::SHOOTING_RPM - 500 && IsAutonomous() && IsEnabled())
     {
         std::cout << "waiting for shooter wheel\n";
         std::this_thread::sleep_for(10ms);
@@ -290,7 +292,7 @@ void Robot::AutonomousInit()
         using namespace std::literals::chrono_literals;
         while(IsAutonomous() && IsEnabled())
         {
-            shooter_wheel.bangbang();
+            ShooterWheel::bangbang();
             Hopper::index(false);              // don't warn when called while shooting
             std::this_thread::sleep_for(5ms); // don't spam the CAN network
         }
@@ -315,8 +317,8 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
     if(BUTTON::oStick.GetThrottle() < 0)
-        shooter_wheel.bangbang();
-    // printf("speed: %f\n", shooter_wheel.get_speed());
+        ShooterWheel::bangbang();
+    // printf("speed: %f\n", ShooterWheel::get_speed());
     ButtonManager();
 }
 void Robot::TestInit()
@@ -344,7 +346,7 @@ void Robot::TestPeriodic()
     // Intake::deploy(true);
     // Turret::visionTrack(TURRET::POSITION::BACK);
     //Drivetrain::print();
-    // shooter_wheel.bangbang();
+    // ShooterWheel::bangbang();
 }
 
 void Robot::DisabledInit()

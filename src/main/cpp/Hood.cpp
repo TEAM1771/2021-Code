@@ -3,8 +3,8 @@
 #include <cmath>
 #include <vector>
 
-//private variables
-extern LimeLight limelight;
+//private (static) variables
+extern LimeLight limelight; // limelight from Robot class
 
 static inline PID_CANSparkMax hood_ { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 static inline HOOD::POSITION position_ = HOOD::POSITION::BOTTOM;

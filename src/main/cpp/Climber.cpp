@@ -1,11 +1,11 @@
 #include "Climber.hpp"
 #include "Constants.hpp"
 
-//private variables
+//static (private) variables
 inline static PID_CANSparkMax climber_1 { CLIMBER::PORT_1, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static PID_CANSparkMax climber_2 { CLIMBER::PORT_2, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 
-//public function definitions
+//function definitions
 void Climber::init()
 {
     climber_1.RestoreFactoryDefaults();

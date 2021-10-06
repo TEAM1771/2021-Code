@@ -5,7 +5,7 @@
 #include <thread>
 // #include <cmath>
 
-//private functions
+//static (private) variables
 inline static std::array<std::unique_ptr<Wheel>, 4> wheels {
     std::make_unique<Wheel>(WHEELS::WHEEL_1),
     std::make_unique<Wheel>(WHEELS::WHEEL_2),

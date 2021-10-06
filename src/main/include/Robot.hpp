@@ -49,6 +49,5 @@ public:
     void ThirteenBall();
 
 private:
-    ShooterWheel shooter_wheel;
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 };

@@ -1,6 +1,6 @@
 #include "Hopper.hpp"
 
-//private variables
+//private (static) variables
 inline static rev::CANSparkMax indexer { HOPPER::INDEXER::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static rev::CANSparkMax transport { HOPPER::TRANSPORT::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static rev::CANPIDController pidController = transport.GetPIDController();

@@ -2,13 +2,10 @@
 
 #include "Constants.hpp"
 
-class ShooterWheel
+namespace ShooterWheel
 {
-    rev::CANSparkMax shooter_1 { SHOOTER_WHEEL::PORT_1, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
-    rev::CANEncoder  shooter_encoder = shooter_1.GetEncoder();
-
-public:
-    ShooterWheel();
+//public function declarations
+    void init();
 
     void   bangbang();
     double get_speed();
