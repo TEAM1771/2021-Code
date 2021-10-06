@@ -1,6 +1,8 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
 
+LimeLight limelight;
+
 Robot::Robot()
 {
     Climber::init();

@@ -19,8 +19,6 @@
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
 
-LimeLight limelight;
-
 class Robot : public frc::TimedRobot
 {
 public:
