@@ -1,17 +1,15 @@
 #pragma once
 
 #include "Constants.hpp"
-#include "LimeLight.hpp"
-#include "PID_CANSparkMax.hpp"
 
 namespace Turret
 {
     struct visionState
-{
-    bool isTracking;
-    bool readyToShoot;
-};
-//public function declarations
+    {
+        bool isTracking;
+        bool readyToShoot;
+    };
+
     void init();
 
     /// returns true if tolerance is met
@@ -25,4 +23,4 @@ namespace Turret
 
     /// used for tuning interpolation tables
     void manualPositionControl(double position);
-}
+} // namespace Turret

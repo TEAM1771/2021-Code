@@ -5,7 +5,6 @@
 #include <thread>
 // #include <cmath>
 
-//static (private) variables
 inline static std::array<std::unique_ptr<Wheel>, 4> wheels {
     std::make_unique<Wheel>(WHEELS::WHEEL_1),
     std::make_unique<Wheel>(WHEELS::WHEEL_2),
@@ -22,7 +21,11 @@ inline static frc::SwerveDriveKinematics<4> const m_kinematics {
 
 inline static std::unique_ptr<AHRS> navx { std::make_unique<AHRS>(frc::SPI::Port::kMXP) };
 
-//public function definitions
+
+/******************************************************************/
+/*                      Non Static Functions                      */
+/******************************************************************/
+
 void Drivetrain::init()
 {
     reset_gyro();

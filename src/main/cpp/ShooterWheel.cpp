@@ -1,10 +1,15 @@
 #include "ShooterWheel.hpp"
+#include <rev/CANSparkMax.h>
+#include <rev/CANEncoder.h>
 
-//private (static) variables
+
 inline static rev::CANSparkMax shooter_1 { SHOOTER_WHEEL::PORT_1, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static rev::CANEncoder  shooter_encoder = shooter_1.GetEncoder();
 
-//public function definitions
+/******************************************************************/
+/*                      Non Static Functions                      */
+/******************************************************************/
+
 void ShooterWheel::init()
 {
     // shooter_1.RestoreFactoryDefaults();

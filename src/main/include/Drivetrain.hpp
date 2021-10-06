@@ -13,8 +13,7 @@
 
 namespace Drivetrain
 {
-//public function declarations
-    void init();
+    void   init();
     double get_angle(); // pull from rio
     void   print();
     void   drive(frc::ChassisSpeeds const& feild_speeds);
@@ -23,6 +22,6 @@ namespace Drivetrain
     void   goto180();
     void   PrintWheelAngle(int);
     void   reset_gyro();
-}
+} // namespace Drivetrain
 
 #endif // __DRIVETRAIN_H__

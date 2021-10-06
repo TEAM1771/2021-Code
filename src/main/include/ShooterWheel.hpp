@@ -4,9 +4,8 @@
 
 namespace ShooterWheel
 {
-//public function declarations
     void init();
 
     void   bangbang();
     double get_speed();
-};
+}; // namespace ShooterWheel

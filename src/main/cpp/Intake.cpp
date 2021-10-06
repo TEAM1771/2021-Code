@@ -1,12 +1,17 @@
 #include "Intake.hpp"
 #include <iostream>
 
-//private (static) variables
-inline static frc::Solenoid intakeair { INTAKE::PCM_PORT };
-inline static bool intakeDeployed = false;
+#include <frc/Solenoid.h>
+#include <rev/CANSparkMax.h>
+
+inline static frc::Solenoid    intakeair { INTAKE::PCM_PORT };
+inline static bool             intakeDeployed = false;
 inline static rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 
-//public function definitions
+/******************************************************************/
+/*                      Non Static Functions                      */
+/******************************************************************/
+
 void Intake::init()
 {
     wheels.SetIdleMode(INTAKE::IDLE_MODE);

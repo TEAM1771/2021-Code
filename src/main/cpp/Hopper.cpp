@@ -1,22 +1,26 @@
 #include "Hopper.hpp"
+#include <frc/DigitalInput.h>
 
-//private (static) variables
-inline static rev::CANSparkMax indexer { HOPPER::INDEXER::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
-inline static rev::CANSparkMax transport { HOPPER::TRANSPORT::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+inline static rev::CANSparkMax      indexer { HOPPER::INDEXER::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+inline static rev::CANSparkMax      transport { HOPPER::TRANSPORT::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static rev::CANPIDController pidController = transport.GetPIDController();
 inline static rev::CANEncoder       encoder       = transport.GetEncoder();
-inline static frc::DigitalInput limitSwitch { HOPPER::LIMIT_SWITCH };
-inline static int               numberOfBalls  = 3;
-inline static double            targetDistance = HOPPER::TRANSPORT::DISTANCE;
-inline static bool              isTransporting = false;
-inline static std::atomic<bool> invalidStopFlag { false };
+inline static frc::DigitalInput     limitSwitch { HOPPER::LIMIT_SWITCH };
+inline static int                   numberOfBalls  = 3;
+inline static double                targetDistance = HOPPER::TRANSPORT::DISTANCE;
+inline static bool                  isTransporting = false;
+inline static std::atomic<bool>     invalidStopFlag { false };
 
 //private functions
 // I found this method in the .hpp file but it is never defined
 //    void driveDistance();
 
+// ^Make it
 
-//public functions
+/******************************************************************/
+/*                      Non Static Functions                      */
+/******************************************************************/
+
 void Hopper::init()
 {
     // indexer.Set(HOPPER::INDEXER::SPEED);

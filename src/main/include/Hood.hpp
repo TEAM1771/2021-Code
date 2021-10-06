@@ -1,13 +1,10 @@
 #pragma once
 
 #include "Constants.hpp"
-#include "LimeLight.hpp"
-#include <PID_CANSparkMax.hpp>
-#include <frc/Joystick.h>
 
 namespace Hood
 {
-//public function definitions
+    //public function definitions
     void init();
 
     /// returns true if tolerance is met
@@ -22,4 +19,4 @@ namespace Hood
     void   print_angle();
     double get_angle();
     double get_camera_Y();
-}
+} // namespace Hood
