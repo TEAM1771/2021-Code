@@ -30,7 +30,7 @@ void ShooterWheel::bangbang() //origional code with commented code removed
     //     shooter_1.SetOpenLoopRampRate(3);
 
     if((abs(shooter_encoder.GetVelocity()) < 2000))
-        shooter_1.Set(-.75);
+        shooter_1.Set(-.5);
     else if((abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::SHOOTING_RPM))
         shooter_1.Set(-1),
             printf("1\n");
