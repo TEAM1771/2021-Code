@@ -14,13 +14,14 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     direction.ConfigSensorInitializationStrategy(SensorInitializationStrategy::BootToAbsolutePosition);
 
     TalonFXConfiguration turner_config {};
-    turner_config.slot0.kP                           = 1.5;
+    turner_config.slot0.kP                           = 1;
     turner_config.slot0.kI                           = 0;
-    turner_config.slot0.kD                           = .4;
+    turner_config.slot0.kD                           = 0;
     turner_config.slot0.kF                           = 0;
     turner_config.remoteFilter0.remoteSensorDeviceID = direction.GetDeviceNumber();
     turner_config.remoteFilter0.remoteSensorSource   = RemoteSensorSource::RemoteSensorSource_CANCoder;
     turner_config.primaryPID.selectedFeedbackSensor  = FeedbackDevice::RemoteSensor0;
+    turner_config.closedloopRamp = .000;
     turner.ConfigAllSettings(turner_config);
 
     TalonFXConfiguration driver_config {};
