@@ -95,5 +95,6 @@
     "xstddef": "cpp",
     "xstring": "cpp",
     "xtr1common": "cpp"
-  }
+  },
+  "C_Cpp.errorSquiggles": "Disabled"
 }
