@@ -1,11 +1,10 @@
 #include "Turret.hpp"
 #include <cmath>
-#include "PhotonVision.hpp"
 
-
+#include "LimeLight.hpp"
 #include "PID_CANSparkMax.hpp"
 
-extern PhotonCamera photon; //photon from Robot.cpp
+extern LimeLight limelight; //limelight from Robot.cpp
 
 inline static PID_CANSparkMax  turretTurnyTurny { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static TURRET::POSITION position = TURRET::POSITION::ZERO;
@@ -51,9 +50,9 @@ Turret::visionState Turret::visionTrack_v1(TURRET::POSITION initPosition, double
         return { false, false };
     }
 
-    if(photon.hasTarget())
+    if(limelight.hasTarget())
     {
-        double const xOffset = photon.getX() + CAMERA::X_OFFSET;
+        double const xOffset = limelight.getX() + CAMERA::X_OFFSET;
         double const output  = xOffset / 35;
         turretTurnyTurny.Set(output);
         return { true, fabs(xOffset) < tolerance };
@@ -70,10 +69,9 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         return { false, false };
     }
 
-    printf("hasTarget: %i,x:%i,y:%i\n", photon.hasTarget(),photon.getX(),photon.getY());
-    if(photon.hasTarget())
+    if(limelight.hasTarget())
     {
-        double const xOffsetDeg = photon.getX() + CAMERA::X_OFFSET;
+        double const xOffsetDeg = limelight.getX() + CAMERA::X_OFFSET;
         double const xOffsetRad = ngr::deg2rad(xOffsetDeg);
         double const xOffset    = xOffsetRad * TURRET::TICKS_PER_RADIAN;
 

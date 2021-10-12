@@ -1,6 +1,7 @@
 #ifndef __DRIVETRAIN_H__
 #define __DRIVETRAIN_H__
 
+#include "Twist.hpp"
 #include "Wheel.hpp"
 #include <AHRS.h>
 #include <array>
