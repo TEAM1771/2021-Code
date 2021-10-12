@@ -3,6 +3,7 @@
 
 #include "Constants.hpp"
 #include <complex>
+#include "Twist.hpp"
 #include <thread>
 #include <iostream>
 
