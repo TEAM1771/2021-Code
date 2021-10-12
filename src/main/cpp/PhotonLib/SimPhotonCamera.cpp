@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "PhotonLib/SimPhotonCamera.hpp"
+#include "photonlib/SimPhotonCamera.h"
 
 namespace photonlib {
 

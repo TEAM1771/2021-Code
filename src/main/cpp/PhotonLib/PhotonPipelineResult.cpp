@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "PhotonLib/PhotonPipelineResult.hpp"
+#include "photonlib/PhotonPipelineResult.h"
 
 namespace photonlib {
 PhotonPipelineResult::PhotonPipelineResult(

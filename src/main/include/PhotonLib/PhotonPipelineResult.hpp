@@ -24,8 +24,8 @@
 #include <wpi/ArrayRef.h>
 #include <wpi/SmallVector.h>
 
-#include "PhotonLib/Packet.hpp"
-#include "PhotonLib/PhotonTrackedTarget.hpp"
+#include "photonlib/Packet.h"
+#include "photonlib/PhotonTrackedTarget.h"
 
 namespace photonlib {
 /**
