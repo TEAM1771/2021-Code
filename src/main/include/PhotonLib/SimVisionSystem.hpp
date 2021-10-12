@@ -28,8 +28,8 @@
 #include <wpi/ArrayRef.h>
 #include <wpi/SmallVector.h>
 
-#include "photonlib/SimPhotonCamera.h"
-#include "photonlib/SimVisionTarget.h"
+#include "PhotonLib/SimPhotonCamera.hpp"
+#include "PhotonLib/SimVisionTarget.hpp"
 
 namespace photonlib {
 

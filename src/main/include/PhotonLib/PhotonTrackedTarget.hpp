@@ -23,7 +23,7 @@
 
 #include <frc/geometry/Transform2d.h>
 
-#include "photonlib/Packet.h"
+#include "PhotonLib/Packet.hpp"
 
 namespace photonlib {
 /**

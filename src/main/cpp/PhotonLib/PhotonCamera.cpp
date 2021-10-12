@@ -15,9 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "photonlib/PhotonCamera.h"
+#include "PhotonLib/PhotonCamera.hpp"
 
-#include "photonlib/Packet.h"
+#include "PhotonLib/Packet.hpp"
 
 namespace photonlib {
 PhotonCamera::PhotonCamera(std::shared_ptr<nt::NetworkTable> rootTable)

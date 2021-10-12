@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "photonlib/SimVisionTarget.h"
+#include "PhotonLib/SimVisionTarget.hpp"
 
 namespace photonlib {
 

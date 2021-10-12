@@ -24,7 +24,7 @@
 #include <memory>
 #include <string>
 
-#include "photonlib/PhotonPipelineResult.h"
+#include "PhotonLib/PhotonPipelineResult.hpp"
 
 namespace photonlib {
 

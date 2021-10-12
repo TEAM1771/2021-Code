@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "photonlib/PhotonTrackedTarget.h"
+#include "PhotonLib/PhotonTrackedTarget.hpp"
 
 #include <iostream>
 

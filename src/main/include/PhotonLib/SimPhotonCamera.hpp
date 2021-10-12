@@ -24,8 +24,8 @@
 #include <wpi/ArrayRef.h>
 #include <wpi/SmallVector.h>
 
-#include "photonlib/Packet.h"
-#include "photonlib/PhotonCamera.h"
+#include "PhotonLib/Packet.hpp"
+#include "PhotonLib/PhotonCamera.hpp"
 
 namespace photonlib {
 
