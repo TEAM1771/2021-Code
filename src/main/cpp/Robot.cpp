@@ -1,8 +1,7 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
-#include "PhotonVision.hpp"
 
-PhotonCamera photon;
+LimeLight limelight;
 
 Robot::Robot()
 {
@@ -35,7 +34,7 @@ void Robot::ThreeBall()
     }
     Drivetrain::gotoZero();
 
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(IsAutonomous() && IsEnabled())
@@ -80,7 +79,7 @@ void Robot::FiveBall()
     // shoot
     timer.Reset();
     timer.Start();
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
     while(IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
@@ -112,7 +111,7 @@ void Robot::SixBall()
     //             timer;
     timer.Reset();
     timer.Start();
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
     while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
@@ -143,7 +142,7 @@ void Robot::SixBall()
     timer.Reset();
     timer.Start();
     std::thread aim_and_shoot { [this, timer] {
-        photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+        limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
         while(IsAutonomous() && IsEnabled())
         {
             std::this_thread::sleep_for(10ms);
@@ -178,7 +177,7 @@ void Robot::EightBall()
     }
     std::cout << "shooter wheel ready\n";
 
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
@@ -208,7 +207,7 @@ void Robot::EightBall()
     std::this_thread::sleep_for(TRENCH_RUN_RETURN_TIME);
     Drivetrain::gotoZero();
 
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    limelight.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(timer.Get() < SHOOT_TIME_2 && IsAutonomous() && IsEnabled())
@@ -334,7 +333,7 @@ void Robot::TestPeriodic()
 
     // Climber::printStatus();
     // Drivetrain::PrintWheelAngle(2);
-    // printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
+    printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
 
     auto targetLocked = Turret::visionTrack(TURRET::BACK);
