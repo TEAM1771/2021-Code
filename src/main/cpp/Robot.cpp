@@ -1,8 +1,16 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
-#include "PhotonVision.hpp"
+#include "PhotonLib/PhotonCamera.hpp"
 
-PhotonCamera photon;
+/* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
+Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
+#include "PLExampleCode/3_TargetAimRange.hpp"
+void Robot::SimulationPeriodic() {
+    dtSim.update();
+}
+*/
+
+photonlib::PhotonCamera camera{"gloworm1771"}; // name of the camera = gloworm1771
 
 Robot::Robot()
 {
@@ -35,7 +43,7 @@ void Robot::ThreeBall()
     }
     Drivetrain::gotoZero();
 
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    camera.SetLEDMode(photonlib::kOn);
     timer.Reset();
     timer.Start();
     while(IsAutonomous() && IsEnabled())
@@ -80,7 +88,7 @@ void Robot::FiveBall()
     // shoot
     timer.Reset();
     timer.Start();
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    camera.SetLEDMode(photonlib::kOn);
     while(IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
@@ -112,7 +120,7 @@ void Robot::SixBall()
     //             timer;
     timer.Reset();
     timer.Start();
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    camera.SetLEDMode(photonlib::kOn);
     while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
@@ -143,7 +151,7 @@ void Robot::SixBall()
     timer.Reset();
     timer.Start();
     std::thread aim_and_shoot { [this, timer] {
-        photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+        camera.SetLEDMode(photonlib::kOn);
         while(IsAutonomous() && IsEnabled())
         {
             std::this_thread::sleep_for(10ms);
@@ -178,7 +186,7 @@ void Robot::EightBall()
     }
     std::cout << "shooter wheel ready\n";
 
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    camera.SetLEDMode(photonlib::kOn);
     timer.Reset();
     timer.Start();
     while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
@@ -208,7 +216,7 @@ void Robot::EightBall()
     std::this_thread::sleep_for(TRENCH_RUN_RETURN_TIME);
     Drivetrain::gotoZero();
 
-    photon.setLEDMode(PhotonCamera::LED_Mode::Force_On);
+    camera.SetLEDMode(photonlib::kOn);
     timer.Reset();
     timer.Start();
     while(timer.Get() < SHOOT_TIME_2 && IsAutonomous() && IsEnabled())

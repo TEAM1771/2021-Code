@@ -1,11 +1,12 @@
 #include "Hood.hpp"
 #include "PhotonVision.hpp"
+#include "PhotonLib/PhotonCamera.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <vector>
 #include <PID_CANSparkMax.hpp>
-// #include <PhotonCamera.h>
+// #include <PhotonCamera.h> I think I included the right file above
 
 extern PhotonCamera photon; // photon from Robot class
 

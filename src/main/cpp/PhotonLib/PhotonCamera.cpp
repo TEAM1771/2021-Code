@@ -20,7 +20,7 @@
 #include "PhotonLib/Packet.hpp"
 
 namespace photonlib {
-PhotonCamera::PhotonCamera(std::shared_ptr<nt::NetworkTable> rootTable)
+  PhotonCamera::PhotonCamera(std::shared_ptr<nt::NetworkTable> rootTable)
     : rawBytesEntry(rootTable->GetEntry("rawBytes")),
       driverModeEntry(rootTable->GetEntry("driverMode")),
       inputSaveImgEntry(rootTable->GetEntry("inputSaveImgCmd")),

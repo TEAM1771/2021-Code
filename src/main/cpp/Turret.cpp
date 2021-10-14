@@ -5,7 +5,7 @@
 
 #include "PID_CANSparkMax.hpp"
 
-extern PhotonCamera photon; //photon from Robot.cpp
+extern photonlib::PhotonCamera camera; //photon from Robot.cpp
 
 inline static PID_CANSparkMax  turretTurnyTurny { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static TURRET::POSITION position = TURRET::POSITION::ZERO;
@@ -43,24 +43,24 @@ bool Turret::goToPosition(TURRET::POSITION pos, double tolerance)
     return std::fabs(turretTurnyTurny.encoder.GetPosition() - pos) < tolerance;
 }
 
-Turret::visionState Turret::visionTrack_v1(TURRET::POSITION initPosition, double tolerance)
-{
-    if(! tracking) // move to initPosition
-    {
-        tracking = goToPosition(initPosition);
-        return { false, false };
-    }
+// Turret::visionState Turret::visionTrack_v1(TURRET::POSITION initPosition, double tolerance)
+// {
+//     if(! tracking) // move to initPosition
+//     {
+//         tracking = goToPosition(initPosition);
+//         return { false, false };
+//     }
 
-    if(photon.hasTarget())
-    {
-        double const xOffset = photon.getX() + CAMERA::X_OFFSET;
-        double const output  = xOffset / 35;
-        turretTurnyTurny.Set(output);
-        return { true, fabs(xOffset) < tolerance };
-    }
-    turretTurnyTurny.Set(0);
-    return { false, false };
-}
+//     if(photon.hasTarget())
+//     {
+//         double const xOffset = photon.getX() + CAMERA::X_OFFSET;
+//         double const output  = xOffset / 35;
+//         turretTurnyTurny.Set(output);
+//         return { true, fabs(xOffset) < tolerance };
+//     }
+//     turretTurnyTurny.Set(0);
+//     return { false, false };
+// }
 
 Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double tolerance)
 {
@@ -70,7 +70,7 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         return { false, false };
     }
 
-    printf("hasTarget: %i,x:%i,y:%i\n", photon.hasTarget(),photon.getX(),photon.getY());
+    printf("hasTarget: %i,x:%i,y:%i\n", photonlib.hasTarget(),photon.getX(),photon.getY());
     if(photon.hasTarget())
     {
         double const xOffsetDeg = photon.getX() + CAMERA::X_OFFSET;
