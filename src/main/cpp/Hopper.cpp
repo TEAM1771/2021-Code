@@ -77,12 +77,13 @@ void Hopper::shoot()
 
 void Hopper::stop()
 {
-    invalidStopFlag = false;
-    isTransporting  = false;
-    numberOfBalls   = 0;
-    targetDistance  = HOPPER::TRANSPORT::DISTANCE;
-    encoder.SetPosition(0);
+    if (invalidStopFlag) {
+        invalidStopFlag = false;
+        isTransporting  = false;
+        numberOfBalls   = 0;
+        targetDistance  = HOPPER::TRANSPORT::DISTANCE;
+        encoder.SetPosition(0);
 
-
-    transport.Set(0);
+        transport.Set(0);
+    }
 }
