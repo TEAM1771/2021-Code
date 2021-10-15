@@ -26,6 +26,8 @@
 
 #include "PhotonLib/PhotonPipelineResult.hpp"
 
+photonlib::PhotonCamera camera {"gloworm1771"}; // name of the camera = gloworm1771
+
 namespace photonlib {
 
 enum LEDMode : int { kDefault = -1, kOff = 0, kOn = 1, kBlink = 2 };

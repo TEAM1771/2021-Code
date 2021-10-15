@@ -10,8 +10,6 @@ void Robot::SimulationPeriodic() {
 }
 */
 
-photonlib::PhotonCamera camera{"gloworm1771"}; // name of the camera = gloworm1771
-
 Robot::Robot()
 {
     Climber::init();

@@ -17,6 +17,7 @@
 
 // This program has a ton of errors that I can't be bothered with fixing atm
 
+/*                                                       ******** Commented everything out to get rid of errors ********
 #include "Robot.hpp"
 #include "PhotonLib/PhotonPipelineResult.hpp"
 #include <PhotonLib/PhotonUtils.hpp>
@@ -51,3 +52,4 @@ void Robot::TeleopPeriodic() {
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
+*/
