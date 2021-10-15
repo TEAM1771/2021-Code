@@ -14,7 +14,9 @@ void PhotonCamera::setLEDMode(PhotonCamera::LED_Mode mode) {
      }
 // Create camera
 photonlib::PhotonCamera camera {"gloworm1771"};
-// Step 3
+// Step 3 - currently not working
+/*
 camera.SetLEDMode(photonlib::kOn);              // turn LEDs on
 camera.TakeInputSnapshot();                     // take initial snapshot
 camera.SetPipelineIndex(2);
+*/
