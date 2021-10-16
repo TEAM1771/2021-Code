@@ -1,11 +1,12 @@
 #include "Turret.hpp"
 #include <cmath>
-#include "PhotonVision.hpp"
+// #include "PhotonVision.hpp"
+#include "PhotonLib/PhotonCamera.hpp"
 
 
 #include "PID_CANSparkMax.hpp"
 
-extern photonlib::PhotonCamera camera; //photon from Robot.cpp
+// extern photonlib::PhotonCamera camera; //camera from Robot.cpp
 
 inline static PID_CANSparkMax  turretTurnyTurny { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static TURRET::POSITION position = TURRET::POSITION::ZERO;
@@ -51,9 +52,9 @@ bool Turret::goToPosition(TURRET::POSITION pos, double tolerance)
 //         return { false, false };
 //     }
 
-//     if(photon.hasTarget())
+//     if(camera.hasTarget())
 //     {
-//         double const xOffset = photon.getX() + CAMERA::X_OFFSET;
+//         double const xOffset = camera.getX() + CAMERA::X_OFFSET;
 //         double const output  = xOffset / 35;
 //         turretTurnyTurny.Set(output);
 //         return { true, fabs(xOffset) < tolerance };
@@ -69,11 +70,23 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         tracking = goToPosition(initPosition);
         return { false, false };
     }
+    int err = 0;
 
-    printf("hasTarget: %i,x:%i,y:%i\n", photonlib.hasTarget(),photon.getX(),photon.getY());
-    if(photon.hasTarget())
+    // printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getX(),camera.getY());
+    std::cerr << err++ << " Turret ERROR\n";
+    
+    photonlib::PhotonPipelineResult result = camera.GetLatestResult();
+    
+    std::cerr << err++ << " Turret ERROR\n";
+
+    if(result.HasTargets())
     {
-        double const xOffsetDeg = photon.getX() + CAMERA::X_OFFSET;
+            std::cerr << err++ << " Turret ERROR\n";
+
+        auto const target = result.GetBestTarget();
+            std::cerr << err++ << " Turret ERROR\n";
+        double const xOffsetDeg = target.GetYaw() + CAMERA::X_OFFSET;
+            std::cerr << err++ << " Turret ERROR\n";
         double const xOffsetRad = ngr::deg2rad(xOffsetDeg);
         double const xOffset    = xOffsetRad * TURRET::TICKS_PER_RADIAN;
 

@@ -13,7 +13,6 @@ void PhotonCamera::setLEDMode(PhotonCamera::LED_Mode mode) {
     // table->PutNumber("ledMode", static_cast<int>(mode));
      }
 // Create camera
-photonlib::PhotonCamera camera {"gloworm1771"};
 // Step 3 - currently not working
 /*
 camera.SetLEDMode(photonlib::kOn);              // turn LEDs on

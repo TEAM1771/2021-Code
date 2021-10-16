@@ -26,7 +26,8 @@
 
 #include "PhotonLib/PhotonPipelineResult.hpp"
 
-photonlib::PhotonCamera camera {"gloworm1771"}; // name of the camera = gloworm1771
+// no....
+// photonlib::PhotonCamera camera {"gloworm1771"}; // name of the camera = gloworm1771
 
 namespace photonlib {
 
@@ -143,5 +144,7 @@ class PhotonCamera {
   double pipelineIndex;
   mutable LEDMode mode;
 };
+ 
 
 }  // namespace photonlib
+inline extern photonlib::PhotonCamera camera {"gloworm"};

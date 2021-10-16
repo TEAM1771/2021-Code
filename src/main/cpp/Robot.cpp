@@ -10,6 +10,7 @@ void Robot::SimulationPeriodic() {
 }
 */
 
+
 Robot::Robot()
 {
     Climber::init();
@@ -326,7 +327,9 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
     if(BUTTON::oStick.GetThrottle() < 0)
+    {
         ShooterWheel::bangbang();
+    }
     // printf("speed: %f\n", ShooterWheel::get_speed());
     ButtonManager();
 }

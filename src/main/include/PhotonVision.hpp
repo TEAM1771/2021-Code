@@ -39,3 +39,4 @@ public:
 
     void setLEDMode(LED_Mode mode);
 };
+// inline photonlib::PhotonCamera camera {"gloworm"};
