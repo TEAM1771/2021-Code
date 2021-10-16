@@ -1,12 +1,12 @@
 #include "Turret.hpp"
 #include <cmath>
-// #include "PhotonVision.hpp"
-#include "PhotonLib/PhotonCamera.hpp"
+#include "PhotonVision.hpp"
+// #include "PhotonLib/PhotonCamera.hpp"
 
 
 #include "PID_CANSparkMax.hpp"
 
-// extern photonlib::PhotonCamera camera; //camera from Robot.cpp
+extern PhotonCamera camera; //camera from Robot.cpp
 
 inline static PID_CANSparkMax  turretTurnyTurny { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static TURRET::POSITION position = TURRET::POSITION::ZERO;
@@ -71,22 +71,15 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         return { false, false };
     }
     int err = 0;
-
-    // printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getX(),camera.getY());
-    std::cerr << err++ << " Turret ERROR\n";
+// 
+    printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getX(),camera.getY());
     
-    photonlib::PhotonPipelineResult result = camera.GetLatestResult();
-    
-    std::cerr << err++ << " Turret ERROR\n";
+    // photonlib::PhotonPipelineResult result = camera.GetLatestResult();
 
-    if(result.HasTargets())
+    if(camera.hasTarget())
     {
-            std::cerr << err++ << " Turret ERROR\n";
-
-        auto const target = result.GetBestTarget();
-            std::cerr << err++ << " Turret ERROR\n";
-        double const xOffsetDeg = target.GetYaw() + CAMERA::X_OFFSET;
-            std::cerr << err++ << " Turret ERROR\n";
+        // auto const target = result.GetBestTarget();
+        double const xOffsetDeg = camera.getX() + CAMERA::X_OFFSET;
         double const xOffsetRad = ngr::deg2rad(xOffsetDeg);
         double const xOffset    = xOffsetRad * TURRET::TICKS_PER_RADIAN;
 

@@ -7,7 +7,7 @@
 #include <PID_CANSparkMax.hpp>
 // #include <PhotonCamera.h> I think I included the right file above
 
-// extern photonlib::PhotonCamera camera; // photon from Robot class
+extern PhotonCamera camera; // photon from Robot class
 
 static inline PID_CANSparkMax hood { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 static inline HOOD::POSITION  position = HOOD::POSITION::BOTTOM;
@@ -100,11 +100,11 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
 bool Hood::visionTrack(double tolerance)
 {
     std::cerr << "Hood ERROR\n";
-    auto const result       = camera.GetLatestResult();
-    if(result.HasTargets())
+    // auto const result       = camera.GetLatestResult();
+    if(camera.hasTarget())
     {
-        auto const cameratarget = result.GetBestTarget();
-        double     target       = getTrackingValue(cameratarget.GetYaw());
+        // auto const cameratarget = result.GetBestTarget();
+        double     target       = getTrackingValue(camera.getX());
         hood.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }
@@ -136,7 +136,7 @@ double Hood::get_angle()
 
 double Hood::get_camera_Y()
 {
-    auto const result       = camera.GetLatestResult();
-    auto const cameratarget = result.GetBestTarget();
-    return cameratarget.GetYaw();
+    // auto const result       = camera.GetLatestResult();
+    // auto const cameratarget = result.GetBestTarget();
+    return camera.getY();
 }

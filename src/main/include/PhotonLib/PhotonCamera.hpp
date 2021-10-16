@@ -147,4 +147,4 @@ class PhotonCamera {
  
 
 }  // namespace photonlib
-inline extern photonlib::PhotonCamera camera {"gloworm"};
+// inline extern photonlib::PhotonCamera camera {"gloworm"};

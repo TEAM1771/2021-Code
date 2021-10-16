@@ -3,20 +3,20 @@
 #include "frc/smartdashboard/Smartdashboard.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
-
+#include <iostream>
 // include all the PhotonLib HPP files
-#include "PhotonLib/Packet.hpp"
-#include "PhotonLib/PhotonCamera.hpp"
-#include "PhotonLib/PhotonPipelineResult.hpp"
-#include "PhotonLib/PhotonTrackedTarget.hpp"
-#include "PhotonLib/PhotonUtils.hpp"
-#include "PhotonLib/SimPhotonCamera.hpp"
-#include "PhotonLib/SimVisionSystem.hpp"
-#include "PhotonLib/SimVisionTarget.hpp"
+// #include "PhotonLib/Packet.hpp"
+// #include "PhotonLib/PhotonCamera.hpp"
+// #include "PhotonLib/PhotonPipelineResult.hpp"
+// #include "PhotonLib/PhotonTrackedTarget.hpp"
+// #include "PhotonLib/PhotonUtils.hpp"
+// #include "PhotonLib/SimPhotonCamera.hpp"
+// #include "PhotonLib/SimVisionSystem.hpp"
+// #include "PhotonLib/SimVisionTarget.hpp"
 
 class PhotonCamera
 {
-    std::shared_ptr<NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("photonvision");
+    std::shared_ptr<NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("photonvision")->GetSubTable("gloworm");
 
 public:
     enum class LED_Mode { Keep_Current = -1,
@@ -31,6 +31,13 @@ public:
     enum class Snapshot_Mode { OFF = 0,
                                ON };
 
+    void debug()
+    {
+        // std::cout << "DEBUG START" << table->GetNumber("FMSControlData", 0.0) << '\n';
+        // auto tables = table->GetSubTables();
+        // for (auto t : tables)
+        //     std::cout << "DEBUG\t" << t << '\n';
+    }
     [[nodiscard]] double getX() const;    // [-27.0, 27.0] For LimeLight-1
     [[nodiscard]] double getY() const;    // [-20.5, 20.5] For LimeLight-1
     [[nodiscard]] double getArea() const; // % of image
@@ -39,4 +46,4 @@ public:
 
     void setLEDMode(LED_Mode mode);
 };
-// inline photonlib::PhotonCamera camera {"gloworm"};
+// inline PhotonCamera camera;

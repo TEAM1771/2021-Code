@@ -1,6 +1,6 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
-#include "PhotonLib/PhotonCamera.hpp"
+#include "PhotonVision.hpp"
 
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
@@ -9,7 +9,7 @@ void Robot::SimulationPeriodic() {
     dtSim.update();
 }
 */
-
+PhotonCamera camera;
 
 Robot::Robot()
 {
@@ -42,7 +42,7 @@ void Robot::ThreeBall()
     }
     Drivetrain::gotoZero();
 
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(PhotonCamera::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(IsAutonomous() && IsEnabled())
@@ -87,7 +87,7 @@ void Robot::FiveBall()
     // shoot
     timer.Reset();
     timer.Start();
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(PhotonCamera::LED_Mode::Force_On);
     while(IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
@@ -119,7 +119,7 @@ void Robot::SixBall()
     //             timer;
     timer.Reset();
     timer.Start();
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(PhotonCamera::LED_Mode::Force_On);
     while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
@@ -150,7 +150,7 @@ void Robot::SixBall()
     timer.Reset();
     timer.Start();
     std::thread aim_and_shoot { [this, timer] {
-        camera.SetLEDMode(photonlib::kOn);
+        camera.setLEDMode(PhotonCamera::LED_Mode::Force_On);
         while(IsAutonomous() && IsEnabled())
         {
             std::this_thread::sleep_for(10ms);
@@ -185,7 +185,7 @@ void Robot::EightBall()
     }
     std::cout << "shooter wheel ready\n";
 
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(PhotonCamera::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
@@ -215,7 +215,7 @@ void Robot::EightBall()
     std::this_thread::sleep_for(TRENCH_RUN_RETURN_TIME);
     Drivetrain::gotoZero();
 
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(PhotonCamera::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(timer.Get() < SHOOT_TIME_2 && IsAutonomous() && IsEnabled())
@@ -322,6 +322,7 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+    camera.debug();
     Hopper::stop(); // eliminates need to shoot at start of teleop
 }
 void Robot::TeleopPeriodic()
@@ -332,9 +333,12 @@ void Robot::TeleopPeriodic()
     }
     // printf("speed: %f\n", ShooterWheel::get_speed());
     ButtonManager();
+        // printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getX(),camera.getY());
+
 }
 void Robot::TestInit()
 {
+
 }
 
 void Robot::TestPeriodic()
