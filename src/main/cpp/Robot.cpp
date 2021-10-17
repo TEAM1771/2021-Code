@@ -189,7 +189,7 @@ void Robot::EightBall()
 
     // Go to traverse
     while(IsAutonomous() && IsEnabled() &&
-          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)) && Turret::goToPosition(TURRET::POSITION::ZERO)))
+          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, ngr::fabs(HOOD::POSITION::SAFE_TO_TURN)) && Turret::goToPosition(TURRET::POSITION::ZERO)))
         std::this_thread::sleep_for(10ms);
 
     ///////////////////////
@@ -345,6 +345,20 @@ void Robot::TestPeriodic()
     else if(! BUTTON::SHOOTER::SHOOT)
         Hopper::index();
 
+    
+    if(BUTTON::ps5.GetRawButton(4))
+    {
+        Drivetrain::drive({ units::meters_per_second_t(.1), units::meters_per_second_t(0), 0_deg / 1_s });
+    }
+    else if(BUTTON::ps5.GetRawButton(2))
+    {
+        Drivetrain::drive({ units::meters_per_second_t(-.1), units::meters_per_second_t(0), 0_deg / 1_s });
+    }
+    else
+    {
+        Drivetrain::drive({ units::meters_per_second_t(0), units::meters_per_second_t(0), 0_deg / 1_s });
+    }
+
     // Intake::deploy(true);
     // Turret::visionTrack(TURRET::POSITION::BACK);
     //Drivetrain::print();
@@ -393,7 +407,7 @@ void Robot::ButtonManager()
     else
     {
         deployIntake = false;
-        if(Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)))
+        if(Hood::goToPosition(HOOD::POSITION::BOTTOM, ngr::fabs(HOOD::POSITION::SAFE_TO_TURN)))
             Turret::goToPosition(TURRET::POSITION::ZERO);
     }
 
