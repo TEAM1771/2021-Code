@@ -22,6 +22,7 @@ namespace Drivetrain
     void   goto180();
     void   PrintWheelAngle(int);
     void   reset_gyro();
+    void   face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
 } // namespace Drivetrain
 
 #endif // __DRIVETRAIN_H__

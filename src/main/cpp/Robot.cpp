@@ -56,20 +56,20 @@ void Robot::FiveBall()
 
     // move to balls
     Drivetrain::drive({ 0_mps * WHEELS::speed_mult,
-                       -0.35_mps * WHEELS::speed_mult,
-                       .0_rad_per_s });
+                        -0.35_mps * WHEELS::speed_mult,
+                        .0_rad_per_s });
     std::this_thread::sleep_for(MOVE_TO_BALLS);
 
     // pickup balls
     Drivetrain::drive({ -.2_mps * WHEELS::speed_mult,
-                       -.10_mps * WHEELS::speed_mult,
-                       .1_rad_per_s });
+                        -.10_mps * WHEELS::speed_mult,
+                        .1_rad_per_s });
     std::this_thread::sleep_for(PICKUP_TIME);
 
     // move to goal
     Drivetrain::drive({ .4_mps * WHEELS::speed_mult,
-                       .1_mps * WHEELS::speed_mult,
-                       0_rad_per_s });
+                        .1_mps * WHEELS::speed_mult,
+                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_TIME);
 
 
@@ -126,15 +126,15 @@ void Robot::SixBall()
     while(timer.Get() < PICKUP_DRIVE_TIME && IsAutonomous() && IsEnabled())
     {
         Drivetrain::drive({ 0_mps,
-                           -0.45_mps * WHEELS::speed_mult,
-                           0_rad_per_s });
+                            -0.45_mps * WHEELS::speed_mult,
+                            0_rad_per_s });
         std::this_thread::sleep_for(20ms); // don't spam the CAN network
     }
 
     // turn and move back toward goal
     Drivetrain::drive({ -0.15_mps * WHEELS::speed_mult, ////////////////////////////////////////////////////
-                       0.45_mps * WHEELS::speed_mult,  ////////////////////////////////////////////////////////
-                       0_rad_per_s });
+                        0.45_mps * WHEELS::speed_mult,  ////////////////////////////////////////////////////////
+                        0_rad_per_s });
     std::this_thread::sleep_for(TIME_BACKWARD);
     Drivetrain::gotoZero();
 
@@ -189,21 +189,21 @@ void Robot::EightBall()
 
     // Go to traverse
     while(IsAutonomous() && IsEnabled() &&
-          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)) && Turret::goToPosition(TURRET::POSITION::ZERO)))
+          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, ngr::fabs(HOOD::POSITION::SAFE_TO_TURN)) && Turret::goToPosition(TURRET::POSITION::ZERO)))
         std::this_thread::sleep_for(10ms);
 
     ///////////////////////
     // Pickup Trench Run //
     ///////////////////////
     Drivetrain::drive({ 0_mps,
-                       0.3_mps * WHEELS::speed_mult,
-                       0_rad_per_s });
+                        0.3_mps * WHEELS::speed_mult,
+                        0_rad_per_s });
     std::this_thread::sleep_for(TRENCH_RUN_PICKUP_TIME);
 
 
     Drivetrain::drive({ 0_mps,
-                       0.5_mps * WHEELS::speed_mult,
-                       0_rad_per_s });
+                        0.5_mps * WHEELS::speed_mult,
+                        0_rad_per_s });
     std::this_thread::sleep_for(TRENCH_RUN_RETURN_TIME);
     Drivetrain::gotoZero();
 
@@ -226,21 +226,21 @@ void Robot::TenBall()
     FiveBall();
 
     Drivetrain::drive({ 0_mps,
-                       -0.5_mps * WHEELS::speed_mult,
-                       0.5_rad_per_s });
+                        -0.5_mps * WHEELS::speed_mult,
+                        0.5_rad_per_s });
     std::this_thread::sleep_for(RETURN_PICKUP_TIME);
     Drivetrain::drive({ -.3_mps * WHEELS::speed_mult,
-                       0_mps,
-                       0_rad_per_s });
+                        0_mps,
+                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_MOVE_TIME);
     Drivetrain::drive({ .3_mps * WHEELS::speed_mult,
-                       0_mps,
-                       0_rad_per_s });
+                        0_mps,
+                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_RETURN_TIME);
 
     Drivetrain::drive({ 0_mps,
-                       0.5_mps * WHEELS::speed_mult,
-                       -0.5_rad_per_s });
+                        0.5_mps * WHEELS::speed_mult,
+                        -0.5_rad_per_s });
     std::this_thread::sleep_for(GOAL_RETURN_TIME);
     while(IsAutonomous() && IsEnabled())
     {
@@ -258,21 +258,21 @@ void Robot::ThirteenBall()
     EightBall();
 
     Drivetrain::drive({ 0_mps,
-                       -0.5_mps * WHEELS::speed_mult,
-                       0.5_rad_per_s });
+                        -0.5_mps * WHEELS::speed_mult,
+                        0.5_rad_per_s });
     std::this_thread::sleep_for(RETURN_PICKUP_TIME);
     Drivetrain::drive({ -.3_mps * WHEELS::speed_mult,
-                       0_mps,
-                       0_rad_per_s });
+                        0_mps,
+                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_MOVE_TIME);
     Drivetrain::drive({ .3_mps * WHEELS::speed_mult,
-                       0_mps,
-                       0_rad_per_s });
+                        0_mps,
+                        0_rad_per_s });
     std::this_thread::sleep_for(PICKUP_RETURN_TIME);
 
     Drivetrain::drive({ 0_mps,
-                       0.5_mps * WHEELS::speed_mult,
-                       -0.5_rad_per_s });
+                        0.5_mps * WHEELS::speed_mult,
+                        -0.5_rad_per_s });
     std::this_thread::sleep_for(GOAL_RETURN_TIME);
     while(IsAutonomous() && IsEnabled())
     {
@@ -295,7 +295,7 @@ void Robot::AutonomousInit()
         while(IsAutonomous() && IsEnabled())
         {
             ShooterWheel::bangbang();
-            Hopper::index(false);              // don't warn when called while shooting
+            Hopper::index(false);             // don't warn when called while shooting
             std::this_thread::sleep_for(5ms); // don't spam the CAN network
         }
     } };
@@ -349,6 +349,28 @@ void Robot::TestPeriodic()
     // Turret::visionTrack(TURRET::POSITION::BACK);
     //Drivetrain::print();
     // ShooterWheel::bangbang();
+
+    double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
+
+    if(fabs(x) < .1)
+        x = 0;
+    double y = -BUTTON::ps5.GetY() * WHEELS::speed_mult;
+
+    if(fabs(y) < .1)
+        y = 0;
+
+    double rotate = BUTTON::ps5.GetZ() * 2;
+    if(fabs(rotate) < .1)
+        rotate = 0;
+
+    if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
+    {
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
+    }
+    if(BUTTON::DRIVETRAIN::ROTATE_BACK)
+    {
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
+    }
 }
 
 void Robot::DisabledInit()
@@ -379,7 +401,7 @@ void Robot::ButtonManager()
 
         // turret_in_pos is true when it's safe to deploy hood
         bool const turret_in_pos = Turret::goToPosition(TURRET::POSITION::FRONT,
-                                                       fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
+                                                        fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
         if(turret_in_pos)
             targetLocked = Hood::goToPosition(HOOD::POSITION::BATTER);
         else
@@ -393,7 +415,7 @@ void Robot::ButtonManager()
     else
     {
         deployIntake = false;
-        if(Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)))
+        if(Hood::goToPosition(HOOD::POSITION::BOTTOM, ngr::fabs(HOOD::POSITION::SAFE_TO_TURN)))
             Turret::goToPosition(TURRET::POSITION::ZERO);
     }
 
@@ -438,8 +460,8 @@ void Robot::ButtonManager()
     //     Drivetrain::goto180();
     // else
     Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
-                                          units::meters_per_second_t { y },
-                                          units::radians_per_second_t { rotate } });
+                                           units::meters_per_second_t { y },
+                                           units::radians_per_second_t { rotate } });
 }
 
 bool Robot::aim(TURRET::POSITION direction)

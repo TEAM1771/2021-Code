@@ -8,4 +8,4 @@ namespace ShooterWheel
 
     void   bangbang();
     double get_speed();
-}; // namespace ShooterWheel
+} // namespace ShooterWheel
