@@ -24,6 +24,7 @@ namespace Drivetrain
     void   reset_gyro();
     void   face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
     void   face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy);
+    units::angle::degree_t degreeABS(units::angle::degree_t input);
 } // namespace Drivetrain
 
 #endif // __DRIVETRAIN_H__
