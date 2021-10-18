@@ -68,10 +68,22 @@ void Drivetrain::face_direction(units::meters_per_second_t dx, units::meters_per
     auto const currentRotation = units::degree_t { get_angle() };
     auto const errorTheta      = currentRotation - theta;
     auto const rotateP         = 1.5;
-    auto slowedRotation  = errorTheta * rotateP / 1_s;
-    if (slowedRotation > 90_deg / 1_s) 
-        slowedRotation = 90_deg / 1_s;
-    drive({ dx, dy, slowedRotation});
+    auto       pRotation       = errorTheta * rotateP / 1_s;
+    if(pRotation > 90_deg / 1_s)
+        pRotation = 90_deg / 1_s;
+    drive({ dx, dy, pRotation });
+}
+
+void Drivetrain::face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy)
+{
+    auto const             currentRotation = units::degree_t { get_angle() };
+    units::angle::degree_t errorTheta;
+    (ngr::fabs(currentRotation - 0) <= 90) ? errorTheta = currentRotation : errorTheta = currentRotation - 180;
+    auto const rotateP                                                                 = 1.5;
+    auto       pRotation                                                               = errorTheta * rotateP / 1_s;
+    if(pRotation > 90_deg / 1_s)
+        pRotation = 90_deg / 1_s;
+    drive({ dx, dy, pRotation });
 }
 
 void Drivetrain::goto180()
