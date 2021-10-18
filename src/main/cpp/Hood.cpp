@@ -1,5 +1,5 @@
 #include "Hood.hpp"
-#include "LimeLight.hpp"
+#include "PhotonVision.hpp"
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -106,11 +106,8 @@ bool Hood::visionTrack(double tolerance)
         hood.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }
-    else
-    {
-        goToPosition(HOOD::POSITION::TRAVERSE);
-        return false;
-    }
+    goToPosition(HOOD::POSITION::TRAVERSE);
+    return false;
 }
 
 void Hood::manualPositionControl(double pos)

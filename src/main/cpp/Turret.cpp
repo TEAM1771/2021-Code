@@ -3,8 +3,6 @@
 #include "PhotonVision.hpp"
 // #include "PhotonLib/PhotonCamera.hpp"
 
-
-#include "LimeLight.hpp"
 #include "PID_CANSparkMax.hpp"
 
 extern PhotonCamera camera; //camera from Robot.cpp
