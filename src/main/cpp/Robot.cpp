@@ -1,6 +1,6 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
-
+#include "PhotonVision.hpp"
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
 #include "PLExampleCode/3_TargetAimRange.hpp"
