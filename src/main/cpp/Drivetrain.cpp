@@ -76,11 +76,12 @@ void Drivetrain::face_direction(units::meters_per_second_t dx, units::meters_per
 
 void Drivetrain::face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy)
 {
-    auto const             currentRotation = units::degree_t { get_angle() };
-    units::angle::degree_t errorTheta;
-    (degreeABS(currentRotation) <= 90_deg) ? errorTheta = currentRotation : errorTheta = currentRotation - 180_deg;
-    auto const rotateP                                                                 = 1.5;
-    auto       pRotation                                                               = errorTheta * rotateP / 1_s;
+    auto const currentRotation = get_angle();
+    auto const errorTheta      = (ngr::fabs(currentRotation) <= 90)
+                                ? currentRotation
+                                : currentRotation - 180;
+    auto const rotateP   = 1.5;
+    auto       pRotation = units::degree_t { errorTheta } * rotateP / 1_s;
     if(pRotation > 90_deg / 1_s)
         pRotation = 90_deg / 1_s;
     drive({ dx, dy, pRotation });
@@ -112,12 +113,4 @@ void Drivetrain::gotoZero()
 void Drivetrain::PrintWheelAngle(int wheelid)
 {
     wheels[wheelid]->printAngle();
-}
-
-units::angle::degree_t Drivetrain::degreeABS(units::angle::degree_t input)
-{
-    if (input >= 0_deg) 
-        return input;
-    else
-        return 0_deg - input;
 }

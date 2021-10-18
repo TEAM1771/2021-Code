@@ -379,13 +379,11 @@ void Robot::TestPeriodic()
         rotate = 0;
 
     if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
-    {
         Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
-    }
     if(BUTTON::DRIVETRAIN::ROTATE_BACK)
-    {
         Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
-    }
+    if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
+        Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
 }
 
 void Robot::DisabledInit()
@@ -474,9 +472,16 @@ void Robot::ButtonManager()
     // else if(BUTTON::DRIVETRAIN::REVERSE)
     //     Drivetrain::goto180();
     // else
-    Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
-                                           units::meters_per_second_t { y },
-                                           units::radians_per_second_t { rotate } });
+    if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
+    else if(BUTTON::DRIVETRAIN::ROTATE_BACK)
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
+    else if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
+        Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
+    else
+        Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
+                                               units::meters_per_second_t { y },
+                                               units::radians_per_second_t { rotate } });
 }
 
 bool Robot::aim(TURRET::POSITION direction)
