@@ -1,10 +1,13 @@
 #include "Turret.hpp"
 #include <cmath>
+#include "PhotonVision.hpp"
+// #include "PhotonLib/PhotonCamera.hpp"
+
 
 #include "LimeLight.hpp"
 #include "PID_CANSparkMax.hpp"
 
-extern LimeLight limelight; //limelight from Robot.cpp
+extern PhotonCamera camera; //camera from Robot.cpp
 
 inline static PID_CANSparkMax  turretTurnyTurny { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static TURRET::POSITION position = TURRET::POSITION::ZERO;
@@ -42,24 +45,24 @@ bool Turret::goToPosition(TURRET::POSITION pos, double tolerance)
     return std::fabs(turretTurnyTurny.encoder.GetPosition() - pos) < tolerance;
 }
 
-Turret::visionState Turret::visionTrack_v1(TURRET::POSITION initPosition, double tolerance)
-{
-    if(! tracking) // move to initPosition
-    {
-        tracking = goToPosition(initPosition);
-        return { false, false };
-    }
+// Turret::visionState Turret::visionTrack_v1(TURRET::POSITION initPosition, double tolerance)
+// {
+//     if(! tracking) // move to initPosition
+//     {
+//         tracking = goToPosition(initPosition);
+//         return { false, false };
+//     }
 
-    if(limelight.hasTarget())
-    {
-        double const xOffset = limelight.getX() + CAMERA::X_OFFSET;
-        double const output  = xOffset / 35;
-        turretTurnyTurny.Set(output);
-        return { true, fabs(xOffset) < tolerance };
-    }
-    turretTurnyTurny.Set(0);
-    return { false, false };
-}
+//     if(camera.hasTarget())
+//     {
+//         double const xOffset = camera.getX() + CAMERA::X_OFFSET;
+//         double const output  = xOffset / 35;
+//         turretTurnyTurny.Set(output);
+//         return { true, fabs(xOffset) < tolerance };
+//     }
+//     turretTurnyTurny.Set(0);
+//     return { false, false };
+// }
 
 Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double tolerance)
 {
@@ -68,10 +71,16 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         tracking = goToPosition(initPosition);
         return { false, false };
     }
+    int err = 0;
+// 
+    printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getX(),camera.getY());
+    
+    // photonlib::PhotonPipelineResult result = camera.GetLatestResult();
 
-    if(limelight.hasTarget())
+    if(camera.hasTarget())
     {
-        double const xOffsetDeg = limelight.getX() + CAMERA::X_OFFSET;
+        // auto const target = result.GetBestTarget();
+        double const xOffsetDeg = camera.getX() + CAMERA::X_OFFSET;
         double const xOffsetRad = ngr::deg2rad(xOffsetDeg);
         double const xOffset    = xOffsetRad * TURRET::TICKS_PER_RADIAN;
 
