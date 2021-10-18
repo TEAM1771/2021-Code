@@ -1,15 +1,7 @@
 #ifndef __DRIVETRAIN_H__
 #define __DRIVETRAIN_H__
 
-#include "Twist.hpp"
-#include "Wheel.hpp"
-#include <AHRS.h>
-#include <array>
-#include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
-#include <iostream>
-#include <memory>
-#include <thread>
 
 namespace Drivetrain
 {
