@@ -50,13 +50,14 @@ Wheel::float_t Wheel::get_angle()
 std::thread Wheel::drive(frc::SwerveModuleState const& state)
 {
     return std::thread { [this, state] {
-        auto const currentRotation = frc::Rotation2d(units::degree_t(direction.GetAbsolutePosition()));
-        auto const [speed, angle]  = frc::SwerveModuleState::Optimize(
+        auto const currentRotationInRadians = frc::Rotation2d(units::radian_t(direction.GetAbsolutePosition()));
+        auto const currentRotationInDegrees = frc::Rotation2d(units::degree_t(direction.GetAbsolutePosition()));
+        auto const [speed, angleInRadians]  = frc::SwerveModuleState::Optimize(
             state,
-            currentRotation);
+            currentRotationInRadians);
 
         // Find the difference between our current rotational position + our new rotational position
-        frc::Rotation2d rotationDelta = angle - currentRotation;
+        frc::Rotation2d rotationDelta = angleInRadians - currentRotationInRadians;
 
         // Find the new absolute position of the module based on the difference in rotation
         double const deltaTicks = (rotationDelta.Degrees().to<double>() / 360) * WHEELS::kEncoderTicksPerRotation;
@@ -64,14 +65,14 @@ std::thread Wheel::drive(frc::SwerveModuleState const& state)
         double const currentTicks = direction.GetPosition() / .0878;
         double const desiredTicks = currentTicks + deltaTicks;
 
-        double const velocity = speed.to<double>();
+      //  double const velocity = speed.to<double>();
         if(id == 0)
         {
             // printf("speed: %f\n", velocity);
             // printAngle();
         }
 
-        driver.Set(ControlMode::PercentOutput, velocity);
+        driver.Set(ControlMode::Velocity, speed.to<double>() / radius.to<double>() * WHEELS::driver_ratio);
         turner.Set(ControlMode::Position, desiredTicks);
     } };
 }
