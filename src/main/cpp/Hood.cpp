@@ -1,6 +1,5 @@
 #include "Hood.hpp"
-#include "PhotonVision.hpp"
-
+#include "LimeLight.hpp"
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -99,7 +98,6 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
 
 bool Hood::visionTrack(double tolerance)
 {
-    std::cerr << "Hood ERROR\n";
     // auto const result       = camera.GetLatestResult();
     if(camera.hasTarget())
     {

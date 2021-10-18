@@ -1,6 +1,5 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
-#include "PhotonVision.hpp"
 
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
@@ -349,7 +348,7 @@ void Robot::TestPeriodic()
 
     // Climber::printStatus();
     // Drivetrain::PrintWheelAngle(2);
-    // printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
+    printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
     Intake::deploy(true);
     auto targetLocked = Turret::visionTrack(TURRET::BACK);
