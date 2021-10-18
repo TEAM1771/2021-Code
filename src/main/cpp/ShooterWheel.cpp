@@ -42,3 +42,8 @@ double ShooterWheel::get_speed()
 {
     return shooter_encoder.GetVelocity();
 }
+
+void ShooterWheel::stop()
+{
+    shooter_1.Set(0);
+}
