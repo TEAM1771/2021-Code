@@ -116,7 +116,7 @@ void Drivetrain::PrintWheelAngle(int wheelid)
 
 units::angle::degree_t Drivetrain::degreeABS(units::angle::degree_t input)
 {
-    if (degreeABS >= 0_deg) 
+    if (input >= 0_deg) 
         return input;
     else
         return 0_deg - input;
