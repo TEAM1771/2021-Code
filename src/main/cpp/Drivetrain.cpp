@@ -88,11 +88,7 @@ void Drivetrain::face_closest(units::meters_per_second_t dx, units::meters_per_s
     auto const errorTheta      = (ngr::fabs(currentRotation) <= 90)
                                 ? currentRotation
                                 : currentRotation - 180;
-    auto const rotateP   = 1.5;
-    auto       pRotation = units::degree_t { errorTheta } * rotateP / 1_s;
-    if(pRotation > 90_deg / 1_s)
-        pRotation = 90_deg / 1_s;
-    drive({ dx, dy, pRotation });
+    face_direction(dx, dy, units::degree_t {errorTheta});
 }
 
 
