@@ -1,18 +1,18 @@
 #pragma once
 
-#include "frc/smartdashboard/Smartdashboard.h"
-#include "networktables/NetworkTable.h"
-#include "networktables/NetworkTableInstance.h"
+//#include "frc/smartdashboard/Smartdashboard.h"
+//#include "networktables/NetworkTable.h"
+//#include "networktables/NetworkTableInstance.h"
 #include <iostream>
 // include all the PhotonLib HPP files
-#include "PhotonLib/Packet.hpp"
+//#include "PhotonLib/Packet.hpp"
 #include "PhotonLib/PhotonCamera.hpp"
-#include "PhotonLib/PhotonPipelineResult.hpp"
-#include "PhotonLib/PhotonTrackedTarget.hpp"
-#include "PhotonLib/PhotonUtils.hpp"
-#include "PhotonLib/SimPhotonCamera.hpp"
-#include "PhotonLib/SimVisionSystem.hpp"
-#include "PhotonLib/SimVisionTarget.hpp"
+//#include "PhotonLib/PhotonPipelineResult.hpp"
+//#include "PhotonLib/PhotonTrackedTarget.hpp"
+//#include "PhotonLib/PhotonUtils.hpp"
+//#include "PhotonLib/SimPhotonCamera.hpp"
+//#include "PhotonLib/SimVisionSystem.hpp"
+//#include "PhotonLib/SimVisionTarget.hpp"
 
 class PhotonCamera
 {

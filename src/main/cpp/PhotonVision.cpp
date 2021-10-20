@@ -186,7 +186,7 @@ void PhotonCamera::setLEDMode(LED_Mode mode)
 {
     switch((int) mode)
     {
-    case (int) photonlib::LEDMode::kDefault: camera.SetLEDMode(photonlib::LEDMode::kDefault);
+    case static_cast<int> (photonlib::LEDMode::kDefault): camera.SetLEDMode(photonlib::LEDMode::kDefault);
     case (int) photonlib::LEDMode::kBlink: camera.SetLEDMode(photonlib::LEDMode::kBlink);
     case (int) photonlib::LEDMode::kOff: camera.SetLEDMode(photonlib::LEDMode::kOff);
     case (int) photonlib::LEDMode::kOn: camera.SetLEDMode(photonlib::LEDMode::kOn);
