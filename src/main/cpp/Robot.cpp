@@ -196,7 +196,7 @@ void Robot::EightBall()
 
     // Go to traverse
     while(IsAutonomous() && IsEnabled() &&
-          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)) && Turret::goToPosition(TURRET::POSITION::ZERO)))
+          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, ngr::fabs(HOOD::POSITION::SAFE_TO_TURN)) && Turret::goToPosition(TURRET::POSITION::ZERO)))
         std::this_thread::sleep_for(10ms);
 
     ///////////////////////
@@ -394,7 +394,7 @@ void Robot::ButtonManager()
 
         // turret_in_pos is true when it's safe to deploy hood
         bool const turret_in_pos = Turret::goToPosition(TURRET::POSITION::FRONT,
-                                                        fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
+                                                        ngr::fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
         if(turret_in_pos)
             targetLocked = Hood::goToPosition(HOOD::POSITION::BATTER);
         else
@@ -408,7 +408,7 @@ void Robot::ButtonManager()
     else
     {
         deployIntake = false;
-        if(Hood::goToPosition(HOOD::POSITION::BOTTOM, fabs(HOOD::POSITION::SAFE_TO_TURN)))
+        if(Hood::goToPosition(HOOD::POSITION::BOTTOM, ngr::fabs(HOOD::POSITION::SAFE_TO_TURN)))
             Turret::goToPosition(TURRET::POSITION::ZERO);
     }
 

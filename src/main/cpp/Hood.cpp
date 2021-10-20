@@ -102,7 +102,7 @@ bool Hood::visionTrack(double tolerance)
     if(camera.hasTarget())
     {
         // auto const cameratarget = result.GetBestTarget();
-        double     target       = getTrackingValue(camera.getX());
+        double     target       = getTrackingValue(camera.getBestTargetX());
         hood.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }
@@ -133,5 +133,5 @@ double Hood::get_camera_Y()
 {
     // auto const result       = camera.GetLatestResult();
     // auto const cameratarget = result.GetBestTarget();
-    return camera.getY();
+    return camera.getBestTargetY();
 }

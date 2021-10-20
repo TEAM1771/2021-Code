@@ -71,14 +71,14 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
     }
     int err = 0;
 // 
-    printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getX(),camera.getY());
+    printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getBestTargetX(),camera.getBestTargetY());
     
     // photonlib::PhotonPipelineResult result = camera.GetLatestResult();
 
     if(camera.hasTarget())
     {
         // auto const target = result.GetBestTarget();
-        double const xOffsetDeg = camera.getX() + CAMERA::X_OFFSET;
+        double const xOffsetDeg = camera.getBestTargetX() + CAMERA::X_OFFSET;
         double const xOffsetRad = ngr::deg2rad(xOffsetDeg);
         double const xOffset    = xOffsetRad * TURRET::TICKS_PER_RADIAN;
 
