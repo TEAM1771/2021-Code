@@ -41,6 +41,9 @@ namespace BUTTON
     {
         // inline JoystickButton ZERO { BUTTON::lStick, 10 };
         // inline JoystickButton REVERSE { BUTTON::lStick, 11 };
+        inline JoystickButton ROTATE_FRONT { BUTTON::ps5, 6 };
+        inline JoystickButton ROTATE_BACK { BUTTON::ps5, 5 };
+        inline JoystickButton ROTATE_TO_CLOSEST { BUTTON::ps5, 7 };
     } // namespace DRIVETRAIN
 } // namespace BUTTON
 

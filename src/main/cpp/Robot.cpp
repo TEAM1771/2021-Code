@@ -378,6 +378,26 @@ void Robot::TestPeriodic()
     // Turret::visionTrack(TURRET::POSITION::BACK);
     //Drivetrain::print();
     // ShooterWheel::bangbang();
+
+    double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
+
+    if(fabs(x) < .1)
+        x = 0;
+    double y = -BUTTON::ps5.GetY() * WHEELS::speed_mult;
+
+    if(fabs(y) < .1)
+        y = 0;
+
+    double rotate = BUTTON::ps5.GetZ() * 2;
+    if(fabs(rotate) < .1)
+        rotate = 0;
+
+    if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
+    if(BUTTON::DRIVETRAIN::ROTATE_BACK)
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
+    if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
+        Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
 }
 
 void Robot::DisabledInit()
@@ -466,9 +486,16 @@ void Robot::ButtonManager()
     // else if(BUTTON::DRIVETRAIN::REVERSE)
     //     Drivetrain::goto180();
     // else
-    Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
-                                           units::meters_per_second_t { y },
-                                           units::radians_per_second_t { rotate } });
+    if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
+    else if(BUTTON::DRIVETRAIN::ROTATE_BACK)
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
+    else if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
+        Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
+    else
+        Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
+                                               units::meters_per_second_t { y },
+                                               units::radians_per_second_t { rotate } });
 }
 
 bool Robot::aim(TURRET::POSITION direction)

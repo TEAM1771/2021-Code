@@ -2,7 +2,15 @@
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/SwerveModuleState.h>
 
+#include "Twist.hpp"
+#include "Wheel.hpp"
+#include <AHRS.h>
+#include <array>
+#include <frc/geometry/Translation2d.h>
 #include <thread>
+#include <iostream>
+#include <memory>
+
 // #include <cmath>
 
 inline static std::array<std::unique_ptr<Wheel>, 4> wheels {
@@ -38,7 +46,7 @@ void Drivetrain::reset_gyro()
 
 double Drivetrain::get_angle()
 {
-    return -navx->GetAngle();
+    return -navx->GetAngle() + 90;
 }
 
 void Drivetrain::drive(frc::ChassisSpeeds const& feild_speeds)
@@ -47,7 +55,7 @@ void Drivetrain::drive(frc::ChassisSpeeds const& feild_speeds)
         feild_speeds.vx,
         feild_speeds.vy,
         feild_speeds.omega,
-        frc::Rotation2d { units::degree_t { get_angle() + 90 } });
+        frc::Rotation2d { units::degree_t { get_angle() } });
     auto const module_states = m_kinematics.ToSwerveModuleStates(speeds);
     drive(module_states);
 }
@@ -62,6 +70,31 @@ void Drivetrain::drive(wpi::array<frc::SwerveModuleState, 4> const& module_state
     for(auto&& ts : t)
         ts.join();
 }
+
+void Drivetrain::face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta)
+{
+    auto const currentRotation = units::degree_t { get_angle() };
+    auto const errorTheta      = currentRotation - theta;
+    auto const rotateP         = 1.5;
+    auto       pRotation       = errorTheta * rotateP / 1_s;
+    if(pRotation > 90_deg / 1_s)
+        pRotation = 90_deg / 1_s;
+    drive({ dx, dy, pRotation });
+}
+
+void Drivetrain::face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy)
+{
+    auto const currentRotation = get_angle();
+    auto const errorTheta      = (ngr::fabs(currentRotation) <= 90)
+                                ? currentRotation
+                                : currentRotation - 180;
+    auto const rotateP   = 1.5;
+    auto       pRotation = units::degree_t { errorTheta } * rotateP / 1_s;
+    if(pRotation > 90_deg / 1_s)
+        pRotation = 90_deg / 1_s;
+    drive({ dx, dy, pRotation });
+}
+
 
 void Drivetrain::goto180()
 {
