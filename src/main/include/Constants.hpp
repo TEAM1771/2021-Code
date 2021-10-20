@@ -12,6 +12,7 @@
 
 using can_adr = int;
 
+using namespace std::literals::chrono_literals;
 
 namespace BUTTON
 {
@@ -75,7 +76,7 @@ namespace WHEELS
 
     constexpr double kEncoderTicksPerRotation = 4096;
     constexpr double driver_ratio             = .1 * 8.16 * 2048; //Previous value was .25 instead of .1
-    constexpr double turning_ratio            = 1; //4096.0/360;//.125 * 12.8 * 2048 / 360;
+    constexpr double turning_ratio            = 1;                //4096.0/360;//.125 * 12.8 * 2048 / 360;
 
     constexpr double speed_mult = 1; // hacky way to deal with joysticks
 } // namespace WHEELS

@@ -70,6 +70,12 @@ std::thread Wheel::drive(frc::SwerveModuleState const& state)
         turner.Set(ControlMode::Position, desiredTicks);
     } };
 }
+
+void Wheel::stop()
+{
+    driver.Set(ControlMode::Velocity, 0);
+}
+
 void Wheel::printAngle()
 {
     std::cout << "Angle: " << get_angle() << std::endl;

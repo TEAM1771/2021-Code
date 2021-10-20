@@ -44,5 +44,6 @@ public:
     void        printAngle();
     float_t     get_angle();
     std::thread drive(frc::SwerveModuleState const& state);
+    void stop();
 };
 #endif // __WHEEL_H__

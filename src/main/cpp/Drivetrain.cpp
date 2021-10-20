@@ -4,6 +4,7 @@
 
 #include "Twist.hpp"
 #include "Wheel.hpp"
+#include "RobotState.hpp"
 #include <AHRS.h>
 #include <array>
 #include <frc/geometry/Translation2d.h>
@@ -95,9 +96,40 @@ void Drivetrain::face_closest(units::meters_per_second_t dx, units::meters_per_s
     drive({ dx, dy, pRotation });
 }
 
+inline static std::thread drive_thread;
+
+bool auton_stop_flag = false;
+void Drivetrain::auton_drive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction)
+{
+    auton_stop_flag = true;     // stop previous thread
+    if(drive_thread.joinable()) // verify drive thread was running, should only happen on first run
+        drive_thread.join();    // wait for drivethread to finish
+    auton_stop_flag = false;    // reset stop flag
+    drive_thread    = std::thread { [dx, dy, direction]() {
+        while(! auton_stop_flag && RobotState::IsAutonomousEnabled())
+        {
+            face_direction(dx, dy, direction);
+            std::this_thread::sleep_for(20ms); // don't hog the cpu
+        }
+    } };
+}
+
+void Drivetrain::stop()
+{
+    auton_stop_flag = true;
+        // note this takes advantage of the fact that
+        // the thread starts with the wheel instructions
+        // and therefore we dont need to wait for it to
+        // finish the loop as long as it won't tell the
+        // wheels to do anything
+    std::this_thread::sleep_for(1ms); // make sure it has time to stop the thread
+    for(auto&& wheel : wheels)
+        wheel->stop();
+}
 
 void Drivetrain::goto180()
 {
+    auton_stop_flag = true;
     wpi::array<frc::SwerveModuleState, 4> states {
         frc::SwerveModuleState { 0_mps, frc::Rotation2d { units::degree_t { 180 } } },
         frc::SwerveModuleState { 0_mps, frc::Rotation2d { units::degree_t { 180 } } },
@@ -109,6 +141,7 @@ void Drivetrain::goto180()
 
 void Drivetrain::gotoZero()
 {
+    auton_stop_flag = true;
     wpi::array<frc::SwerveModuleState, 4> states {
         frc::SwerveModuleState { 0_mps, frc::Rotation2d { units::degree_t { 0 } } },
         frc::SwerveModuleState { 0_mps, frc::Rotation2d { units::degree_t { 0 } } },

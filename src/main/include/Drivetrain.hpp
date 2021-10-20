@@ -16,6 +16,9 @@ namespace Drivetrain
     void   reset_gyro();
     void   face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
     void   face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy);
+    
+    void auton_drive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction);
+    void stop();
 } // namespace Drivetrain
 
 #endif // __DRIVETRAIN_H__
