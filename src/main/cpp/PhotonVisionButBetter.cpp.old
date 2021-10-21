@@ -177,7 +177,8 @@ auto PhotonCamera::getTargetPose(photonlib::PhotonTrackedTarget target) const
 /*                         Extra Methods                          */
 /******************************************************************/
 
-bool PhotonCamera::hasTarget() const
+bool PhotonCamera::
+() const
 {
     return camera.HasTargets();
 }
