@@ -337,7 +337,6 @@ void Robot::TeleopPeriodic()
     }
     // printf("speed: %f\n", ShooterWheel::get_speed());
     ButtonManager();
-    printf("hasTarget: %i,x:%i,y:%i\n", camera.HasTargets(),camera.GetLatestResult().GetBestTarget().GetYaw(),camera.GetLatestResult().GetBestTarget().GetPitch());
 }
 void Robot::TestInit()
 {
@@ -349,7 +348,7 @@ void Robot::TestPeriodic()
 
     // Climber::printStatus();
     // Drivetrain::PrintWheelAngle(2);
-    printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
+//    printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
     Intake::deploy(true);
     auto targetLocked = Turret::visionTrack(TURRET::BACK);

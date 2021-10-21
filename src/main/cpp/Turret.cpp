@@ -71,7 +71,6 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
     }
     int err = 0;
 // 
-    printf("hasTarget: %i,x:%i,y:%i\n", camera.HasTargets(),camera.GetLatestResult().GetBestTarget().GetYaw(),camera.GetLatestResult().GetBestTarget().GetPitch());
     // photonlib::PhotonPipelineResult result = camera.GetLatestResult();
 
     if(camera.HasTargets())
