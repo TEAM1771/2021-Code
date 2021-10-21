@@ -1,6 +1,6 @@
 #include "Average.hpp"
 
-double Average::average(double input)
+double Average::operator() (double input)
 {
     if (iterator == 5)
     {

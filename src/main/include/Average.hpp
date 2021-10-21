@@ -11,5 +11,5 @@ class Average
       int sizeOfDataSet = 0;
 
 public:
-    double average(double input);
+    double operator() (double input);
 };
