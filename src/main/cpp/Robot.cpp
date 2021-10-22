@@ -1,6 +1,7 @@
 #include "Robot.hpp"
-#include "Timer.hpp"
+//#include "Timer.hpp"
 #include "PhotonVision.hpp"
+#include "Auton.hpp"
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
 #include "PLExampleCode/3_TargetAimRange.hpp"
@@ -21,37 +22,8 @@ Robot::Robot()
     ShooterWheel::init();
 }
 
-void Robot::ThreeBall()
-{
-    using namespace AUTO::THREE_BALL;
 
-    ngr::Timer timer;
-    ngr::Timer spinup_timer;
-
-    spinup_timer.Reset();
-    spinup_timer.Start();
-
-    timer.Reset();
-    timer.Start();
-    while(timer.Get() < DRIVE_TIME && IsAutonomous() && IsEnabled())
-    {
-        Drivetrain::drive(frc::ChassisSpeeds { 0_mps, -.25_mps * WHEELS::speed_mult, 0_rad_per_s });
-        aim(TURRET::POSITION::BACK);
-        std::this_thread::sleep_for(10ms);
-    }
-    Drivetrain::gotoZero();
-
-    camera.setLEDMode(PhotonCamera::LED_Mode::Force_On);
-    timer.Reset();
-    timer.Start();
-    while(IsAutonomous() && IsEnabled())
-    {
-        std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK) && spinup_timer.Get() > SPINUP_TIME && timer.Get() < SHOOT_WAIT_TIME)
-            Hopper::shoot();
-    }
-}
-
+/*
 void Robot::FiveBall()
 {
     using namespace AUTO::FIVE_BALL;
@@ -288,7 +260,7 @@ void Robot::ThirteenBall()
             Hopper::shoot();
     }
 }
-
+*/
 void Robot::AutonomousInit()
 {
     Drivetrain::reset_gyro();
@@ -308,7 +280,7 @@ void Robot::AutonomousInit()
     } };
     Intake::deploy(true);
 
-    ThreeBall();
+    Auton::ThreeBall();
     //SixBall();
     //FiveBall();
 
@@ -457,7 +429,7 @@ void Robot::ButtonManager()
                                            units::radians_per_second_t { rotate } });
 }
 
-bool Robot::aim(TURRET::POSITION direction)
+bool aim(TURRET::POSITION direction)
 {
     if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
         return Hood::visionTrack() && readyToShoot;

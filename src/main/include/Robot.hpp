@@ -19,6 +19,8 @@
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
 
+bool aim(TURRET::POSITION);
+
 class Robot : public frc::TimedRobot
 {
 public:
@@ -38,8 +40,8 @@ public:
     void ButtonManager();
 
     // returns true when aimed at goal
-    bool aim(TURRET::POSITION);
-/*    void ThreeBall();
+    /*    
+    void ThreeBall();
     void FiveBall();
     void SixBall();
     void EightBall();
