@@ -2,6 +2,7 @@
 //#include "Timer.hpp"
 #include "PhotonVision.hpp"
 #include "Auton.hpp"
+#include "RobotState.hpp"
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
 #include "PLExampleCode/3_TargetAimRange.hpp"
@@ -13,6 +14,16 @@ PhotonCamera camera;
 
 Robot::Robot()
 {
+
+      // setup RobotStates
+    RobotState::IsEnabled                = [this]() { return IsEnabled(); };
+    RobotState::IsDisabled               = [this]() { return IsDisabled(); };
+    RobotState::IsAutonomous             = [this]() { return IsAutonomous(); };
+    RobotState::IsAutonomousEnabled      = [this]() { return IsAutonomousEnabled(); };
+    RobotState::IsOperatorControl        = [this]() { return IsOperatorControl(); };
+    RobotState::IsOperatorControlEnabled = [this]() { return IsOperatorControlEnabled(); };
+    RobotState::IsTest                   = [this]() { return IsTest(); };
+
     Climber::init();
     Drivetrain::init();
     Hood::init();
