@@ -137,7 +137,7 @@ namespace SHOOTER_WHEEL
 {
     constexpr can_adr PORT_1       = 18;
     constexpr auto    IDLE_MODE    = rev::CANSparkMax::IdleMode::kCoast;
-    constexpr double  SHOOTING_RPM = 6750;
+    constexpr double  SHOOTING_RPM = 6100; // previous value was 6750
 } // namespace SHOOTER_WHEEL
 
 namespace HOPPER
@@ -157,7 +157,7 @@ namespace HOPPER
         constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
 
         constexpr double SPEED       = 0.7;
-        constexpr double SHOOT_SPEED = 1.0;
+        constexpr double SHOOT_SPEED = 0.7; //previous value was 1.0
 
         constexpr double DISTANCE  = 73.0 / 3;
         constexpr double TOLERANCE = 1;
