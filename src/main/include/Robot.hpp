@@ -39,13 +39,13 @@ public:
 
     // returns true when aimed at goal
     bool aim(TURRET::POSITION);
-    void ThreeBall();
+/*    void ThreeBall();
     void FiveBall();
     void SixBall();
     void EightBall();
     void TenBall();
     void ThirteenBall();
-
+*/
 private:
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 };
