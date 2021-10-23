@@ -68,6 +68,10 @@ std::thread Wheel::drive(frc::SwerveModuleState const& state)
 
         driver.Set(ControlMode::Velocity, speed.to<double>() / radius.to<double>() * WHEELS::driver_ratio);
         turner.Set(ControlMode::Position, desiredTicks);
+        if(id == 0)
+        {
+            printf("%f\n",speed.to<double>() / radius.to<double>() * WHEELS::driver_ratio);
+        }
     } };
 }
 
