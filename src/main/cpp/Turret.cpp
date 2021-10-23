@@ -24,7 +24,6 @@ void Turret::init()
     turretTurnyTurny.SetP(TURRET::P);
     turretTurnyTurny.SetI(TURRET::I);
     turretTurnyTurny.SetD(TURRET::D);
-
     turretTurnyTurny.SetOutputRange(-TURRET::TRAVERSE_SPEED, TURRET::TRAVERSE_SPEED);
     turretTurnyTurny.SetPositionRange(TURRET::POSITION::MAX_LEFT, TURRET::POSITION::MAX_RIGHT);
     turretTurnyTurny.SetTarget(TURRET::POSITION::ZERO);

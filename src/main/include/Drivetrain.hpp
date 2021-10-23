@@ -1,15 +1,7 @@
 #ifndef __DRIVETRAIN_H__
 #define __DRIVETRAIN_H__
 
-#include "Twist.hpp"
-#include "Wheel.hpp"
-#include <AHRS.h>
-#include <array>
-#include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
-#include <iostream>
-#include <memory>
-#include <thread>
 
 namespace Drivetrain
 {
@@ -22,6 +14,11 @@ namespace Drivetrain
     void   goto180();
     void   PrintWheelAngle(int);
     void   reset_gyro();
+    void   face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
+    void   face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy);
+    
+    void auton_drive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction);
+    void stop();
 } // namespace Drivetrain
 
 #endif // __DRIVETRAIN_H__
