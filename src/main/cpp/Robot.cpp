@@ -373,12 +373,6 @@ void Robot::TestPeriodic()
         Hopper::index();
 
 
-    if(BUTTON::ps5.GetRawButton(4))
-        Drivetrain::drive({ units::meters_per_second_t(.1), units::meters_per_second_t(0), 0_deg / 1_s });
-    else if(BUTTON::ps5.GetRawButton(5))
-        Drivetrain::drive({ units::meters_per_second_t(-.1), units::meters_per_second_t(0), 0_deg / 1_s });
-    else
-        Drivetrain::drive({ units::meters_per_second_t(0), units::meters_per_second_t(0), 0_deg / 1_s });
 
     // Intake::deploy(true);
     // Turret::visionTrack(TURRET::POSITION::BACK);
@@ -398,6 +392,13 @@ void Robot::TestPeriodic()
     if(fabs(rotate) < .1)
         rotate = 0;
 
+
+
+    if(BUTTON::ps5.GetRawButton(4))
+        Drivetrain::drive({ units::meters_per_second_t(.1), units::meters_per_second_t(0), 0_deg / 1_s });
+    else if(BUTTON::ps5.GetRawButton(5))
+        Drivetrain::drive({ units::meters_per_second_t(-.1), units::meters_per_second_t(0), 0_deg / 1_s });
+    else
     if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
         Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
     if(BUTTON::DRIVETRAIN::ROTATE_BACK)
@@ -492,6 +493,7 @@ void Robot::ButtonManager()
     // else if(BUTTON::DRIVETRAIN::REVERSE)
     //     Drivetrain::goto180();
     // else
+
     if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
         Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
     else if(BUTTON::DRIVETRAIN::ROTATE_BACK)
@@ -502,6 +504,7 @@ void Robot::ButtonManager()
         Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
                                                units::meters_per_second_t { y },
                                                units::radians_per_second_t { rotate } });
+    // printf("rotate: %f\n", rotate);
 }
 
 bool Robot::aim(TURRET::POSITION direction)
