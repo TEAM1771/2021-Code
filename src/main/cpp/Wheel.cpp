@@ -15,7 +15,7 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     direction.ConfigSensorInitializationStrategy(SensorInitializationStrategy::BootToAbsolutePosition);
 
     TalonFXConfiguration turner_config {};
-    turner_config.slot0.kP                           = 1.5;
+    turner_config.slot0.kP                           = 2.5;
     turner_config.slot0.kI                           = 0;
     turner_config.slot0.kD                           = 0;
     turner_config.slot0.kF                           = 0;
@@ -29,12 +29,12 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     turner.ConfigAllSettings(turner_config);
 
     TalonFXConfiguration driver_config {};
-    driver_config.slot0.kP = 2;
+    driver_config.slot0.kP = .1;
     driver_config.slot0.kI = 0;
     driver_config.slot0.kD = 0;
     driver_config.slot0.kF = 0;
     // driver_config.voltageCompSaturation = 12;
-    driver.ConfigAllSettings(turner_config);
+    driver.ConfigAllSettings(driver_config);
     driver.SetNeutralMode(NeutralMode::Brake);
 
     // CANCoderConfiguration direction_config {};

@@ -42,9 +42,8 @@ namespace BUTTON
     {
         // inline JoystickButton ZERO { BUTTON::lStick, 10 };
         // inline JoystickButton REVERSE { BUTTON::lStick, 11 };
-        inline JoystickButton ROTATE_FRONT { BUTTON::ps5, 6 };
-        inline JoystickButton ROTATE_BACK { BUTTON::ps5, 5 };
-        inline JoystickButton ROTATE_TO_CLOSEST { BUTTON::ps5, 7 };
+        inline JoystickButton ROTATE_FRONT { BUTTON::ps5, 7 };
+        inline JoystickButton ROTATE_BACK { BUTTON::ps5, 8 };
     } // namespace DRIVETRAIN
 } // namespace BUTTON
 
@@ -75,7 +74,7 @@ namespace WHEELS
 
 
     constexpr double kEncoderTicksPerRotation = 2048;
-    constexpr double driver_ratio             = 0.012 * 8.16 * kEncoderTicksPerRotation; //Previous value was .25 instead of .1
+    constexpr double driver_ratio             = 1 * 8.16 * kEncoderTicksPerRotation; //Previous value was .25 instead of .1
     constexpr double turning_ratio            = 1;                //4096.0/360;//.125 * 12.8 * 2048 / 360;
 
     constexpr double speed_mult = 1; // hacky way to deal with joysticks
@@ -161,7 +160,7 @@ namespace HOPPER
         constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
 
         constexpr double SPEED       = 0.7;
-        constexpr double SHOOT_SPEED = 0.7; //previous value was 1.0
+        constexpr double SHOOT_SPEED = 1; //previous value was 1.0
 
         constexpr double DISTANCE  = 73.0 / 3;
         constexpr double TOLERANCE = 1;

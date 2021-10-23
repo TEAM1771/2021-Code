@@ -75,25 +75,13 @@ void Drivetrain::drive(wpi::array<frc::SwerveModuleState, 4> const& module_state
 void Drivetrain::face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta)
 {
     auto const currentRotation = units::degree_t { get_angle() };
-    auto const errorTheta      = currentRotation - theta;
-    auto const rotateP         = 1.5;
-    auto       pRotation       = errorTheta * rotateP / 1_s;
-    if(pRotation > 90_deg / 1_s)
-        pRotation = 90_deg / 1_s;
-    drive({ dx, dy, pRotation });
-}
 
-void Drivetrain::face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy)
-{
-    auto const currentRotation = get_angle();
-    auto const errorTheta      = (ngr::fabs(currentRotation) <= 90)
-                                ? currentRotation
-                                : currentRotation - 180;
-    auto const rotateP   = 1.5;
-    auto       pRotation = units::degree_t { errorTheta } * rotateP / 1_s;
-    if(pRotation > 90_deg / 1_s)
-        pRotation = 90_deg / 1_s;
-    drive({ dx, dy, pRotation });
+    int const errorTheta      = ((currentRotation - theta).to<int>()%360-180-90)%360;
+    auto const rotateP         = 1.25;
+    auto       pRotation       = errorTheta * rotateP;
+    // if(pRotation > 90)
+    //     pRotation = 90;
+    drive(frc::ChassisSpeeds{ dx, dy, units::degrees_per_second_t{pRotation} });
 }
 
 inline static std::thread drive_thread;

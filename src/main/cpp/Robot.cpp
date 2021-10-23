@@ -356,10 +356,7 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-    // printf("angle: %f\n", Drivetrain::get_angle());
 
-    // Climber::printStatus();
-    // Drivetrain::PrintWheelAngle(2);
     printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
     Intake::deploy(true);
@@ -374,37 +371,33 @@ void Robot::TestPeriodic()
 
 
 
-    // Intake::deploy(true);
-    // Turret::visionTrack(TURRET::POSITION::BACK);
-    //Drivetrain::print();
-    // ShooterWheel::bangbang();
+    // double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
 
-    double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
+    // if(fabs(x) < .1)
+    //     x = 0;
+    // double y = -BUTTON::ps5.GetY() * WHEELS::speed_mult;
 
-    if(fabs(x) < .1)
-        x = 0;
-    double y = -BUTTON::ps5.GetY() * WHEELS::speed_mult;
+    // if(fabs(y) < .1)
+    //     y = 0;
 
-    if(fabs(y) < .1)
-        y = 0;
-
-    double rotate = BUTTON::ps5.GetZ() * 2;
-    if(fabs(rotate) < .1)
-        rotate = 0;
+    // double rotate = BUTTON::ps5.GetZ() * 2;
+    // if(fabs(rotate) < .1)
+    //     rotate = 0;
 
 
 
-    if(BUTTON::ps5.GetRawButton(4))
-        Drivetrain::drive({ units::meters_per_second_t(.1), units::meters_per_second_t(0), 0_deg / 1_s });
-    else if(BUTTON::ps5.GetRawButton(5))
-        Drivetrain::drive({ units::meters_per_second_t(-.1), units::meters_per_second_t(0), 0_deg / 1_s });
-    else
-    if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
-        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
-    if(BUTTON::DRIVETRAIN::ROTATE_BACK)
-        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
-    if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
-        Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
+    // if(BUTTON::ps5.GetRawButton(4))
+    //     Drivetrain::face_direction( units::meters_per_second_t(0), units::meters_per_second_t(.2), 0_deg );
+    // else if(BUTTON::ps5.GetRawButton(2))
+    //     Drivetrain::face_direction( units::meters_per_second_t(0), units::meters_per_second_t(-.2), 0_deg );
+    // else Drivetrain::stop();
+    // else
+    // if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
+    //     Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
+    // if(BUTTON::DRIVETRAIN::ROTATE_BACK)
+    //     Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
+    // if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
+    //     Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
 }
 
 void Robot::DisabledInit()
@@ -473,10 +466,10 @@ void Robot::ButtonManager()
 
 
     double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
-    if(fabs(x) < .1)
+    if(fabs(x) < .04)
         x = 0;
     double y = -BUTTON::ps5.GetY() * WHEELS::speed_mult;
-    if(fabs(y) < .1)
+    if(fabs(y) < .04)
         y = 0;
     // double RjoyX = BUTTON::ps5.GetZ();
     // double RjoyY = BUTTON::ps5.GetTwist();
@@ -498,8 +491,8 @@ void Robot::ButtonManager()
         Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
     else if(BUTTON::DRIVETRAIN::ROTATE_BACK)
         Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
-    else if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
-        Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
+    // else if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
+    //     Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
     else
         Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
                                                units::meters_per_second_t { y },
