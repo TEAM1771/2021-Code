@@ -58,7 +58,7 @@ void Auton::SixBall()
 
     timer.Reset();
     timer.Start();
-    std::thread aim_and_shoot { [this, timer] {
+    std::thread aim_and_shoot { [timer] {
 //        camera.setLEDMode(PhotonCamera::LED_Mode::Force_On);
         while(IsAutonomous() && IsEnabled())
         {
