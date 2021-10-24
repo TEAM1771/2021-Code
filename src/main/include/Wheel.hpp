@@ -27,7 +27,7 @@ class Wheel
 
     frc::Translation2d const wheel_pos;
 
-    units::meter_t  radius;
+    units::inch_t  radius;
     units::degree_t offset;
 
 public:
@@ -44,5 +44,6 @@ public:
     void        printAngle();
     float_t     get_angle();
     std::thread drive(frc::SwerveModuleState const& state);
+    void stop();
 };
 #endif // __WHEEL_H__
