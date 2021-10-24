@@ -126,7 +126,7 @@ namespace TURRET
     constexpr double TOLERANCE = 10;
 
     constexpr double TICKS_PER_REVOLUTION = 212; // replace me with correct, number. this should be close if not exact
-    constexpr double TICKS_PER_RADIAN     = TICKS_PER_REVOLUTION / (2 * pi);
+    constexpr double TICKS_PER_RADIAN     = 15;//TICKS_PER_REVOLUTION / (2 * pi);
 
     constexpr double TRAVERSE_SPEED = .7;
 
@@ -140,7 +140,7 @@ namespace SHOOTER_WHEEL
 {
     constexpr can_adr PORT_1       = 18;
     constexpr auto    IDLE_MODE    = rev::CANSparkMax::IdleMode::kCoast;
-    constexpr double  SHOOTING_RPM = 6100; // previous value was 6750
+    constexpr double  SHOOTING_RPM = 6500; // previous value was 6750
 } // namespace SHOOTER_WHEEL
 
 namespace HOPPER
@@ -229,9 +229,8 @@ namespace AUTO
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto MOVE_TO_BALLS     = 2.5s;
-        constexpr auto PICKUP_TIME       = 1.5s;
-        constexpr auto MOVE_TO_GOAL_TIME = 4.5s;
+        constexpr auto MOVE_TO_BALLS     = 2.3s;
+        constexpr auto MOVE_TO_GOAL_TIME = 1.75s;
         constexpr auto SHOOT_WAIT_TIME   = 1s;
 
 
@@ -259,7 +258,7 @@ namespace AUTO
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto RETURN_PICKUP_TIME = 3s;
+        constexpr auto RETURN_PICKUP_TIME = 1s;
         constexpr auto PICKUP_MOVE_TIME   = 2s;
         constexpr auto PICKUP_RETURN_TIME = 2s;
         constexpr auto GOAL_RETURN_TIME   = 2s;

@@ -77,20 +77,23 @@ void Robot::FiveBall()
     // move to balls
     Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
                             -0.35_mps * WHEELS::speed_mult,
-                            .0_rad);
+                            -180_deg);
     std::this_thread::sleep_for(MOVE_TO_BALLS);
-
+    Drivetrain::stop();
+    std::this_thread::sleep_for(.5s);
     // pickup balls
-    Drivetrain::auton_drive(-.2_mps * WHEELS::speed_mult,
-                            -.10_mps * WHEELS::speed_mult,
-                            .1_rad);
-    std::this_thread::sleep_for(PICKUP_TIME);
+    // Drivetrain::auton_drive(-.2_mps * WHEELS::speed_mult,
+    //                         -.10_mps * WHEELS::speed_mult,
+    //                         .1_deg);
+    // std::this_thread::sleep_for(PICKUP_TIME);
 
     // move to goal
-    Drivetrain::auton_drive(.4_mps * WHEELS::speed_mult,
-                            .1_mps * WHEELS::speed_mult,
-                            0_rad);
-    std::this_thread::sleep_for(PICKUP_TIME);
+    Drivetrain::auton_drive(-.175_mps * WHEELS::speed_mult,
+                            .3_mps * WHEELS::speed_mult,
+                            0_deg);
+    std::this_thread::sleep_for(MOVE_TO_GOAL_TIME);
+    Drivetrain::stop();
+    std::this_thread::sleep_for(.5s);
 
 
     // don't drive forever
@@ -100,10 +103,10 @@ void Robot::FiveBall()
     timer.Reset();
     timer.Start();
     camera.SetLEDMode(photonlib::kOn);
-    while(IsAutonomous() && IsEnabled())
+    while(IsAutonomous() && IsEnabled() && timer.Get() < 2.5s)
     {
         std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
+        if(aim(TURRET::POSITION::FRONT) && timer.Get() > SHOOT_WAIT_TIME)
             Hopper::shoot();
     }
 }
@@ -244,24 +247,24 @@ void Robot::TenBall()
     ngr::Timer timer;
 
     FiveBall();
-
+    
     Drivetrain::auton_drive(0_mps,
-                            -0.5_mps * WHEELS::speed_mult,
-                            0.5_rad);
+                            -0.35_mps * WHEELS::speed_mult,
+                            0_deg);
     std::this_thread::sleep_for(RETURN_PICKUP_TIME);
-    Drivetrain::auton_drive(-.3_mps * WHEELS::speed_mult,
-                            0_mps,
-                            0_rad);
+    Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
+                            -.35_mps,
+                            30_deg);
     std::this_thread::sleep_for(PICKUP_MOVE_TIME);
-    Drivetrain::auton_drive(.3_mps * WHEELS::speed_mult,
-                            0_mps,
-                            0_rad);
+    Drivetrain::auton_drive(-.2_mps * WHEELS::speed_mult,
+                            .3_mps,
+                            30_rad);
     std::this_thread::sleep_for(PICKUP_RETURN_TIME);
 
-    Drivetrain::auton_drive(0_mps,
-                            0.5_mps * WHEELS::speed_mult,
-                            -0.5_rad);
-    std::this_thread::sleep_for(GOAL_RETURN_TIME);
+    // Drivetrain::auton_drive(0_mps,
+    //                         0.5_mps * WHEELS::speed_mult,
+    //                         -0.5_rad);
+    // std::this_thread::sleep_for(GOAL_RETURN_TIME);
     while(IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
@@ -307,23 +310,24 @@ void Robot::AutonomousInit()
     Drivetrain::reset_gyro();
     using namespace std::literals::chrono_literals;
 
-    Drivetrain::gotoZero();
-    std::this_thread::sleep_for(0.1s);
     // Start BangBang and indexer
     std::thread run_shooter_wheel_and_index_balls { [this] {
         using namespace std::literals::chrono_literals;
         while(IsAutonomous() && IsEnabled())
         {
-            ShooterWheel::bangbang();
+            //ShooterWheel::bangbang();
             Hopper::index(false);             // don't warn when called while shooting
             std::this_thread::sleep_for(5ms); // don't spam the CAN network
         }
     } };
     Intake::deploy(true);
 
-    ThreeBall();
+    Drivetrain::gotoZero();
+    std::this_thread::sleep_for(0.75s);
+    //ThreeBall();
     //SixBall();
     //FiveBall();
+    TenBall();
 
     run_shooter_wheel_and_index_balls.join();
 }
@@ -357,7 +361,8 @@ void Robot::TestInit()
 void Robot::TestPeriodic()
 {
 
-    printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
+    printf("CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
+    ShooterWheel::bangbang();
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
     Intake::deploy(true);
     auto targetLocked = Turret::visionTrack(TURRET::BACK);
