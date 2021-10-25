@@ -1,13 +1,14 @@
 #include "Hood.hpp"
 //#include "PhotonVision.hpp"
-#include "PhotonLib/PhotonCamera.hpp"
+#include "LimeLight.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <vector>
 #include <PID_CANSparkMax.hpp>
 // #include <PhotonCamera.h> I think I included the right file above
 
-extern photonlib::PhotonCamera camera; // From Robot.cpp
+extern LimeLight camera; // From Robot.cpp
 
 static inline PID_CANSparkMax hood { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 static inline HOOD::POSITION  position = HOOD::POSITION::BOTTOM;
@@ -100,10 +101,10 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
 bool Hood::visionTrack(double tolerance)
 {
     // auto const result       = camera.GetLatestResult();
-    if(camera.HasTargets())
+    if(camera.hasTarget())
     {
         // auto const cameratarget = result.GetBestTarget();
-        double     target       = getTrackingValue(camera.GetLatestResult().GetBestTarget().GetPitch());
+        double     target       = getTrackingValue(camera.getY());
         hood.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }
@@ -134,5 +135,5 @@ double Hood::get_camera_Y()
 {
     // auto const result       = camera.GetLatestResult();
     // auto const cameratarget = result.GetBestTarget();
-    return camera.GetLatestResult().GetBestTarget().GetPitch();
+    return camera.getY();
 }

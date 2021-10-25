@@ -82,7 +82,7 @@ namespace WHEELS
 
 namespace CAMERA
 {
-    constexpr double X_OFFSET = 4.2517710;
+    constexpr double X_OFFSET = 2.5;//4.2517710;
 } // namespace CAMERA
 
 namespace HOOD
@@ -126,7 +126,7 @@ namespace TURRET
     constexpr double TOLERANCE = 10;
 
     constexpr double TICKS_PER_REVOLUTION = 212; // replace me with correct, number. this should be close if not exact
-    constexpr double TICKS_PER_RADIAN     = 15;//TICKS_PER_REVOLUTION / (2 * pi);
+    constexpr double TICKS_PER_RADIAN     = 21;//TICKS_PER_REVOLUTION / (2 * pi);
 
     constexpr double TRAVERSE_SPEED = .7;
 

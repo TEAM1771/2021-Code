@@ -1,7 +1,7 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
 //#include "PhotonVision.hpp"
-#include "PhotonLib/PhotonCamera.hpp"
+#include "LimeLight.hpp"
 #include "RobotState.hpp"
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
@@ -10,7 +10,7 @@ void Robot::SimulationPeriodic() {
     dtSim.update();
 }
 */
-photonlib::PhotonCamera camera { "gloworm" };
+LimeLight camera {};
 
 Robot::Robot()
 {
@@ -54,7 +54,7 @@ void Robot::ThreeBall()
     }
     Drivetrain::stop();
 
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(IsAutonomous() && IsEnabled())
@@ -102,8 +102,8 @@ void Robot::FiveBall()
     // shoot
     timer.Reset();
     timer.Start();
-    camera.SetLEDMode(photonlib::kOn);
-    while(IsAutonomous() && IsEnabled() && timer.Get() < 2.5s)
+    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
+    while(IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::FRONT) && timer.Get() > SHOOT_WAIT_TIME)
@@ -134,7 +134,7 @@ void Robot::SixBall()
     //             timer;
     timer.Reset();
     timer.Start();
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
       while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
@@ -165,7 +165,7 @@ void Robot::SixBall()
     timer.Reset();
     timer.Start();
     std::thread aim_and_shoot { [this, timer] {
-        camera.SetLEDMode(photonlib::kOn);
+        camera.setLEDMode(LimeLight::LED_Mode::Force_On);
         while(IsAutonomous() && IsEnabled())
         {
             std::this_thread::sleep_for(10ms);
@@ -200,7 +200,7 @@ void Robot::EightBall()
     }
     std::cout << "shooter wheel ready\n";
 
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
@@ -230,7 +230,7 @@ void Robot::EightBall()
     std::this_thread::sleep_for(TRENCH_RUN_RETURN_TIME);
     Drivetrain::stop();
 
-    camera.SetLEDMode(photonlib::kOn);
+    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
     while(timer.Get() < SHOOT_TIME_2 && IsAutonomous() && IsEnabled())
@@ -360,9 +360,8 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-
-    printf("CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
     ShooterWheel::bangbang();
+    printf("CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
     Intake::deploy(true);
     auto targetLocked = Turret::visionTrack(TURRET::BACK);
