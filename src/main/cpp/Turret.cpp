@@ -1,11 +1,11 @@
 #include "Turret.hpp"
 #include <cmath>
 //#include "PhotonVision.hpp"
-#include "PhotonLib/PhotonCamera.hpp"
+#include "LimeLight.hpp"
 
 #include "PID_CANSparkMax.hpp"
 
-extern photonlib::PhotonCamera camera; //camera from Robot.cpp
+extern LimeLight camera; //camera from Robot.cpp
 
 inline static PID_CANSparkMax  turretTurnyTurny { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static TURRET::POSITION position = TURRET::POSITION::ZERO;
@@ -68,14 +68,13 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         tracking = goToPosition(initPosition);
         return { false, false };
     }
-    int err = 0;
 // 
     // photonlib::PhotonPipelineResult result = camera.GetLatestResult();
 
-    if(camera.HasTargets())
+    if(camera.hasTarget())
     {
         // auto const target = result.GetBestTarget();
-        double const xOffsetDeg = camera.GetLatestResult().GetBestTarget().GetYaw() + CAMERA::X_OFFSET;
+        double const xOffsetDeg = camera.getX() + CAMERA::X_OFFSET;
         double const xOffsetRad = ngr::deg2rad(xOffsetDeg);
         double const xOffset    = xOffsetRad * TURRET::TICKS_PER_RADIAN;
 
