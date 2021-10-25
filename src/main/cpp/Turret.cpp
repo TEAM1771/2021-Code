@@ -1,11 +1,11 @@
 #include "Turret.hpp"
 #include <cmath>
-#include "PhotonVision.hpp"
-// #include "PhotonLib/PhotonCamera.hpp"
+//#include "PhotonVision.hpp"
+#include "LimeLight.hpp"
 
 #include "PID_CANSparkMax.hpp"
 
-extern PhotonCamera camera; //camera from Robot.cpp
+extern LimeLight camera; //camera from Robot.cpp
 
 inline static PID_CANSparkMax  turretTurnyTurny { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static TURRET::POSITION position = TURRET::POSITION::ZERO;
@@ -68,10 +68,7 @@ Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double to
         tracking = goToPosition(initPosition);
         return { false, false };
     }
-    int err = 0;
 // 
-    printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getX(),camera.getY());
-    
     // photonlib::PhotonPipelineResult result = camera.GetLatestResult();
 
     if(camera.hasTarget())

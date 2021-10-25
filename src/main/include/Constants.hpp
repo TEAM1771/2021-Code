@@ -1,7 +1,7 @@
 #pragma once
 
 #include "JoystickButton.hpp"
-#include "Limelight.hpp"
+//#include "Limelight.hpp"
 #include "ngr.hpp"
 #include <cmath>
 #include <ctre/Phoenix.h>
@@ -82,7 +82,7 @@ namespace WHEELS
 
 namespace CAMERA
 {
-    constexpr double X_OFFSET = 4.2517710;
+    constexpr double X_OFFSET = 2.5;//4.2517710;
 } // namespace CAMERA
 
 namespace HOOD
@@ -126,7 +126,7 @@ namespace TURRET
     constexpr double TOLERANCE = 10;
 
     constexpr double TICKS_PER_REVOLUTION = 212; // replace me with correct, number. this should be close if not exact
-    constexpr double TICKS_PER_RADIAN     = TICKS_PER_REVOLUTION / (2 * pi);
+    constexpr double TICKS_PER_RADIAN     = 21;//TICKS_PER_REVOLUTION / (2 * pi);
 
     constexpr double TRAVERSE_SPEED = .7;
 
@@ -140,7 +140,7 @@ namespace SHOOTER_WHEEL
 {
     constexpr can_adr PORT_1       = 18;
     constexpr auto    IDLE_MODE    = rev::CANSparkMax::IdleMode::kCoast;
-    constexpr double  SHOOTING_RPM = 6100; // previous value was 6750
+    constexpr double  SHOOTING_RPM = 6500; // previous value was 6750
 } // namespace SHOOTER_WHEEL
 
 namespace HOPPER
