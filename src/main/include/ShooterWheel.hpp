@@ -9,4 +9,6 @@ namespace ShooterWheel
     void   bangbang();
     void stop();
     double get_speed();
+
+    double get_temp();
 } // namespace ShooterWheel

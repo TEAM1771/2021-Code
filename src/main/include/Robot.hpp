@@ -46,6 +46,8 @@ public:
     void TenBall();
     void ThirteenBall();
 
+    bool ShooterTempUpdate();
+
 private:
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
 };
