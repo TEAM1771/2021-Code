@@ -4,8 +4,6 @@
 
 namespace ShooterWheel
 {
-    bool shooting = false;
-
     void init();
 
     void   bangbang();
@@ -14,5 +12,5 @@ namespace ShooterWheel
 
     double get_temp();
 
-    void setShooting(bool boolean);
+    void enableMaxSpeedForShooting(bool boolean);
 } // namespace ShooterWheel

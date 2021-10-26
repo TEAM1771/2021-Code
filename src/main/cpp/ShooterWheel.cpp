@@ -5,6 +5,7 @@
 
 inline static rev::CANSparkMax shooter_1 { SHOOTER_WHEEL::PORT_1, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static rev::CANEncoder  shooter_encoder = shooter_1.GetEncoder();
+inline static bool             maxSpeedForShooting;
 
 /******************************************************************/
 /*                      Non Static Functions                      */
@@ -25,7 +26,7 @@ void ShooterWheel::bangbang() //original code with commented code removed
     //     shooter_1.SetOpenLoopRampRate(6);
 
     // if(abs(shooter_encoder.GetVelocity() > SHOOTER_WHEEL::SHOOTING_RPM - 2000))
-    if(shooting)
+    if(maxSpeedForShooting)
     {
     }
     else
@@ -59,7 +60,8 @@ double ShooterWheel::get_temp()
     return shooter_1.GetMotorTemperature();
 }
 
-void ShooterWheel::setShooting(bool boolean)
+// True overrides bangbang, false returns to normal function
+void ShooterWheel::enableMaxSpeedForShooting(bool boolean)
 {
-    shooting = boolean;
+    maxSpeedForShooting = boolean;
 }
