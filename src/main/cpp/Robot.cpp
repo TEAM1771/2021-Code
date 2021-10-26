@@ -80,7 +80,7 @@ void Robot::FiveBall()
                             -180_deg);
     std::this_thread::sleep_for(MOVE_TO_BALLS);
     Drivetrain::stop();
-    std::this_thread::sleep_for(.5s);
+    std::this_thread::sleep_for(.25s);
     // pickup balls
     // Drivetrain::auton_drive(-.2_mps * WHEELS::speed_mult,
     //                         -.10_mps * WHEELS::speed_mult,
@@ -323,7 +323,7 @@ void Robot::AutonomousInit()
     Intake::deploy(true);
 
     Drivetrain::gotoZero();
-    std::this_thread::sleep_for(0.75s);
+    std::this_thread::sleep_for(0.25s);
     //ThreeBall();
     //SixBall();
     //FiveBall();
