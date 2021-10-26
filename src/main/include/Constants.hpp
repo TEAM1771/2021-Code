@@ -75,14 +75,14 @@ namespace WHEELS
 
     constexpr double kEncoderTicksPerRotation = 2048;
     constexpr double driver_ratio             = 1 * 8.16 * kEncoderTicksPerRotation; //Previous value was .25 instead of .1
-    constexpr double turning_ratio            = 1;                //4096.0/360;//.125 * 12.8 * 2048 / 360;
+    constexpr double turning_ratio            = 1;                                   //4096.0/360;//.125 * 12.8 * 2048 / 360;
 
     constexpr double speed_mult = 1; // hacky way to deal with joysticks
 } // namespace WHEELS
 
 namespace CAMERA
 {
-    constexpr double X_OFFSET = 2.5;//4.2517710;
+    constexpr double X_OFFSET = 2.5; //4.2517710;
 } // namespace CAMERA
 
 namespace HOOD
@@ -126,7 +126,7 @@ namespace TURRET
     constexpr double TOLERANCE = 10;
 
     constexpr double TICKS_PER_REVOLUTION = 212; // replace me with correct, number. this should be close if not exact
-    constexpr double TICKS_PER_RADIAN     = 21;//TICKS_PER_REVOLUTION / (2 * pi);
+    constexpr double TICKS_PER_RADIAN     = 21;  //TICKS_PER_REVOLUTION / (2 * pi);
 
     constexpr double TRAVERSE_SPEED = .7;
 
@@ -232,6 +232,7 @@ namespace AUTO
         constexpr auto MOVE_TO_BALLS     = 2.3s;
         constexpr auto MOVE_TO_GOAL_TIME = 1.75s;
         constexpr auto SHOOT_WAIT_TIME   = 1s;
+        constexpr auto SHOOT_TOTAL_TIME  = SHOOT_WAIT_TIME + 1.5s;
 
 
     } // namespace FIVE_BALL
@@ -258,12 +259,14 @@ namespace AUTO
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto RETURN_PICKUP_TIME = 1s;
-        constexpr auto PICKUP_MOVE_TIME   = 1.1s;
+        constexpr auto MOVE_STRAIGHT_BACK  = 1s;
+        constexpr auto MOVE_BACK_AND_TURN  = 1.1s;
         constexpr auto PICKUP_SECOND_THREE = 1.15s;
-        constexpr auto GOAL_RETURN_TIME   = 2s;
-        constexpr auto SHOOT_SECOND_TIME = 1.5s;
-        auto keepAiming = true;
+        constexpr auto ALIGN_WITH_GOAL     = 0.8s;
+        constexpr auto SECOND_MOVE_TO_GOAL = 1.5s;
+        constexpr auto STOP_AND_AIM_TIME   = 0.3s;
+        constexpr auto SECOND_SHOOT_TIME   = 1.5s;
+        auto           keepAiming          = true;
     } // namespace TEN_BALL
 
     namespace THIRTEEN_BALL

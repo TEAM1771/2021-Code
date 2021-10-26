@@ -107,7 +107,7 @@ void Robot::FiveBall()
     timer.Reset();
     timer.Start();
     camera.setLEDMode(LimeLight::LED_Mode::Force_On);
-    while(IsAutonomous() && IsEnabled() && timer.Get() < 2.5s)
+    while(IsAutonomous() && IsEnabled() && timer.Get() < SHOOT_TOTAL_TIME)
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::FRONT) && timer.Get() > SHOOT_WAIT_TIME)
@@ -255,13 +255,13 @@ void Robot::TenBall()
     Drivetrain::auton_drive(0_mps,
                             -0.35_mps * WHEELS::speed_mult,
                             0_deg);
-    std::this_thread::sleep_for(RETURN_PICKUP_TIME);
+    std::this_thread::sleep_for(MOVE_STRAIGHT_BACK);
     Drivetrain::auton_drive(-0.1_mps * WHEELS::speed_mult,
                             -0.35_mps,
                             30_deg);
-    std::this_thread::sleep_for(PICKUP_MOVE_TIME);
+    std::this_thread::sleep_for(MOVE_BACK_AND_TURN);
     Drivetrain::stop();
-    std::this_thread::sleep_for(0.25s);
+    std::this_thread::sleep_for(ALIGN_WITH_GOAL);
     Drivetrain::auton_drive(-0.1771_mps * WHEELS::speed_mult,
                             0.28_mps,
                             30_deg);
@@ -281,21 +281,24 @@ void Robot::TenBall()
     timer.Start();
     std::thread aim_and_shoot { [this, timer] {
         camera.setLEDMode(LimeLight::LED_Mode::Force_On);
-        while(IsAutonomous() && IsEnabled() && keepAiming)
+        while(IsAutonomous() && IsEnabled() && timer.Get() < 
+        (SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME + SECOND_SHOOT_TIME))
         {
             std::this_thread::sleep_for(10ms);
-            aim(TURRET::POSITION::FRONT);
-            if(timer.Get() >= SHOOT_SECOND_TIME + .3s)
-                keepAiming = false;
-        }
-        while(IsAutonomous() && IsEnabled())
-        {
-            std::this_thread::sleep_for(10ms);
-            if(aim(TURRET::POSITION::FRONT))
-                Hopper::shoot();
+            if(keepAiming)
+            {
+                aim(TURRET::POSITION::FRONT);
+                if(timer.Get() >= SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME)
+                    keepAiming = false;
+            }
+            else
+            {
+                if(aim(TURRET::POSITION::FRONT))
+                    Hopper::shoot();
+            }
         }
     } };
-    std::this_thread::sleep_for(SHOOT_SECOND_TIME);
+    std::this_thread::sleep_for(SECOND_MOVE_TO_GOAL);
     Drivetrain::stop();
 
     Turret::goToPosition(TURRET::POSITION::ZERO);
