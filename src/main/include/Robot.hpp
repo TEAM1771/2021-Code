@@ -43,7 +43,7 @@ public:
     void FiveBall();
     void SixBall();
     void EightBall();
-    void TenBall();
+//    void TenBall();
     void ThirteenBall();
 
     bool ShooterTempUpdate();

@@ -189,67 +189,6 @@ void Robot::EightBall()
     using namespace AUTO::EIGHT_BALL;
     ngr::Timer timer;
 
-
-    Intake::deploy(true);
-    Intake::drive(INTAKE::DIRECTION::IN);
-
-
-    /////////////////////////
-    // Shoot before moving //
-    /////////////////////////
-    while(ShooterWheel::get_speed() < SHOOTER_WHEEL::SHOOTING_RPM - 500 && IsAutonomous() && IsEnabled())
-    {
-        std::cout << "waiting for shooter wheel\n";
-        std::this_thread::sleep_for(10ms);
-    }
-    std::cout << "shooter wheel ready\n";
-
-    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
-    timer.Reset();
-    timer.Start();
-    while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
-    {
-        std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK))
-            Hopper::shoot();
-    }
-
-    // Go to traverse
-    while(IsAutonomous() && IsEnabled() &&
-          ! (Hood::goToPosition(HOOD::POSITION::BOTTOM, ngr::fabs(HOOD::POSITION::SAFE_TO_TURN)) && Turret::goToPosition(TURRET::POSITION::ZERO)))
-        std::this_thread::sleep_for(10ms);
-
-    ///////////////////////
-    // Pickup Trench Run //
-    ///////////////////////
-    Drivetrain::auton_drive(0_mps,
-                            0.3_mps * WHEELS::speed_mult,
-                            0_rad);
-    std::this_thread::sleep_for(TRENCH_RUN_PICKUP_TIME);
-
-
-    Drivetrain::auton_drive(0_mps,
-                            0.5_mps * WHEELS::speed_mult,
-                            0_rad);
-    std::this_thread::sleep_for(TRENCH_RUN_RETURN_TIME);
-    Drivetrain::stop();
-
-    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
-    timer.Reset();
-    timer.Start();
-    while(timer.Get() < SHOOT_TIME_2 && IsAutonomous() && IsEnabled())
-    {
-        std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK))
-            Hopper::shoot();
-    }
-}
-
-void Robot::TenBall()
-{
-    using namespace AUTO::TEN_BALL;
-    ngr::Timer timer;
-
     FiveBall();
 
     Drivetrain::auton_drive(0_mps,
@@ -261,7 +200,7 @@ void Robot::TenBall()
                             30_deg);
     std::this_thread::sleep_for(MOVE_BACK_AND_TURN);
     Drivetrain::stop();
-    std::this_thread::sleep_for(ALIGN_WITH_GOAL);
+    std::this_thread::sleep_for(0.25s);
     Drivetrain::auton_drive(-0.1771_mps * WHEELS::speed_mult,
                             0.28_mps,
                             30_deg);
@@ -271,7 +210,7 @@ void Robot::TenBall()
     Drivetrain::auton_drive(0.35_mps * WHEELS::speed_mult,
                             0_mps,
                             0_deg);
-    std::this_thread::sleep_for(0.8s);
+    std::this_thread::sleep_for(ALIGN_WITH_GOAL);
     Drivetrain::stop();
     std::this_thread::sleep_for(0.25s);
     Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
@@ -281,8 +220,7 @@ void Robot::TenBall()
     timer.Start();
     std::thread aim_and_shoot { [this, timer] {
         camera.setLEDMode(LimeLight::LED_Mode::Force_On);
-        while(IsAutonomous() && IsEnabled() && timer.Get() < 
-        (SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME + SECOND_SHOOT_TIME))
+        while(IsAutonomous() && IsEnabled() && timer.Get() < (SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME + SECOND_SHOOT_TIME))
         {
             std::this_thread::sleep_for(10ms);
             if(keepAiming)
@@ -301,21 +239,24 @@ void Robot::TenBall()
     std::this_thread::sleep_for(SECOND_MOVE_TO_GOAL);
     Drivetrain::stop();
 
-    Turret::goToPosition(TURRET::POSITION::ZERO);
-    Drivetrain::stop();
+    std::this_thread::sleep_for(STOP_AND_AIM_TIME + SECOND_SHOOT_TIME);
     aim_and_shoot.join();
-    return;
 
+    Turret::goToPosition(TURRET::POSITION::ZERO);
+    Drivetrain::stop(); //Just to make sure it was already stopped
+    
     // Drivetrain::auton_drive(0_mps,
     //                         0.5_mps * WHEELS::speed_mult,
     //                         -0.5_rad);
     // std::this_thread::sleep_for(GOAL_RETURN_TIME);
+    /*
     while(IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::BACK))
             Hopper::shoot();
-    }
+            
+    } */
 }
 
 void Robot::ThirteenBall()
@@ -372,7 +313,7 @@ void Robot::AutonomousInit()
     //ThreeBall();
     //SixBall();
     //FiveBall();
-    TenBall();
+    EightBall();
 
     run_shooter_wheel_and_index_balls.join();
 }

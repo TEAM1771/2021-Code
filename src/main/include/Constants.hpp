@@ -246,19 +246,12 @@ namespace AUTO
         constexpr auto SHOOT_WAIT_TIME   = 1.5s;
     } // namespace SIX_BALL
 
+
     namespace EIGHT_BALL
     {
         using namespace std::literals::chrono_literals;
-        constexpr auto SHOOT_TIME_1           = 2s;
-        constexpr auto TRENCH_RUN_PICKUP_TIME = 3s;
-        constexpr auto TRENCH_RUN_RETURN_TIME = 2s;
-        constexpr auto SHOOT_TIME_2           = 3s;
-    } // namespace EIGHT_BALL
 
-    namespace TEN_BALL
-    {
-        using namespace std::literals::chrono_literals;
-
+        constexpr auto WAIT_BETWEEN_TURNS  = 0.25s;
         constexpr auto MOVE_STRAIGHT_BACK  = 1s;
         constexpr auto MOVE_BACK_AND_TURN  = 1.1s;
         constexpr auto PICKUP_SECOND_THREE = 1.15s;
