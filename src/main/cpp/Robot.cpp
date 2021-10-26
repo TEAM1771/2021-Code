@@ -95,17 +95,19 @@ void Robot::FiveBall()
                             0_deg);
     std::this_thread::sleep_for(MOVE_TO_GOAL_TIME);
     Drivetrain::stop();
-    std::this_thread::sleep_for(.5s);
 
 
-    // don't drive forever
-    Drivetrain::stop();
+    // std::this_thread::sleep_for(.5s);
+
+
+    // // don't drive forever
+    // Drivetrain::stop();
 
     // shoot
     timer.Reset();
     timer.Start();
     camera.setLEDMode(LimeLight::LED_Mode::Force_On);
-    while(IsAutonomous() && IsEnabled())
+    while(IsAutonomous() && IsEnabled() && timer.Get() < 2.5s)
     {
         std::this_thread::sleep_for(10ms);
         if(aim(TURRET::POSITION::FRONT) && timer.Get() > SHOOT_WAIT_TIME)
@@ -254,14 +256,52 @@ void Robot::TenBall()
                             -0.35_mps * WHEELS::speed_mult,
                             0_deg);
     std::this_thread::sleep_for(RETURN_PICKUP_TIME);
-    Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
-                            -.35_mps,
+    Drivetrain::auton_drive(-0.1_mps * WHEELS::speed_mult,
+                            -0.35_mps,
                             30_deg);
     std::this_thread::sleep_for(PICKUP_MOVE_TIME);
-    Drivetrain::auton_drive(-.2_mps * WHEELS::speed_mult,
-                            .3_mps,
-                            30_rad);
-    std::this_thread::sleep_for(PICKUP_RETURN_TIME);
+    Drivetrain::stop();
+    std::this_thread::sleep_for(0.25s);
+    Drivetrain::auton_drive(-0.1771_mps * WHEELS::speed_mult,
+                            0.28_mps,
+                            30_deg);
+    std::this_thread::sleep_for(PICKUP_SECOND_THREE);
+    Drivetrain::stop();
+    std::this_thread::sleep_for(0.25s);
+    Drivetrain::auton_drive(0.35_mps * WHEELS::speed_mult,
+                            0_mps,
+                            0_deg);
+    std::this_thread::sleep_for(0.8s);
+    Drivetrain::stop();
+    std::this_thread::sleep_for(0.25s);
+    Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
+                            0.35_mps,
+                            0_deg);
+    timer.Reset();
+    timer.Start();
+    std::thread aim_and_shoot { [this, timer] {
+        camera.setLEDMode(LimeLight::LED_Mode::Force_On);
+        while(IsAutonomous() && IsEnabled() && keepAiming)
+        {
+            std::this_thread::sleep_for(10ms);
+            aim(TURRET::POSITION::FRONT);
+            if(timer.Get() >= SHOOT_SECOND_TIME + .3s)
+                keepAiming = false;
+        }
+        while(IsAutonomous() && IsEnabled())
+        {
+            std::this_thread::sleep_for(10ms);
+            if(aim(TURRET::POSITION::FRONT))
+                Hopper::shoot();
+        }
+    } };
+    std::this_thread::sleep_for(SHOOT_SECOND_TIME);
+    Drivetrain::stop();
+
+    Turret::goToPosition(TURRET::POSITION::ZERO);
+    Drivetrain::stop();
+    aim_and_shoot.join();
+    return;
 
     // Drivetrain::auton_drive(0_mps,
     //                         0.5_mps * WHEELS::speed_mult,
@@ -309,6 +349,7 @@ void Robot::ThirteenBall()
 
 void Robot::AutonomousInit()
 {
+    ShooterWheel::bangbang();
     Drivetrain::reset_gyro();
     using namespace std::literals::chrono_literals;
 
@@ -317,7 +358,7 @@ void Robot::AutonomousInit()
         using namespace std::literals::chrono_literals;
         while(IsAutonomous() && IsEnabled())
         {
-            //ShooterWheel::bangbang();
+            ShooterWheel::bangbang();
             Hopper::index(false);             // don't warn when called while shooting
             std::this_thread::sleep_for(5ms); // don't spam the CAN network
         }
@@ -521,11 +562,12 @@ bool Robot::ShooterTempUpdate()
     frc::SmartDashboard::PutNumber("Shooter Temp", ShooterWheel::get_temp());
     if(ShooterWheel::get_temp() > 70)
     {
-        frc::SmartDashboard::PutBoolean("Shooter Overheating", true);
+        frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", false);
+        //inverted so that driverstation shows green instead of red
     }
     else
     {
-        frc::SmartDashboard::PutBoolean("Shooter Overheating", false);
+        frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", true);
     }
     return ShooterWheel::get_temp() > 70;
 }

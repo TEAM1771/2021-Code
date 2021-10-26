@@ -259,9 +259,11 @@ namespace AUTO
         using namespace std::literals::chrono_literals;
 
         constexpr auto RETURN_PICKUP_TIME = 1s;
-        constexpr auto PICKUP_MOVE_TIME   = 2s;
-        constexpr auto PICKUP_RETURN_TIME = 2s;
+        constexpr auto PICKUP_MOVE_TIME   = 1.1s;
+        constexpr auto PICKUP_SECOND_THREE = 1.15s;
         constexpr auto GOAL_RETURN_TIME   = 2s;
+        constexpr auto SHOOT_SECOND_TIME = 1.5s;
+        auto keepAiming = true;
     } // namespace TEN_BALL
 
     namespace THIRTEEN_BALL

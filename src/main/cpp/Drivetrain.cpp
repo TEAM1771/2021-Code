@@ -120,7 +120,7 @@ void Drivetrain::stop()
         // and therefore we dont need to wait for it to
         // finish the loop as long as it won't tell the
         // wheels to do anything
-    std::this_thread::sleep_for(1ms); // make sure it has time to stop the thread
+    std::this_thread::sleep_for(5ms); // make sure it has time to stop the thread
     for(auto&& wheel : wheels)
         wheel->stop();
 }
