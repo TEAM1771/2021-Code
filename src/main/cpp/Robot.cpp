@@ -352,7 +352,6 @@ void Robot::ThirteenBall()
 
 void Robot::AutonomousInit()
 {
-    ShooterWheel::bangbang();
     Drivetrain::reset_gyro();
     using namespace std::literals::chrono_literals;
 

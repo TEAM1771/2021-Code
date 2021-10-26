@@ -16,7 +16,7 @@ void ShooterWheel::init()
     shooter_1.SetIdleMode(SHOOTER_WHEEL::IDLE_MODE);
 }
 
-void ShooterWheel::bangbang() //origional code with commented code removed
+void ShooterWheel::bangbang() //original code with commented code removed
 {
     // return;
     // if(abs(shooter_encoder.GetVelocity() > SHOOTER_WHEEL::SHOOTING_RPM - 1200))
@@ -25,17 +25,23 @@ void ShooterWheel::bangbang() //origional code with commented code removed
     //     shooter_1.SetOpenLoopRampRate(6);
 
     // if(abs(shooter_encoder.GetVelocity() > SHOOTER_WHEEL::SHOOTING_RPM - 2000))
-    shooter_1.SetOpenLoopRampRate(0);
-    // else
-    //     shooter_1.SetOpenLoopRampRate(3);
-
-    if((abs(shooter_encoder.GetVelocity()) < 2000))
-        shooter_1.Set(-.5);
-    else if((abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::SHOOTING_RPM))
-        shooter_1.Set(-1),
-            printf("1\n");
+    if(shooting)
+    {
+    }
     else
-        shooter_1.Set(0), printf("0\n");
+    {
+        shooter_1.SetOpenLoopRampRate(0);
+        // else
+        //     shooter_1.SetOpenLoopRampRate(3);
+
+        if((abs(shooter_encoder.GetVelocity()) < 2000))
+            shooter_1.Set(-.5);
+        else if((abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::SHOOTING_RPM))
+            shooter_1.Set(-1),
+                printf("1\n");
+        else
+            shooter_1.Set(0), printf("0\n");
+    }
 }
 
 double ShooterWheel::get_speed()
@@ -48,6 +54,12 @@ void ShooterWheel::stop()
     shooter_1.Set(0);
 }
 
-double ShooterWheel::get_temp() {
+double ShooterWheel::get_temp()
+{
     return shooter_1.GetMotorTemperature();
+}
+
+void ShooterWheel::setShooting(bool boolean)
+{
+    shooting = boolean;
 }
