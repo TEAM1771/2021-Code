@@ -47,3 +47,7 @@ void ShooterWheel::stop()
 {
     shooter_1.Set(0);
 }
+
+double ShooterWheel::get_temp() {
+    return shooter_1.GetMotorTemperature();
+}

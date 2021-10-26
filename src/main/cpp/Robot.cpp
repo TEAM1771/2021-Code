@@ -30,6 +30,7 @@ Robot::Robot()
     Intake::init();
     Turret::init();
     ShooterWheel::init();
+    ShooterTempUpdate();
 }
 
 void Robot::ThreeBall()
@@ -329,6 +330,7 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
+    ShooterTempUpdate();
 }
 
 void Robot::TeleopInit()
@@ -346,6 +348,8 @@ void Robot::TeleopPeriodic()
     {
         ShooterWheel::stop();
     }
+
+    ShooterTempUpdate();
     // printf("speed: %f\n", ShooterWheel::get_speed());
     ButtonManager();
     // printf("hasTarget: %i,x:%i,y:%i\n", camera.hasTarget(),camera.getX(),camera.getY());
@@ -356,6 +360,7 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
+    ShooterTempUpdate();
 
     printf("CamY: %f\tAngle: ", Hood::get_camera_Y(), Hood::get_angle());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
@@ -370,7 +375,6 @@ void Robot::TestPeriodic()
         Hopper::index();
 
 
-
     // double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
 
     // if(fabs(x) < .1)
@@ -383,7 +387,6 @@ void Robot::TestPeriodic()
     // double rotate = BUTTON::ps5.GetZ() * 2;
     // if(fabs(rotate) < .1)
     //     rotate = 0;
-
 
 
     // if(BUTTON::ps5.GetRawButton(4))
@@ -428,7 +431,7 @@ void Robot::ButtonManager()
 
         // turret_in_pos is true when it's safe to deploy hood
         bool const turret_in_pos = Turret::goToPosition(TURRET::POSITION::FRONT,
-                                                        fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
+                                                        ngr::fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
         if(turret_in_pos)
             targetLocked = Hood::goToPosition(HOOD::POSITION::BATTER);
         else
@@ -502,15 +505,28 @@ void Robot::ButtonManager()
 
 bool Robot::aim(TURRET::POSITION direction)
 {
-            if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
-                return Hood::visionTrack() && readyToShoot;
-            Hood::goToPosition(HOOD::POSITION::TRAVERSE);
-            return false;
+    if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
+        return Hood::visionTrack() && readyToShoot;
+    Hood::goToPosition(HOOD::POSITION::TRAVERSE);
+    return false;
+}
+
+bool Robot::ShooterTempUpdate()
+{
+    frc::SmartDashboard::PutNumber("Shooter Temp", ShooterWheel::get_temp());
+    if(ShooterWheel::get_temp() > 70)
+    {
+        frc::SmartDashboard::PutBoolean("Shooter Overheating", true);
+    }
+    else
+    {
+        frc::SmartDashboard::PutBoolean("Shooter Overheating", false);
+    }
 }
 
 #ifndef RUNNING_FRC_TESTS
 int main()
 {
-            return frc::StartRobot<Robot>();
+    return frc::StartRobot<Robot>();
 }
 #endif

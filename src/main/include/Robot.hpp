@@ -48,4 +48,5 @@ public:
 
 private:
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
+    bool ShooterTempUpdate();
 };
