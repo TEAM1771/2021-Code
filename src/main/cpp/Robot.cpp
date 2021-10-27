@@ -1,8 +1,18 @@
 #include "Robot.hpp"
 #include "Timer.hpp"
-//#include "PhotonVision.hpp"
 #include "LimeLight.hpp"
 #include "RobotState.hpp"
+#include "ShooterWheel.hpp"
+#include "Turret.hpp"
+#include "Climber.hpp"
+#include "Drivetrain.hpp"
+#include "Hood.hpp"
+#include "Hopper.hpp"
+#include "Intake.hpp"
+#include <frc/Timer.h>
+#include <frc/smartdashboard/smartdashboard.h>
+#include <memory>
+
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
 #include "PLExampleCode/3_TargetAimRange.hpp"
@@ -82,12 +92,9 @@ void Robot::FiveBall()
                             -180_deg);
     std::this_thread::sleep_for(MOVE_TO_BALLS);
     Drivetrain::stop();
-    std::this_thread::sleep_for(.25s);
-    // pickup balls
-    // Drivetrain::auton_drive(-.2_mps * WHEELS::speed_mult,
-    //                         -.10_mps * WHEELS::speed_mult,
-    //                         .1_deg);
-    // std::this_thread::sleep_for(PICKUP_TIME);
+
+    // Everytime we see sleep_for() we can try to reduce this
+    std::this_thread::sleep_for(AUTO::EIGHT_BALL::WAIT_BETWEEN_TURNS);
 
     // move to goal
     Drivetrain::auton_drive(-.175_mps * WHEELS::speed_mult,
@@ -95,13 +102,6 @@ void Robot::FiveBall()
                             0_deg);
     std::this_thread::sleep_for(MOVE_TO_GOAL_TIME);
     Drivetrain::stop();
-
-
-    // std::this_thread::sleep_for(.5s);
-
-
-    // // don't drive forever
-    // Drivetrain::stop();
 
     // shoot
     timer.Reset();
@@ -190,33 +190,47 @@ void Robot::EightBall()
     using namespace AUTO::EIGHT_BALL;
     ngr::Timer timer;
 
-    FiveBall();
+    FiveBall(); //Pickup 2, shoot first 5
 
+    //Drive straight backwards
     Drivetrain::auton_drive(0_mps,
                             -0.35_mps * WHEELS::speed_mult,
                             0_deg);
     std::this_thread::sleep_for(MOVE_STRAIGHT_BACK);
+
+    //Continues driving back but begins to turn and move to the left
     Drivetrain::auton_drive(-0.1_mps * WHEELS::speed_mult,
                             -0.35_mps,
                             30_deg);
     std::this_thread::sleep_for(MOVE_BACK_AND_TURN);
     Drivetrain::stop();
-    std::this_thread::sleep_for(0.25s);
+
+    std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
+
+    //Now begins going forward & faster to the left, picking up three
     Drivetrain::auton_drive(-0.1771_mps * WHEELS::speed_mult,
                             0.28_mps,
                             30_deg);
     std::this_thread::sleep_for(PICKUP_SECOND_THREE);
     Drivetrain::stop();
-    std::this_thread::sleep_for(0.25s);
+
+    std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
+
+    //Move to the right to avoid pole
     Drivetrain::auton_drive(0.35_mps * WHEELS::speed_mult,
                             0_mps,
                             0_deg);
     std::this_thread::sleep_for(ALIGN_WITH_GOAL);
     Drivetrain::stop();
-    std::this_thread::sleep_for(0.25s);
+
+    std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
+
+    //Now drive straight forward to the goal
     Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
                             0.35_mps,
                             0_deg);
+
+    //Start aiming and prepare to shoot
     timer.Reset();
     timer.Start();
     std::thread aim_and_shoot { [this, timer] {
@@ -224,72 +238,22 @@ void Robot::EightBall()
         while(IsAutonomous() && IsEnabled() && timer.Get() < (SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME + SECOND_SHOOT_TIME))
         {
             std::this_thread::sleep_for(10ms);
-            if(keepAiming)
-            {
-                aim(TURRET::POSITION::FRONT);
-                if(timer.Get() >= SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME)
-                    keepAiming = false;
-            }
-            else
-            {
-                if(aim(TURRET::POSITION::FRONT))
-                    Hopper::shoot();
-            }
+            if(aim(TURRET::POSITION::FRONT) && timer.Get() >= SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME)
+                Hopper::shoot();
         }
     } };
+
+    //Stop when it arrives at shoot location in front of goal
     std::this_thread::sleep_for(SECOND_MOVE_TO_GOAL);
     Drivetrain::stop();
 
+    //Stop aiming/shooting (handled in aim_and_shoot)
     std::this_thread::sleep_for(STOP_AND_AIM_TIME + SECOND_SHOOT_TIME);
-    Hopper::stop();
     aim_and_shoot.join();
 
+    //Just to make sure the intake doesn't hit limelight again...
     Turret::goToPosition(TURRET::POSITION::ZERO);
-
-    // Drivetrain::auton_drive(0_mps,
-    //                         0.5_mps * WHEELS::speed_mult,
-    //                         -0.5_rad);
-    // std::this_thread::sleep_for(GOAL_RETURN_TIME);
-    /*
-    while(IsAutonomous() && IsEnabled())
-    {
-        std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK))
-            Hopper::shoot();
-            
-    } */
-}
-
-void Robot::ThirteenBall()
-{
-    using namespace AUTO::THIRTEEN_BALL;
-    ngr::Timer timer;
-
-    EightBall();
-
-    Drivetrain::auton_drive(0_mps,
-                            -0.5_mps * WHEELS::speed_mult,
-                            0.5_rad);
-    std::this_thread::sleep_for(RETURN_PICKUP_TIME);
-    Drivetrain::auton_drive(-.3_mps * WHEELS::speed_mult,
-                            0_mps,
-                            0_rad);
-    std::this_thread::sleep_for(PICKUP_MOVE_TIME);
-    Drivetrain::auton_drive(.3_mps * WHEELS::speed_mult,
-                            0_mps,
-                            0_rad);
-    std::this_thread::sleep_for(PICKUP_RETURN_TIME);
-
-    Drivetrain::auton_drive(0_mps,
-                            0.5_mps * WHEELS::speed_mult,
-                            -0.5_rad);
-    std::this_thread::sleep_for(GOAL_RETURN_TIME);
-    while(IsAutonomous() && IsEnabled())
-    {
-        std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK))
-            Hopper::shoot();
-    }
+    Hopper::stop();
 }
 
 void Robot::AutonomousInit()
@@ -315,8 +279,6 @@ void Robot::AutonomousInit()
     //SixBall();
     //FiveBall();
     EightBall();
-
-    Hopper::stop();
 
     run_shooter_wheel_and_index_balls.join();
 }
@@ -355,7 +317,7 @@ void Robot::TestPeriodic()
     ShooterTempUpdate();
 
     ShooterWheel::bangbang();
-    printf("CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
+    printf("CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
     Intake::deploy(true);
     auto targetLocked = Turret::visionTrack(TURRET::BACK);

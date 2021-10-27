@@ -5,19 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Climber.hpp"
-#include "Drivetrain.hpp"
-#include "Hood.hpp"
-#include "Hopper.hpp"
-#include "Intake.hpp"
 //#include "Limelight.hpp"
-#include "ShooterWheel.hpp"
-#include "Turret.hpp"
 #include <frc/TimedRobot.h>
-#include <frc/Timer.h>
 #include <frc/livewindow/LiveWindow.h>
-#include <frc/smartdashboard/smartdashboard.h>
-#include <memory>
+#include "Constants.hpp"
+#include "Average.hpp"
 
 class Robot : public frc::TimedRobot
 {
@@ -50,4 +42,5 @@ public:
 
 private:
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
+    Average<5> averageCameraY;
 };

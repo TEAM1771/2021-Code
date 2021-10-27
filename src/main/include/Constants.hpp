@@ -140,7 +140,8 @@ namespace SHOOTER_WHEEL
 {
     constexpr can_adr PORT_1       = 18;
     constexpr auto    IDLE_MODE    = rev::CANSparkMax::IdleMode::kCoast;
-    constexpr double  SHOOTING_RPM = 6500; // previous value was 6750
+    constexpr double  SHOOTING_RPM = 6700; // previous value was 6750, then 6100
+    constexpr double  IDLE_RPM     = 6500;
 } // namespace SHOOTER_WHEEL
 
 namespace HOPPER
@@ -251,23 +252,14 @@ namespace AUTO
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto WAIT_BETWEEN_TURNS  = 0.25s;
+        constexpr auto WAIT_BETWEEN_TURNS  = 0.15s;
         constexpr auto MOVE_STRAIGHT_BACK  = 1s;
         constexpr auto MOVE_BACK_AND_TURN  = 1.1s;
         constexpr auto PICKUP_SECOND_THREE = 1.15s;
         constexpr auto ALIGN_WITH_GOAL     = 0.8s;
-        constexpr auto SECOND_MOVE_TO_GOAL = 1.5s;
+        constexpr auto SECOND_MOVE_TO_GOAL = 1s;
         constexpr auto STOP_AND_AIM_TIME   = 0.25s;
         constexpr auto SECOND_SHOOT_TIME   = 1.5s;
         inline auto    keepAiming          = true;
     } // namespace EIGHT_BALL
-
-    namespace THIRTEEN_BALL
-    {
-        using namespace std::literals::chrono_literals;
-        constexpr auto RETURN_PICKUP_TIME = 3s;
-        constexpr auto PICKUP_MOVE_TIME   = 2s;
-        constexpr auto PICKUP_RETURN_TIME = 2s;
-        constexpr auto GOAL_RETURN_TIME   = 2s;
-    } // namespace THIRTEEN_BALL
 } // namespace AUTO

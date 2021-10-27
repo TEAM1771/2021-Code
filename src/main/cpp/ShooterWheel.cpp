@@ -19,31 +19,19 @@ void ShooterWheel::init()
 
 void ShooterWheel::bangbang() //original code with commented code removed
 {
-    // return;
-    // if(abs(shooter_encoder.GetVelocity() > SHOOTER_WHEEL::SHOOTING_RPM - 1200))
-    //     shooter_1.SetOpenLoopRampRate(0);
-    // else
-    //     shooter_1.SetOpenLoopRampRate(6);
-
-    // if(abs(shooter_encoder.GetVelocity() > SHOOTER_WHEEL::SHOOTING_RPM - 2000))
     shooter_1.SetOpenLoopRampRate(0);
-    if(runAtMaxSpeed)
-    {
-        shooter_1.Set(-1);
-    }
-    else
-    {
-        // else
-        //     shooter_1.SetOpenLoopRampRate(3);
 
-        if((abs(shooter_encoder.GetVelocity()) < 2000))
-            shooter_1.Set(-.5);
-        else if((abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::SHOOTING_RPM))
-            shooter_1.Set(-1),
-                printf("1\n");
-        else
-            shooter_1.Set(0), printf("0\n");
-    }
+
+    if((abs(shooter_encoder.GetVelocity()) < 2000))
+        shooter_1.Set(-.5);
+    else if(runAtMaxSpeed && abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::SHOOTING_RPM)
+        shooter_1.Set(-1),
+            printf("1\n");
+    else if(abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::IDLE_RPM)
+        shooter_1.Set(-1),
+            printf("1\n");
+    else
+        shooter_1.Set(0), printf("0\n");
 }
 
 double ShooterWheel::get_speed()
@@ -61,7 +49,7 @@ double ShooterWheel::get_temp()
     return shooter_1.GetMotorTemperature();
 }
 
-// True overrides bangbang, false returns to normal function
+// True makes bangbang use SHOOTING_RPM, false uses IDLE_RPM
 void ShooterWheel::setShooting(bool input)
 {
     runAtMaxSpeed = input;
