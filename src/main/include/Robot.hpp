@@ -42,5 +42,5 @@ public:
 
 private:
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
-    Average<5> averageCameraY;
+    Average<20> averageCameraY;
 };

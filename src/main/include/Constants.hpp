@@ -160,10 +160,10 @@ namespace HOPPER
 
         constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
 
-        constexpr double SPEED       = 0.7;
-        constexpr double SHOOT_SPEED = 1; //previous value was 1.0
+        constexpr double SPEED       = 0.3;
+        constexpr double SHOOT_SPEED = 1.0; //previous value was 1.0
 
-        constexpr double DISTANCE  = 73.0 / 3;
+        constexpr double DISTANCE  = 79.0 / 3;
         constexpr double TOLERANCE = 1;
 
         constexpr double P = 0.3;

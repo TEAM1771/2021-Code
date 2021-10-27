@@ -50,21 +50,15 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
     };
 
     constexpr table_row lookup_table[] {
-        { 19.5000, -14.85714 },
-        { 11.25, -16.42855 },
-        { 2.9, -18.97613 },
-        { -.5, -19.66659 },
-        { -5.88120, -21.6297 },
-        { -9.15754, -21.3750 }
+        { 19.8, -14.928576 },
+        { 15.2, -15.761895 },
+        { 9.0, -18.49947 },
+        { 4.5, -19.904686 },
+        { 1.56, -21.023714 },
+        { -0.99, -21.023714 },
+        { -3.82, -20.142776 },
+        { -4.67, -20.095138 }
     };
-    // constexpr table_row lookup_table[] { // origional values
-    //     { 20.0104, -13.1929 },
-    //     { 10.4538, -17.0433 },
-    //     { 1.97857, -21.3750 },
-    //     { -3.02635, -22.0117 },
-    //     { -5.88120, -21.6297 },
-    //     { -9.15754, -21.3750 }
-    // };
 
     auto find_value_in_table = [](auto yval, auto begin, auto end) {
         return std::find_if(std::next(begin), end, [=](auto const& val) {
@@ -104,7 +98,7 @@ bool Hood::visionTrack(double tolerance)
     if(camera.hasTarget())
     {
         // auto const cameratarget = result.GetBestTarget();
-        double     target       = getTrackingValue(camera.getY());
+        double target = getTrackingValue(camera.getY());
         hood.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }

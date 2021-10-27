@@ -318,6 +318,7 @@ void Robot::TestPeriodic()
 
     ShooterWheel::bangbang();
     printf("CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
+    printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
     Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
     Intake::deploy(true);
     auto targetLocked = Turret::visionTrack(TURRET::BACK);
@@ -363,6 +364,9 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
+    ShooterTempUpdate();
+    printf("\n CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
+    printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
 }
 
 void Robot::ButtonManager()

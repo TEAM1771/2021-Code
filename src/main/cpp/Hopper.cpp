@@ -7,7 +7,8 @@ inline static rev::CANPIDController pidController = transport.GetPIDController()
 inline static rev::CANEncoder       encoder       = transport.GetEncoder();
 inline static frc::DigitalInput     limitSwitch { HOPPER::LIMIT_SWITCH };
 inline static int                   numberOfBalls  = 3;
-inline static double                targetDistance = HOPPER::TRANSPORT::DISTANCE;
+inline static double                
+targetDistance = HOPPER::TRANSPORT::DISTANCE;
 inline static bool                  isTransporting = false;
 inline static std::atomic<bool>     invalidStopFlag { false };
 
