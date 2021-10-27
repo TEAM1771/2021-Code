@@ -12,5 +12,5 @@ namespace ShooterWheel
 
     double get_temp();
 
-    void enableMaxSpeedForShooting(bool boolean);
+    void maxSpeedForShooting(bool boolean);
 } // namespace ShooterWheel

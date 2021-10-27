@@ -113,6 +113,7 @@ void Robot::FiveBall()
         if(aim(TURRET::POSITION::FRONT) && timer.Get() > SHOOT_WAIT_TIME)
             Hopper::shoot();
     }
+    Hopper::stop();
 }
 
 
@@ -240,11 +241,11 @@ void Robot::EightBall()
     Drivetrain::stop();
 
     std::this_thread::sleep_for(STOP_AND_AIM_TIME + SECOND_SHOOT_TIME);
+    Hopper::stop();
     aim_and_shoot.join();
 
     Turret::goToPosition(TURRET::POSITION::ZERO);
-    Drivetrain::stop(); //Just to make sure it was already stopped
-    
+
     // Drivetrain::auton_drive(0_mps,
     //                         0.5_mps * WHEELS::speed_mult,
     //                         -0.5_rad);
@@ -315,6 +316,8 @@ void Robot::AutonomousInit()
     //FiveBall();
     EightBall();
 
+    Hopper::stop();
+
     run_shooter_wheel_and_index_balls.join();
 }
 
@@ -363,7 +366,6 @@ void Robot::TestPeriodic()
         Hopper::shoot();
     else if(! BUTTON::SHOOTER::SHOOT)
         Hopper::index();
-
 
     // double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
 

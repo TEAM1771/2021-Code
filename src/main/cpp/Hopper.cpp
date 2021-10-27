@@ -72,12 +72,15 @@ void Hopper::shoot()
 {
     invalidStopFlag = true;
     // indexer.Set(HOPPER::INDEXER::SPEED);
+    ShooterWheel::maxSpeedForShooting(true);
     transport.Set(HOPPER::TRANSPORT::SHOOT_SPEED);
 }
 
 void Hopper::stop()
 {
-    if (invalidStopFlag) {
+    ShooterWheel::maxSpeedForShooting(false);
+    if(invalidStopFlag)
+    {
         invalidStopFlag = false;
         isTransporting  = false;
         numberOfBalls   = 0;

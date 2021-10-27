@@ -257,10 +257,10 @@ namespace AUTO
         constexpr auto PICKUP_SECOND_THREE = 1.15s;
         constexpr auto ALIGN_WITH_GOAL     = 0.8s;
         constexpr auto SECOND_MOVE_TO_GOAL = 1.5s;
-        constexpr auto STOP_AND_AIM_TIME   = 0.3s;
+        constexpr auto STOP_AND_AIM_TIME   = 0.25s;
         constexpr auto SECOND_SHOOT_TIME   = 1.5s;
-        auto           keepAiming          = true;
-    } // namespace TEN_BALL
+        inline auto    keepAiming          = true;
+    } // namespace EIGHT_BALL
 
     namespace THIRTEEN_BALL
     {
