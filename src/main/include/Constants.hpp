@@ -31,6 +31,9 @@ namespace BUTTON
         inline JoystickButton AIM_SIDE { BUTTON::oStick, 2 };
         inline JoystickButton BATTERSHOT { BUTTON::oStick, 6 };
         inline JoystickButton SHOOT { BUTTON::oStick, 1 };
+        inline JoystickButton ADJUST_SHOOTER_UP { BUTTON::oStick, 12 };
+        inline JoystickButton ADJUST_SHOOTER_DOWN { BUTTON::oStick, 11 };
+
     } // namespace SHOOTER
 
     namespace CLIMBER
@@ -82,7 +85,7 @@ namespace WHEELS
 
 namespace CAMERA
 {
-    constexpr double X_OFFSET = 2.5; //4.2517710;
+    constexpr double X_OFFSET = 3.75; //4.2517710;
 } // namespace CAMERA
 
 namespace HOOD
@@ -160,7 +163,7 @@ namespace HOPPER
 
         constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
 
-        constexpr double SPEED       = 0.3;
+        constexpr double SPEED       = 0.4;
         constexpr double SHOOT_SPEED = 1.0; //previous value was 1.0
 
         constexpr double DISTANCE  = 79.0 / 3;
@@ -255,10 +258,10 @@ namespace AUTO
         constexpr auto WAIT_BETWEEN_TURNS  = 0.15s;
         constexpr auto MOVE_STRAIGHT_BACK  = 1s;
         constexpr auto MOVE_BACK_AND_TURN  = 1.1s;
-        constexpr auto PICKUP_SECOND_THREE = 1.15s;
+        constexpr auto PICKUP_SECOND_THREE = 1.4375s;
         constexpr auto ALIGN_WITH_GOAL     = 0.8s;
-        constexpr auto SECOND_MOVE_TO_GOAL = 1s;
-        constexpr auto STOP_AND_AIM_TIME   = 0.25s;
+        constexpr auto SECOND_MOVE_TO_GOAL = 1.3s;
+        constexpr auto STOP_AND_AIM_TIME   = 0.4s;
         constexpr auto SECOND_SHOOT_TIME   = 1.5s;
         inline auto    keepAiming          = true;
     } // namespace EIGHT_BALL

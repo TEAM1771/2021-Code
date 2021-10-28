@@ -72,7 +72,7 @@ bool Hopper::index(bool warn_if_shooting)
 void Hopper::shoot()
 {
     invalidStopFlag = true;
-    // indexer.Set(HOPPER::INDEXER::SPEED);
+    indexer.Set(HOPPER::INDEXER::SPEED - 0.3);
     ShooterWheel::setShooting(true);
     transport.Set(HOPPER::TRANSPORT::SHOOT_SPEED);
 }

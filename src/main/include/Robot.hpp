@@ -9,7 +9,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/livewindow/LiveWindow.h>
 #include "Constants.hpp"
-#include "Average.hpp"
+//#include "Average.hpp"
 
 class Robot : public frc::TimedRobot
 {
@@ -42,5 +42,5 @@ public:
 
 private:
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
-    Average<20> averageCameraY;
+
 };

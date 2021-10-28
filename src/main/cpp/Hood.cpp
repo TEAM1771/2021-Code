@@ -1,7 +1,7 @@
 #include "Hood.hpp"
 //#include "PhotonVision.hpp"
 #include "LimeLight.hpp"
-
+//#include "Average.hpp"
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -9,6 +9,7 @@
 // #include <PhotonCamera.h> I think I included the right file above
 
 extern LimeLight camera; // From Robot.cpp
+//Average<3>   averageInputCameraY;
 
 static inline PID_CANSparkMax hood { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 static inline HOOD::POSITION  position = HOOD::POSITION::BOTTOM;
@@ -50,14 +51,12 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
     };
 
     constexpr table_row lookup_table[] {
-        { 19.8, -14.928576 },
-        { 15.2, -15.761895 },
-        { 9.0, -18.49947 },
-        { 4.5, -19.904686 },
-        { 1.56, -21.023714 },
-        { -0.99, -21.023714 },
-        { -3.82, -20.142776 },
-        { -4.67, -20.095138 }
+        { 16.1, -17.023779 },
+        { 10.8, -18.190428 },
+        { 5.6, -19.476120 },
+        { 1.95, -20.190395 },
+        { -0.9, -20.809433 },
+        { -3.6, -21.118952 }
     };
 
     auto find_value_in_table = [](auto yval, auto begin, auto end) {
