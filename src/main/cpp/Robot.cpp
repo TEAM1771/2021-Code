@@ -21,6 +21,9 @@ void Robot::SimulationPeriodic() {
 }
 */
 LimeLight camera {};
+double    adjustShooter = .5;
+//Average<20> averageCameraY;
+
 
 Robot::Robot()
 {
@@ -208,8 +211,8 @@ void Robot::EightBall()
     std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
 
     //Now begins going forward & faster to the left, picking up three
-    Drivetrain::auton_drive(-0.1771_mps * WHEELS::speed_mult,
-                            0.28_mps,
+    Drivetrain::auton_drive(-0.14168_mps * WHEELS::speed_mult,
+                            0.224_mps,
                             30_deg);
     std::this_thread::sleep_for(PICKUP_SECOND_THREE);
     Drivetrain::stop();
@@ -217,7 +220,7 @@ void Robot::EightBall()
     std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
 
     //Move to the right to avoid pole
-    Drivetrain::auton_drive(0.35_mps * WHEELS::speed_mult,
+    Drivetrain::auton_drive(0.25_mps * WHEELS::speed_mult,
                             0_mps,
                             0_deg);
     std::this_thread::sleep_for(ALIGN_WITH_GOAL);
@@ -227,7 +230,7 @@ void Robot::EightBall()
 
     //Now drive straight forward to the goal
     Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
-                            0.35_mps,
+                            0.25_mps,
                             0_deg);
 
     //Start aiming and prepare to shoot
@@ -307,6 +310,10 @@ void Robot::TeleopPeriodic()
     }
     // printf("speed: %f\n", ShooterWheel::get_speed());
     ButtonManager();
+
+    //("\n CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
+    //printf("\n CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
+    //printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
 }
 void Robot::TestInit()
 {
@@ -317,9 +324,29 @@ void Robot::TestPeriodic()
     ShooterTempUpdate();
 
     ShooterWheel::bangbang();
-    printf("CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
+    printf("CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
     printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
-    Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
+    //Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
+
+    if(BUTTON::SHOOTER::ADJUST_SHOOTER_UP.getRawButtonPressed())
+    {
+        adjustShooter += 0.01;
+        if(adjustShooter > 1)
+            adjustShooter = 1;
+    }
+    else if(BUTTON::SHOOTER::ADJUST_SHOOTER_DOWN.getRawButtonPressed())
+    {
+        adjustShooter -= 0.01;
+        if(adjustShooter < 0)
+            adjustShooter = 0;
+    }
+
+    if(adjustShooter > 1)
+        adjustShooter = 1;
+    if(adjustShooter < 0)
+        adjustShooter = 0;
+    Hood::manualPositionControl(adjustShooter);
+
     Intake::deploy(true);
     auto targetLocked = Turret::visionTrack(TURRET::BACK);
 
@@ -365,8 +392,9 @@ void Robot::DisabledInit()
 void Robot::DisabledPeriodic()
 {
     ShooterTempUpdate();
-    printf("\n CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
-    printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
+    //printf("\n CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
+    //printf("\n CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
+    //printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
 }
 
 void Robot::ButtonManager()
