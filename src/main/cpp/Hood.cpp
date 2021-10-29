@@ -22,6 +22,7 @@ void Hood::init()
 {
     hood.RestoreFactoryDefaults();
     hood.SetIdleMode(HOOD::IDLE_MODE);
+    hood.SetSmartCurrentLimit(20);
 
     hood.SetP(HOOD::P);
     hood.SetI(HOOD::I);
@@ -58,6 +59,10 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
         { -0.9, -20.809433 },
         { -3.6, -21.118952 }
     };
+
+    if (yval < -3.6) {
+        yval = -3.6;
+    }
 
     auto find_value_in_table = [](auto yval, auto begin, auto end) {
         return std::find_if(std::next(begin), end, [=](auto const& val) {

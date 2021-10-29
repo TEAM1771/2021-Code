@@ -249,7 +249,26 @@ void Robot::EightBall()
     //Stop when it arrives at shoot location in front of goal
     std::this_thread::sleep_for(SECOND_MOVE_TO_GOAL);
     Drivetrain::stop();
-
+    /*
+    If previous solution for second volley doesn't work, try inputing manual interpolation value from test
+    if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
+          Hood::manualPositionControl(secondVolleyShooterY); && readyToShoot;
+    else
+        Hood::goToPosition(HOOD::POSITION::TRAVERSE);
+   
+    std::this_thread::sleep_for(STOP_AND_AIM_TIME);
+    timer.Reset();
+    timer.Start();
+    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
+    while(IsAutonomous() && IsEnabled() && timer.Get() < SECOND_SHOOT_TIME)
+    {
+        std::this_thread::sleep_for(10ms);
+        
+        if(timer.Get() > SHOOT_WAIT_TIME)
+            Hopper::shoot();
+    }
+    Hopper::stop();
+    */
     //Stop aiming/shooting (handled in aim_and_shoot)
     std::this_thread::sleep_for(STOP_AND_AIM_TIME + SECOND_SHOOT_TIME);
     aim_and_shoot.join();
@@ -300,7 +319,7 @@ void Robot::TeleopPeriodic()
 {
     ShooterTempUpdate();
 
-    if(BUTTON::oStick.GetThrottle() < 0)
+    if(BUTTON::oStick.GetThrottle() > 0)
     {
         ShooterWheel::bangbang();
     }
@@ -482,6 +501,9 @@ void Robot::ButtonManager()
         Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
     // else if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
     //     Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
+    // else if(BUTTON::DRIVETRAIN::ROTATE_CLIMB) {
+    //     Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 67.5_deg);
+    // }
     else
         Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
                                                units::meters_per_second_t { y },
