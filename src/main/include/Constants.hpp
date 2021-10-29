@@ -47,6 +47,8 @@ namespace BUTTON
         // inline JoystickButton REVERSE { BUTTON::lStick, 11 };
         inline JoystickButton ROTATE_FRONT { BUTTON::ps5, 7 };
         inline JoystickButton ROTATE_BACK { BUTTON::ps5, 8 };
+    //    inline JoystickButton ROTATE_TO_CLOSEST { BUTTON::ps5, 8 };
+    //    inline JoystickButton ROTATE_CLIMB { BUTTON::ps5, 8 };
     } // namespace DRIVETRAIN
 } // namespace BUTTON
 
@@ -152,7 +154,7 @@ namespace HOPPER
     namespace INDEXER
     {
         constexpr can_adr PORT  = 10;
-        constexpr double  SPEED = 1;
+        constexpr double  SPEED = 0.7;
 
         constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
     } // namespace INDEXER
@@ -260,9 +262,10 @@ namespace AUTO
         constexpr auto MOVE_BACK_AND_TURN  = 1.1s;
         constexpr auto PICKUP_SECOND_THREE = 1.4375s;
         constexpr auto ALIGN_WITH_GOAL     = 0.8s;
-        constexpr auto SECOND_MOVE_TO_GOAL = 1.3s;
+        constexpr auto SECOND_MOVE_TO_GOAL = 1.1s;
         constexpr auto STOP_AND_AIM_TIME   = 0.4s;
         constexpr auto SECOND_SHOOT_TIME   = 1.5s;
         inline auto    keepAiming          = true;
+        //constexpr auto secondVolleyShooterY = .5;
     } // namespace EIGHT_BALL
 } // namespace AUTO
