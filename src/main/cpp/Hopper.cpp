@@ -31,7 +31,7 @@ void Hopper::init()
     indexer.SetSmartCurrentLimit(20);
 
     transport.SetIdleMode(HOPPER::TRANSPORT::IDLE_MODE);
-    transport.SetSmartCurrentLimit(20);
+    transport.SetSmartCurrentLimit(40);
 
     pidController.SetP(HOPPER::TRANSPORT::P);
     pidController.SetI(HOPPER::TRANSPORT::I);

@@ -21,7 +21,8 @@ void Robot::SimulationPeriodic() {
 }
 */
 LimeLight camera {};
-double    adjustShooter = .5;
+double    adjustShooter       = .5;
+bool      overheatingFlashRed = true;
 //Average<20> averageCameraY;
 
 
@@ -95,6 +96,7 @@ void Robot::FiveBall()
                             -180_deg);
     std::this_thread::sleep_for(MOVE_TO_BALLS);
     Drivetrain::stop();
+    Intake::drive(INTAKE::DIRECTION::OFF);
 
     // Everytime we see sleep_for() we can try to reduce this
     std::this_thread::sleep_for(AUTO::EIGHT_BALL::WAIT_BETWEEN_TURNS);
@@ -105,6 +107,7 @@ void Robot::FiveBall()
                             0_deg);
     std::this_thread::sleep_for(MOVE_TO_GOAL_TIME);
     Drivetrain::stop();
+    Intake::drive(INTAKE::DIRECTION::IN);
 
     // shoot
     timer.Reset();
@@ -216,11 +219,12 @@ void Robot::EightBall()
                             30_deg);
     std::this_thread::sleep_for(PICKUP_SECOND_THREE);
     Drivetrain::stop();
+    Intake::drive(INTAKE::DIRECTION::OFF);
 
     std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
 
     //Move to the right to avoid pole
-    Drivetrain::auton_drive(0.25_mps * WHEELS::speed_mult,
+    Drivetrain::auton_drive(0.3_mps * WHEELS::speed_mult,
                             0_mps,
                             0_deg);
     std::this_thread::sleep_for(ALIGN_WITH_GOAL);
@@ -241,6 +245,7 @@ void Robot::EightBall()
         while(IsAutonomous() && IsEnabled() && timer.Get() < (SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME + SECOND_SHOOT_TIME))
         {
             std::this_thread::sleep_for(10ms);
+            Intake::drive(INTAKE::DIRECTION::IN);
             if(aim(TURRET::POSITION::FRONT) && timer.Get() >= SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME)
                 Hopper::shoot();
         }
@@ -249,6 +254,8 @@ void Robot::EightBall()
     //Stop when it arrives at shoot location in front of goal
     std::this_thread::sleep_for(SECOND_MOVE_TO_GOAL);
     Drivetrain::stop();
+
+
     /*
     If previous solution for second volley doesn't work, try inputing manual interpolation value from test
     if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
@@ -269,6 +276,8 @@ void Robot::EightBall()
     }
     Hopper::stop();
     */
+
+
     //Stop aiming/shooting (handled in aim_and_shoot)
     std::this_thread::sleep_for(STOP_AND_AIM_TIME + SECOND_SHOOT_TIME);
     aim_and_shoot.join();
@@ -282,6 +291,13 @@ void Robot::AutonomousInit()
 {
     Drivetrain::reset_gyro();
     using namespace std::literals::chrono_literals;
+
+    // Drivetrain::auton_drive(0_mps,
+    //                         -0.25_mps * WHEELS::speed_mult,
+    //                         0_deg);
+    // std::this_thread::sleep_for(2s);
+    // Drivetrain::stop();
+    // return;
 
     // Start BangBang and indexer
     std::thread run_shooter_wheel_and_index_balls { [this] {
@@ -341,7 +357,19 @@ void Robot::TestInit()
 void Robot::TestPeriodic()
 {
     ShooterTempUpdate();
+    if(BUTTON::RUMBLE)
+    {
+        BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, .7);
+        BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, .7);
+    }
+    else
+    {
+        BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, 0);
+        BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, 0);
+    }
 
+
+    /*
     ShooterWheel::bangbang();
     printf("CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
     printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
@@ -375,6 +403,7 @@ void Robot::TestPeriodic()
         Hopper::shoot();
     else if(! BUTTON::SHOOTER::SHOOT)
         Hopper::index();
+*/
 
     // double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
 
@@ -497,12 +526,12 @@ void Robot::ButtonManager()
 
     if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
         Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
-    else if(BUTTON::DRIVETRAIN::ROTATE_BACK)
-        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
+    // if(BUTTON::DRIVETRAIN::ROTATE_BACK)
+    //     Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
     // else if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
     //     Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
-    // else if(BUTTON::DRIVETRAIN::ROTATE_CLIMB) {
-    //     Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 67.5_deg);
+    else if(BUTTON::DRIVETRAIN::ROTATE_CLIMB)
+        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 67.5_deg);
     // }
     else
         Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },
@@ -521,14 +550,28 @@ bool Robot::aim(TURRET::POSITION direction)
 bool Robot::ShooterTempUpdate()
 {
     frc::SmartDashboard::PutNumber("Shooter Temp", ShooterWheel::get_temp());
+    printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
     if(ShooterWheel::get_temp() > 70)
     {
-        frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", false);
-        //inverted so that driverstation shows green instead of red
+        // oscillating between green & red to grab attention
+        if(overheatingFlashRed)
+        {
+            frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", false);
+            overheatingFlashRed = false;
+        }
+        else
+        {
+            frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", true);
+            overheatingFlashRed = true;
+        }
+        BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, .7);
+        BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, .7);
     }
     else
     {
         frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", true);
+        BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, 0);
+        BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, 0);
     }
     return ShooterWheel::get_temp() > 70;
 }

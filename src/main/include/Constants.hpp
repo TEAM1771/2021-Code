@@ -18,6 +18,9 @@ namespace BUTTON
 {
     inline frc::Joystick ps5 { 0 },
         oStick { 1 };
+    
+    inline JoystickButton RUMBLE { BUTTON::ps5, 5 };
+    
     namespace INTAKE
     {
         inline JoystickButton DEPLOY { BUTTON::oStick, 3 };
@@ -46,9 +49,9 @@ namespace BUTTON
         // inline JoystickButton ZERO { BUTTON::lStick, 10 };
         // inline JoystickButton REVERSE { BUTTON::lStick, 11 };
         inline JoystickButton ROTATE_FRONT { BUTTON::ps5, 7 };
-        inline JoystickButton ROTATE_BACK { BUTTON::ps5, 8 };
+    //    inline JoystickButton ROTATE_BACK { BUTTON::ps5, 7 };
     //    inline JoystickButton ROTATE_TO_CLOSEST { BUTTON::ps5, 8 };
-    //    inline JoystickButton ROTATE_CLIMB { BUTTON::ps5, 8 };
+        inline JoystickButton ROTATE_CLIMB { BUTTON::ps5, 8 };
     } // namespace DRIVETRAIN
 } // namespace BUTTON
 
