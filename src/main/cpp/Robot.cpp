@@ -54,31 +54,26 @@ void Robot::ThreeBall()
     using namespace AUTO::THREE_BALL;
 
     ngr::Timer timer;
-    ngr::Timer spinup_timer;
 
-    spinup_timer.Reset();
-    spinup_timer.Start();
-
-    timer.Reset();
-    timer.Start();
-    while(timer.Get() < DRIVE_TIME && IsAutonomous() && IsEnabled())
-    {
-        Drivetrain::drive({ 0_mps, -.25_mps * WHEELS::speed_mult, 0_rad_per_s });
-
-        aim(TURRET::POSITION::BACK);
-        std::this_thread::sleep_for(10ms);
-    }
+    std::this_thread::sleep_for(SPINUP_TIME);
+    Drivetrain::auton_drive(-0.35_mps * WHEELS::speed_mult,
+                            0_mps * WHEELS::speed_mult,
+                            -180_deg);
+    std::this_thread::sleep_for(DRIVE_TIME);
     Drivetrain::stop();
 
-    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
     timer.Reset();
     timer.Start();
-    while(IsAutonomous() && IsEnabled())
+    camera.setLEDMode(LimeLight::LED_Mode::Force_On);
+    while(IsAutonomous() && IsEnabled() && timer.Get() < SHOOT_TOTAL_TIME)
     {
         std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK) && spinup_timer.Get() > SPINUP_TIME && timer.Get() < SHOOT_WAIT_TIME)
+        if(aim(TURRET::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
             Hopper::shoot();
     }
+    Hopper::stop();
+    Turret::goToPosition(TURRET::POSITION::ZERO);
+    Drivetrain::stop();
 }
 
 void Robot::FiveBall()
@@ -313,7 +308,7 @@ void Robot::AutonomousInit()
 
     Drivetrain::gotoZero();
     std::this_thread::sleep_for(0.25s);
-    //ThreeBall();
+    // ThreeBall();
     //SixBall();
     //FiveBall();
     EightBall();
@@ -564,14 +559,14 @@ bool Robot::ShooterTempUpdate()
             frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", true);
             overheatingFlashRed = true;
         }
-        BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, .7);
-        BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, .7);
+        // BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, .7);
+        // BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, .7);
     }
     else
     {
         frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", true);
-        BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, 0);
-        BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, 0);
+        // BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, 0);
+        // BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, 0);
     }
     return ShooterWheel::get_temp() > 70;
 }
