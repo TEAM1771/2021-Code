@@ -36,6 +36,7 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     // driver_config.voltageCompSaturation = 12;
     driver.ConfigAllSettings(driver_config);
     driver.SetNeutralMode(NeutralMode::Brake);
+    driver.ConfigClosedloopRamp(.2);
 
     // CANCoderConfiguration direction_config {};
     // direction_config.magnetOffsetDegrees    = wheel_info.offset.to<double>(); // DO NOT UNCOMMENT

@@ -5,19 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Climber.hpp"
-#include "Drivetrain.hpp"
-#include "Hood.hpp"
-#include "Hopper.hpp"
-#include "Intake.hpp"
 //#include "Limelight.hpp"
-#include "ShooterWheel.hpp"
-#include "Turret.hpp"
 #include <frc/TimedRobot.h>
-#include <frc/Timer.h>
 #include <frc/livewindow/LiveWindow.h>
-#include <frc/smartdashboard/smartdashboard.h>
-#include <memory>
+#include "Constants.hpp"
+//#include "Average.hpp"
 
 class Robot : public frc::TimedRobot
 {
@@ -43,9 +35,12 @@ public:
     void FiveBall();
     void SixBall();
     void EightBall();
-    void TenBall();
+//    void TenBall();
     void ThirteenBall();
+
+    bool ShooterTempUpdate();
 
 private:
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
+
 };

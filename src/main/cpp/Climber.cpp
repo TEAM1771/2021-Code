@@ -18,7 +18,7 @@ void Climber::init()
     climber_1.SetI(CLIMBER::I);
     climber_1.SetD(CLIMBER::D);
     climber_1.SetOutputRange(-CLIMBER::MAX_OUTPUT, CLIMBER::MAX_OUTPUT);
-    climber_2.SetPositionRange(CLIMBER::POSITION::ZERO, CLIMBER::POSITION::UP);
+    climber_1.SetPositionRange(CLIMBER::POSITION::ZERO, CLIMBER::POSITION::UP);
     climber_1.SetTarget(CLIMBER::POSITION::ZERO);
 
     climber_2.SetP(CLIMBER::P);

@@ -1,7 +1,7 @@
 #include "Hood.hpp"
 //#include "PhotonVision.hpp"
 #include "LimeLight.hpp"
-
+//#include "Average.hpp"
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -9,6 +9,7 @@
 // #include <PhotonCamera.h> I think I included the right file above
 
 extern LimeLight camera; // From Robot.cpp
+//Average<3>   averageInputCameraY;
 
 static inline PID_CANSparkMax hood { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 static inline HOOD::POSITION  position = HOOD::POSITION::BOTTOM;
@@ -21,6 +22,7 @@ void Hood::init()
 {
     hood.RestoreFactoryDefaults();
     hood.SetIdleMode(HOOD::IDLE_MODE);
+    hood.SetSmartCurrentLimit(20);
 
     hood.SetP(HOOD::P);
     hood.SetI(HOOD::I);
@@ -50,21 +52,17 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
     };
 
     constexpr table_row lookup_table[] {
-        { 20.0104, -13.1929 },
-        { 10.4538, -17.0433 },
-        { 1.97857, -21.3750 },
-        { -3.02635, -22.0117 },
-        { -5.88120, -21.6297 },
-        { -9.15754, -21.3750 }
+        { 16.1, -17.023779 },
+        { 10.8, -18.190428 },
+        { 5.6, -19.476120 },
+        { 1.95, -20.190395 },
+        { -0.9, -20.809433 },
+        { -3.6, -21.118952 }
     };
-    // constexpr table_row lookup_table[] { // origional values
-    //     { 20.0104, -13.1929 },
-    //     { 10.4538, -17.0433 },
-    //     { 1.97857, -21.3750 },
-    //     { -3.02635, -22.0117 },
-    //     { -5.88120, -21.6297 },
-    //     { -9.15754, -21.3750 }
-    // };
+
+    if (yval < -3.6) {
+        yval = -3.6;
+    }
 
     auto find_value_in_table = [](auto yval, auto begin, auto end) {
         return std::find_if(std::next(begin), end, [=](auto const& val) {
@@ -104,7 +102,7 @@ bool Hood::visionTrack(double tolerance)
     if(camera.hasTarget())
     {
         // auto const cameratarget = result.GetBestTarget();
-        double     target       = getTrackingValue(camera.getY());
+        double target = getTrackingValue(camera.getY());
         hood.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }

@@ -5,6 +5,7 @@
 
 inline static rev::CANSparkMax shooter_1 { SHOOTER_WHEEL::PORT_1, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 inline static rev::CANEncoder  shooter_encoder = shooter_1.GetEncoder();
+inline static bool             runAtMaxSpeed;
 
 /******************************************************************/
 /*                      Non Static Functions                      */
@@ -16,22 +17,17 @@ void ShooterWheel::init()
     shooter_1.SetIdleMode(SHOOTER_WHEEL::IDLE_MODE);
 }
 
-void ShooterWheel::bangbang() //origional code with commented code removed
+void ShooterWheel::bangbang() //original code with commented code removed
 {
-    // return;
-    // if(abs(shooter_encoder.GetVelocity() > SHOOTER_WHEEL::SHOOTING_RPM - 1200))
-    //     shooter_1.SetOpenLoopRampRate(0);
-    // else
-    //     shooter_1.SetOpenLoopRampRate(6);
-
-    // if(abs(shooter_encoder.GetVelocity() > SHOOTER_WHEEL::SHOOTING_RPM - 2000))
     shooter_1.SetOpenLoopRampRate(0);
-    // else
-    //     shooter_1.SetOpenLoopRampRate(3);
+
 
     if((abs(shooter_encoder.GetVelocity()) < 2000))
         shooter_1.Set(-.5);
-    else if((abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::SHOOTING_RPM))
+    else if(runAtMaxSpeed && abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::SHOOTING_RPM)
+        shooter_1.Set(-1),
+            printf("1\n");
+    else if(abs(shooter_encoder.GetVelocity()) < SHOOTER_WHEEL::IDLE_RPM)
         shooter_1.Set(-1),
             printf("1\n");
     else
@@ -46,4 +42,15 @@ double ShooterWheel::get_speed()
 void ShooterWheel::stop()
 {
     shooter_1.Set(0);
+}
+
+double ShooterWheel::get_temp()
+{
+    return shooter_1.GetMotorTemperature();
+}
+
+// True makes bangbang use SHOOTING_RPM, false uses IDLE_RPM
+void ShooterWheel::setShooting(bool input)
+{
+    runAtMaxSpeed = input;
 }

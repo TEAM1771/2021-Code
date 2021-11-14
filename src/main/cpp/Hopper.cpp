@@ -7,7 +7,8 @@ inline static rev::CANPIDController pidController = transport.GetPIDController()
 inline static rev::CANEncoder       encoder       = transport.GetEncoder();
 inline static frc::DigitalInput     limitSwitch { HOPPER::LIMIT_SWITCH };
 inline static int                   numberOfBalls  = 3;
-inline static double                targetDistance = HOPPER::TRANSPORT::DISTANCE;
+inline static double                
+targetDistance = HOPPER::TRANSPORT::DISTANCE;
 inline static bool                  isTransporting = false;
 inline static std::atomic<bool>     invalidStopFlag { false };
 
@@ -27,7 +28,10 @@ void Hopper::init()
 
 
     indexer.SetIdleMode(HOPPER::INDEXER::IDLE_MODE);
+    indexer.SetSmartCurrentLimit(20);
+
     transport.SetIdleMode(HOPPER::TRANSPORT::IDLE_MODE);
+    transport.SetSmartCurrentLimit(40);
 
     pidController.SetP(HOPPER::TRANSPORT::P);
     pidController.SetI(HOPPER::TRANSPORT::I);
@@ -71,13 +75,16 @@ bool Hopper::index(bool warn_if_shooting)
 void Hopper::shoot()
 {
     invalidStopFlag = true;
-    // indexer.Set(HOPPER::INDEXER::SPEED);
+    indexer.Set(HOPPER::INDEXER::SPEED - 0.3);
+    ShooterWheel::setShooting(true);
     transport.Set(HOPPER::TRANSPORT::SHOOT_SPEED);
 }
 
 void Hopper::stop()
 {
-    if (invalidStopFlag) {
+    ShooterWheel::setShooting(false);
+    if(invalidStopFlag)
+    {
         invalidStopFlag = false;
         isTransporting  = false;
         numberOfBalls   = 0;

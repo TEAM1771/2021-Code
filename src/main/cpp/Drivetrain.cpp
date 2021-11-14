@@ -80,8 +80,8 @@ void Drivetrain::face_direction(units::meters_per_second_t dx, units::meters_per
     int const errorTheta      = ((currentRotation - theta).to<int>()%360-180-90)%360;
     auto const rotateP         = 1.25;
     auto       pRotation       = errorTheta * rotateP;
-    if(ngr::fabs(pRotation) > 40)
-         pRotation = 40 * ((pRotation > 0)?1:-1);
+    if(ngr::fabs(pRotation) > 35)
+         pRotation = 35 * ((pRotation > 0)?1:-1);
     drive(frc::ChassisSpeeds{ dx, dy, units::degrees_per_second_t{pRotation} });
 }
 
@@ -120,7 +120,7 @@ void Drivetrain::stop()
         // and therefore we dont need to wait for it to
         // finish the loop as long as it won't tell the
         // wheels to do anything
-    std::this_thread::sleep_for(1ms); // make sure it has time to stop the thread
+    std::this_thread::sleep_for(5ms); // make sure it has time to stop the thread
     for(auto&& wheel : wheels)
         wheel->stop();
 }

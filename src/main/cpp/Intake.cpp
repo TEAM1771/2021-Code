@@ -15,6 +15,7 @@ inline static rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::
 void Intake::init()
 {
     wheels.SetIdleMode(INTAKE::IDLE_MODE);
+    wheels.SetSmartCurrentLimit(20);
 }
 
 void Intake::drive(INTAKE::DIRECTION mode)

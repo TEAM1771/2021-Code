@@ -21,6 +21,8 @@ void Turret::init()
 
     turretTurnyTurny.SetIdleMode(TURRET::IDLE_MODE);
 
+    turretTurnyTurny.SetSmartCurrentLimit(20);
+
     turretTurnyTurny.SetP(TURRET::P);
     turretTurnyTurny.SetI(TURRET::I);
     turretTurnyTurny.SetD(TURRET::D);
