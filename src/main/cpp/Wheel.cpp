@@ -47,13 +47,18 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
 
 Wheel::float_t Wheel::get_angle()
 {
-    return direction.GetAbsolutePosition(); // return turner encoder converted to radians
+    return direction.GetAbsolutePosition();
+}
+
+frc::SwerveModuleState Wheel::get_state()
+{
+    return {units::meters_per_second_t{driver.GetSelectedSensorVelocity() * 10 * radius.to<double>() * WHEELS::driver_ratio}, frc::Rotation2d{units::degree_t{get_angle()}}};
 }
 
 std::thread Wheel::drive(frc::SwerveModuleState const& state)
 {
     return std::thread { [this, state] {
-        auto const currentRotation = frc::Rotation2d(units::degree_t(direction.GetAbsolutePosition()));
+        auto const currentRotation = frc::Rotation2d(units::degree_t(get_angle()));
         auto const [speed, angle]  = frc::SwerveModuleState::Optimize(
             state,
             currentRotation);

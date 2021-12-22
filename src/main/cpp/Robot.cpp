@@ -330,6 +330,8 @@ void Robot::TeleopPeriodic()
 {
     ShooterTempUpdate();
 
+    Drivetrain::update_odometry();
+
     if(BUTTON::oStick.GetThrottle() > 0)
     {
         ShooterWheel::bangbang();

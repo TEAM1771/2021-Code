@@ -5,7 +5,7 @@
 #include <cmath>
 #include <iostream>
 
-// cartesian and rotational velocities in a space relative to the feild
+// cartesian and rotational velocities in a space relative to the field
 struct Twist_I
 {
     double dx, dy, dtheta;
