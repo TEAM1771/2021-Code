@@ -226,7 +226,7 @@ namespace INTAKE
 
 namespace DRIVETRAIN
 {
-    namespace TRAJECTORY
+    namespace HOLONOMIC
     {
         constexpr int                                 xKP             = 1;                    // 1 meter in X direction for every meter of error
         constexpr int                                 yKP             = 1;                    // same for y
@@ -234,7 +234,7 @@ namespace DRIVETRAIN
         constexpr units::radians_per_second_t         maxVelocity     = 6.28_rad / 1_s;       // Max Velocity of 1 rotation/sec
         constexpr units::radians_per_second_squared_t maxAcceleration = 3.14_rad / 1_s / 1_s; //max acceleration of pi / second^2
 
-    } // namespace TRAJECTORY
+    } // namespace HOLONOMIC
 } // namespace DRIVETRAIN
 
 namespace AUTO

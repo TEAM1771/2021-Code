@@ -34,7 +34,7 @@ inline static frc::SwerveDriveOdometry const m_odometry { m_kinematics, Drivetra
 
 inline static std::unique_ptr<AHRS> navx { std::make_unique<AHRS>(frc::SPI::Port::kMXP) };
 
-using namespace DRIVETRAIN::TRAJECTORY;
+using namespace DRIVETRAIN::HOLONOMIC;
 inline static frc::HolonomicDriveController controller {
     frc2::PIDController { xKP, 0, 0 },
     frc2::PIDController { yKP, 0, 0 },
