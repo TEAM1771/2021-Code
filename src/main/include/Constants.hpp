@@ -10,6 +10,7 @@
 
 #include <frc/geometry/Transform2d.h>
 #include <units/angular_velocity.h>
+#include <units/angular_acceleration.h>
 
 using can_adr = int;
 
@@ -227,11 +228,11 @@ namespace DRIVETRAIN
 {
     namespace TRAJECTORY
     {
-        constexpr int  xKP             = 1;                                                      // 1 meter in X direction for every meter of error
-        constexpr int  yKP             = 1;                                                      // same for y
-        constexpr int  zKP             = 1;                                                      // for z
-        constexpr auto maxVelocity     = units::angular_velocity::radians_per_second_t { 6.28 }; // Max Velocity of 1 rotation/sec
-        constexpr auto maxAcceleration = units::radians_per_second_t { 3.14 } / 1_s;             //max acceleration of pi / second^2
+        constexpr int                                 xKP             = 1;                    // 1 meter in X direction for every meter of error
+        constexpr int                                 yKP             = 1;                    // same for y
+        constexpr int                                 zKP             = 1;                    // for z
+        constexpr units::radians_per_second_t         maxVelocity     = 6.28_rad / 1_s;       // Max Velocity of 1 rotation/sec
+        constexpr units::radians_per_second_squared_t maxAcceleration = 3.14_rad / 1_s / 1_s; //max acceleration of pi / second^2
 
     } // namespace TRAJECTORY
 } // namespace DRIVETRAIN
