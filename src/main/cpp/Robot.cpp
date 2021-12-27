@@ -288,7 +288,7 @@ void Robot::EightBall()
 void Robot::TestTrajectory()
 {
     using namespace DRIVETRAIN::TRAJECTORY;
-    auto config = frc::TrajectoryConfig(3_mps, 3_mps);
+    auto config = frc::TrajectoryConfig(3_mps, 3_mps / 1_s);
     config.SetKinematics<4>(const_cast<frc::SwerveDriveKinematics<4>&>(Drivetrain::get_kinematics()));
     // auto startPos = frc::Pose2d(0_m, 0_m, frc::Rotation2d(0));
     frc::Pose2d const startPos;
@@ -300,7 +300,7 @@ void Robot::TestTrajectory()
 
     auto traj = frc::TrajectoryGenerator::GenerateTrajectory(startPos, interiorPos, endPos, config);
 
-    Drivetrain::trajectory_auton_drive(traj);
+    Drivetrain::trajectory_auton_drive(traj, frc::Rotation2d{0_deg});
 }
 
 void Robot::AutonomousInit()

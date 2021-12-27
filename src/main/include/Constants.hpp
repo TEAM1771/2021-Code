@@ -9,6 +9,7 @@
 #include <rev/CANSparkMax.h>
 
 #include <frc/geometry/Transform2d.h>
+#include <units/angular_velocity.h>
 
 using can_adr = int;
 
@@ -83,7 +84,7 @@ namespace WHEELS
 
     constexpr double kEncoderTicksPerRotation = 2048;
     constexpr double driver_ratio             = 8.16 * kEncoderTicksPerRotation; //Previous value was .25 instead of .1
-    constexpr double turning_ratio            = 1;                                   //4096.0/360;//.125 * 12.8 * 2048 / 360;
+    constexpr double turning_ratio            = 1;                               //4096.0/360;//.125 * 12.8 * 2048 / 360;
 
     constexpr double speed_mult = 1; // hacky way to deal with joysticks
 } // namespace WHEELS
@@ -226,11 +227,12 @@ namespace DRIVETRAIN
 {
     namespace TRAJECTORY
     {
-        constexpr int  xKP             = 1;                      // 1 meter in X direction for every meter of error
-        constexpr int  yKP             = 1;                      // same for y
-        constexpr int  zKP             = 1;                      // for z
-        constexpr auto maxVelocity     = 6.28_rad_per_s;         // Max Velocity of 1 rotation/sec
-        constexpr auto maxAcceleration = 3.14_rad_per_s / 1_s; //max acceleration of pi / second^2
+        constexpr int  xKP             = 1;                                                      // 1 meter in X direction for every meter of error
+        constexpr int  yKP             = 1;                                                      // same for y
+        constexpr int  zKP             = 1;                                                      // for z
+        constexpr auto maxVelocity     = units::angular_velocity::radians_per_second_t { 6.28 }; // Max Velocity of 1 rotation/sec
+        constexpr auto maxAcceleration = units::radians_per_second_t { 3.14 } / 1_s;             //max acceleration of pi / second^2
+
     } // namespace TRAJECTORY
 } // namespace DRIVETRAIN
 

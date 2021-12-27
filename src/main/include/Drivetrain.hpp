@@ -14,7 +14,7 @@ namespace Drivetrain
     void                                 drive(frc::ChassisSpeeds const& field_speeds);
     void                                 drive(wpi::array<frc::SwerveModuleState, 4> const& states);
     void                                 trajectory_drive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation);
-    void                                 trajectory_auton_drive(frc::Trajectory const& traj);
+    void                                 trajectory_auton_drive(frc::Trajectory const& traj, frc::Rotation2d const& faceAngle);
     frc::SwerveDriveKinematics<4> const& get_kinematics();
     void                                 update_odometry();
     void                                 gotoZero();
