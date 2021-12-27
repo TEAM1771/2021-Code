@@ -111,7 +111,7 @@ void Drivetrain::trajectory_auton_drive(frc::Trajectory const& traj, frc::Rotati
     trajectory_thread    = std::thread { [traj, faceAngle] () {
         frc::Timer trajTimer;
         trajTimer.Start();
-        while(! trajectory_stop_flag && RobotState::IsAutonomousEnabled())
+        while(! trajectory_stop_flag && RobotState::IsAutonomousEnabled() && trajTimer.Get() <= traj.TotalTime().to<double>())
         {
             auto const sample = traj.Sample(units::time::second_t{trajTimer.Get()});
             trajectory_drive(sample, faceAngle);
