@@ -7,23 +7,24 @@
 
 namespace Drivetrain
 {
-    void            init();
-    double          get_angle(); // pull from rio
-    frc::Rotation2d get_heading();
-    void            print();
-    void            drive(frc::ChassisSpeeds const& field_speeds);
-    void            drive(wpi::array<frc::SwerveModuleState, 4> const& states);
-    void            trajectoryDrive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation);
-    void            trajectoryDrive(frc::Trajectory::State&& state, frc::Rotation2d&& rotation);
-    void            update_odometry();
-    void            gotoZero();
-    void            goto180();
-    void            PrintWheelAngle(int);
-    void            reset_gyro();
-    void            face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
-    void            face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy);
-    void            auton_drive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction);
-    void            stop();
+    void                                 init();
+    double                               get_angle(); // pull from rio
+    frc::Rotation2d                      get_heading();
+    void                                 print();
+    void                                 drive(frc::ChassisSpeeds const& field_speeds);
+    void                                 drive(wpi::array<frc::SwerveModuleState, 4> const& states);
+    void                                 trajectory_drive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation);
+    void                                 trajectory_auton_drive(frc::Trajectory const& traj);
+    frc::SwerveDriveKinematics<4> const& get_kinematics();
+    void                                 update_odometry();
+    void                                 gotoZero();
+    void                                 goto180();
+    void                                 PrintWheelAngle(int);
+    void                                 reset_gyro();
+    void                                 face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
+    void                                 face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy);
+    void                                 auton_drive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction);
+    void                                 stop();
 } // namespace Drivetrain
 
 #endif // __DRIVETRAIN_H__

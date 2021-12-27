@@ -82,7 +82,7 @@ namespace WHEELS
 
 
     constexpr double kEncoderTicksPerRotation = 2048;
-    constexpr double driver_ratio             = 1 * 8.16 * kEncoderTicksPerRotation; //Previous value was .25 instead of .1
+    constexpr double driver_ratio             = 8.16 * kEncoderTicksPerRotation; //Previous value was .25 instead of .1
     constexpr double turning_ratio            = 1;                                   //4096.0/360;//.125 * 12.8 * 2048 / 360;
 
     constexpr double speed_mult = 1; // hacky way to deal with joysticks
@@ -222,15 +222,27 @@ namespace INTAKE
     constexpr double OUT_SPEED = 1;
 } // namespace INTAKE
 
+namespace DRIVETRAIN
+{
+    namespace TRAJECTORY
+    {
+        constexpr int  xKP             = 1;                      // 1 meter in X direction for every meter of error
+        constexpr int  yKP             = 1;                      // same for y
+        constexpr int  zKP             = 1;                      // for z
+        constexpr auto maxVelocity     = 6.28_rad_per_s;         // Max Velocity of 1 rotation/sec
+        constexpr auto maxAcceleration = 3.14_rad_per_s / 1_s; //max acceleration of pi / second^2
+    } // namespace TRAJECTORY
+} // namespace DRIVETRAIN
+
 namespace AUTO
 {
     namespace THREE_BALL
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto SPINUP_TIME     = 4s;
-        constexpr auto DRIVE_TIME      = 1.8s;
-        constexpr auto SHOOT_WAIT_TIME = 2s;
+        constexpr auto SPINUP_TIME      = 4s;
+        constexpr auto DRIVE_TIME       = 1.8s;
+        constexpr auto SHOOT_WAIT_TIME  = 2s;
         constexpr auto SHOOT_TOTAL_TIME = SHOOT_WAIT_TIME + 3s;
 
     } // namespace THREE_BALL

@@ -34,18 +34,12 @@ inline static frc::SwerveDriveOdometry const m_odometry { m_kinematics, Drivetra
 
 inline static std::unique_ptr<AHRS> navx { std::make_unique<AHRS>(frc::SPI::Port::kMXP) };
 
-// In the future some values should be moved to Constants.hpp and changed as needed
+using namespace DRIVETRAIN::TRAJECTORY;
 inline static frc::HolonomicDriveController controller {
-    frc2::PIDController { 1, 0, 0 }, // 1 meter in X direction for every meter of error
-    frc2::PIDController { 1, 0, 0 }, // 1 meter in Y direction for every meter of error
-    frc::ProfiledPIDController<units::radian> {
-        1,
-        0,
-        0,
-        frc::TrapezoidProfile<units::radian>::Constraints {
-            6.28_rad_per_s,
-            3.14_rad_per_s / 1_s } }
-}; // Max Velocity of 1 rotation/sec, max acceleration of pi / second^2
+    frc2::PIDController { xKP, 0, 0 },
+    frc2::PIDController { yKP, 0, 0 },
+    frc::ProfiledPIDController<units::radian> { zKP, 0, 0, frc::TrapezoidProfile<units::radian>::Constraints { maxVelocity, maxAcceleration } }
+};
 
 /*
     void initDriveController(double xErrorCorrection, double yErrorCorrection,
@@ -73,7 +67,8 @@ double Drivetrain::get_angle()
 
 frc::Rotation2d Drivetrain::get_heading()
 {
-    return { units::degree_t { -get_angle() } };
+    // return { units::degree_t { -get_angle() } };
+    return navx->GetRotation2d();
 }
 
 void Drivetrain::drive(frc::ChassisSpeeds const& field_speeds)
@@ -98,14 +93,37 @@ void Drivetrain::drive(wpi::array<frc::SwerveModuleState, 4> const& module_state
         ts.join();
 }
 
-void Drivetrain::trajectoryDrive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation)
+void Drivetrain::trajectory_drive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation)
 {
     drive(controller.Calculate(m_odometry.GetPose(), state, rotation));
 }
 
-void Drivetrain::trajectoryDrive(frc::Trajectory::State&& state, frc::Rotation2d&& rotation)
+inline static std::thread trajectory_thread;
+
+bool trajectory_stop_flag = false;
+
+void Drivetrain::trajectory_auton_drive(frc::Trajectory const& traj, frc::Rotation2d const& faceAngle)
 {
-    drive(controller.Calculate(m_odometry.GetPose(), state, rotation));
+    trajectory_stop_flag = true;     // stop previous thread
+    if(trajectory_thread.joinable()) // verify drive thread was running, should only happen on first run
+        trajectory_thread.join();    // wait for drivethread to finish
+    trajectory_stop_flag = false;    // reset stop flag
+    trajectory_thread    = std::thread { [traj, faceAngle] () {
+        frc::Timer trajTimer;
+        trajTimer.Start();
+        while(! trajectory_stop_flag && RobotState::IsAutonomousEnabled())
+        {
+            auto const sample = traj.Sample(units::time::second_t{trajTimer.Get()});
+            trajectory_drive(sample, faceAngle);
+            std::this_thread::sleep_for(20ms); // don't hog the cpu
+        }
+        face_direction(0_mps, 0_mps, faceAngle.Degrees());
+    } };
+}
+
+frc::SwerveDriveKinematics<4> const& Drivetrain::get_kinematics()
+{
+    return m_kinematics;
 }
 
 void Drivetrain::update_odometry()

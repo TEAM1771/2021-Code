@@ -12,6 +12,9 @@
 #include <frc/Timer.h>
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
+#include <frc/trajectory/TrajectoryConfig.h>
+#include <frc/trajectory/Trajectory.h>
+#include <frc/trajectory/TrajectoryGenerator.h>
 
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
@@ -280,6 +283,24 @@ void Robot::EightBall()
     //Just to make sure the intake doesn't hit limelight again...
     Turret::goToPosition(TURRET::POSITION::ZERO);
     Hopper::stop();
+}
+
+void Robot::TestTrajectory()
+{
+    using namespace DRIVETRAIN::TRAJECTORY;
+    auto config = frc::TrajectoryConfig(3_mps, 3_mps);
+    config.SetKinematics<4>(const_cast<frc::SwerveDriveKinematics<4>&>(Drivetrain::get_kinematics()));
+    // auto startPos = frc::Pose2d(0_m, 0_m, frc::Rotation2d(0));
+    frc::Pose2d const startPos;
+    frc::Pose2d const endPos{3_m, 3_m, 180_deg};
+    std::vector<frc::Translation2d> interiorPos{
+        frc::Translation2d{1.5_m, 1_m},
+        frc::Translation2d{2_m, 2.5_m}
+    };
+
+    auto traj = frc::TrajectoryGenerator::GenerateTrajectory(startPos, interiorPos, endPos, config);
+
+    Drivetrain::trajectory_auton_drive(traj);
 }
 
 void Robot::AutonomousInit()

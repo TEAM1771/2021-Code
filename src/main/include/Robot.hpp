@@ -38,6 +38,8 @@ public:
 //    void TenBall();
     void ThirteenBall();
 
+    void TestTrajectory();
+
     bool ShooterTempUpdate();
 
 private:
