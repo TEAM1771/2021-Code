@@ -1,7 +1,7 @@
-#include "drivetrain.hpp"
+#include "Drivetrain.hpp"
 //#include <frc/kinematics/ChassisSpeeds.h> Replaced by next line
 // #include <frc/kinematics/SwerveModuleState.h> Replaced by next line
-#include "frc/kinematics/SwerveDriveOdometry.h"
+#include <frc/kinematics/SwerveDriveOdometry.h>
 
 #include "Twist.hpp"
 #include "Wheel.hpp"
@@ -12,7 +12,7 @@
 #include <thread>
 #include <iostream>
 #include <memory>
-#include "frc/controller/HolonomicDriveController.h"
+#include <frc/controller/HolonomicDriveController.h>
 
 // #include <cmath>
 

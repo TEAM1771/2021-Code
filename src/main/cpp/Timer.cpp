@@ -1,6 +1,6 @@
 #include "Timer.hpp"
-#include "frc/DriverStation.h"
-#include "frc/RobotController.h"
+#include <frc/DriverStation.h>
+#include <frc/RobotController.h>
 #include <chrono>
 #include <hal/FRCUsageReporting.h>
 #include <thread>
