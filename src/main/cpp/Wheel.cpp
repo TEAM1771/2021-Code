@@ -69,19 +69,20 @@ std::thread Wheel::drive(frc::SwerveModuleState const& state)
 
         //  double const velocity = speed.to<double>();
 
-        driver.Set(ControlMode::Velocity, speed.to<double>() * radius.to<double>() * WHEELS::driver_ratio);
+        // Speed / wheel radius = speed in wheel radians, converted to ticks/sec, multiplied by .1 gives ticks per 100 milliseconds
+        driver.Set(ControlMode::Velocity, speed / radius.to<units::meter_t>() * WHEELS::kEncoderTicksPerWheelRadian * WHEELS::convertToTicksPer100Milliseconds);
         turner.Set(ControlMode::Position, desiredTicks);
         if(id == 0)
         {
             printf("v: %5.0f\tr: %5.0f\tdt: %5.0f\tc: %5.0f\ta: %5i\tc: %5i\tdir: %5.0f\trad: %f\n",
-            speed.to<double>() * radius.to<double>() * WHEELS::driver_ratio,
-            desiredTicks,
-            deltaTicks,
-            currentTicks,
-            static_cast<int>(angle.Degrees())/360,
-            static_cast<int>(currentRotation.Degrees())/360,
-            direction.GetAbsolutePosition(),
-            radius.to<double>());
+                   speed.to<double>() * radius.to<double>() * WHEELS::driver_ratio,
+                   desiredTicks,
+                   deltaTicks,
+                   currentTicks,
+                   static_cast<int>(angle.Degrees()) / 360,
+                   static_cast<int>(currentRotation.Degrees()) / 360,
+                   direction.GetAbsolutePosition(),
+                   radius.to<double>());
         }
     } };
 }
