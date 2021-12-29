@@ -183,27 +183,11 @@ namespace HOPPER
 
 } // namespace HOPPER
 
-namespace CLIMBER
-{
-    constexpr int PORT_1 = 9;
-    constexpr int PORT_2 = 35;
-
-    constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
-
-    constexpr double P = 0.1771;
-    constexpr double I = 0.0;
-    constexpr double D = 0.0;
-
-    constexpr double MAX_OUTPUT = 1;
-
-    typedef enum {
-        DOWN = 50,
-        UP   = 802,
-        ZERO = 0
-    } POSITION;
-
-
-} // namespace CLIMBER
+typedef enum {
+    DOWN = 50,
+    UP   = 802,
+    ZERO = 0
+} CLIMBER_POSITION;
 
 namespace INTAKE
 {
@@ -228,9 +212,9 @@ namespace AUTO
     {
         using namespace std::literals::chrono_literals;
 
-        constexpr auto SPINUP_TIME     = 4s;
-        constexpr auto DRIVE_TIME      = 1.8s;
-        constexpr auto SHOOT_WAIT_TIME = 2s;
+        constexpr auto SPINUP_TIME      = 4s;
+        constexpr auto DRIVE_TIME       = 1.8s;
+        constexpr auto SHOOT_WAIT_TIME  = 2s;
         constexpr auto SHOOT_TOTAL_TIME = SHOOT_WAIT_TIME + 3s;
 
     } // namespace THREE_BALL

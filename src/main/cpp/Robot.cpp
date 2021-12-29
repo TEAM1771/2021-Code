@@ -494,7 +494,7 @@ void Robot::ButtonManager()
     else
         Intake::drive(INTAKE::DIRECTION::OFF);
 
-    Climber::ButtonManager();
+    Climber::buttonManager();
 
 
     double x = BUTTON::ps5.GetX() * WHEELS::speed_mult;
