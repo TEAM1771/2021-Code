@@ -8,7 +8,7 @@
 //#include "Limelight.hpp"
 #include <frc/TimedRobot.h>
 #include <frc/livewindow/LiveWindow.h>
-#include "Constants.hpp"
+#include "Turret.hpp"
 //#include "Average.hpp"
 
 class Robot : public frc::TimedRobot
@@ -27,18 +27,18 @@ public:
     void TestInit() override;
     void TestPeriodic() override;
 
-    void ButtonManager();
+    void buttonManager();
 
     // returns true when aimed at goal
-    bool aim(TURRET::POSITION);
-    void ThreeBall();
-    void FiveBall();
-    void SixBall();
-    void EightBall();
+    bool aim(Turret::POSITION direction);
+    void threeBall();
+    void fiveBall();
+    void sixBall();
+    void eightBall();
 //    void TenBall();
-    void ThirteenBall();
+    void thirteenBall();
 
-    bool ShooterTempUpdate();
+    bool shooterTempUpdate();
 
 private:
     frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();

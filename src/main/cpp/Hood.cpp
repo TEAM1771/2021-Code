@@ -4,11 +4,11 @@
 
 #include <PID_CANSparkMax.hpp>
 
-// #include <algorithm>
-
 extern LimeLight camera; // From Robot.cpp
 
-//Constants
+/******************************************************************/
+/*                             Constants                          */
+/******************************************************************/
 const can_adr PORT = 7;
 
 const auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
@@ -21,8 +21,12 @@ const double MAX_SPEED = 0.8;
 
 // Average<10>   averageInputCameraY;
 
+/******************************************************************/
+/*                          Non-constant Vars                     */
+/******************************************************************/
+
 static inline PID_CANSparkMax hood { PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
-static inline HOOD_POSITION  position = HOOD_POSITION::BOTTOM;
+static inline Hood::POSITION  position = Hood::POSITION::BOTTOM;
 
 /******************************************************************/
 /*                      Non Static Functions                      */
@@ -38,12 +42,12 @@ void Hood::init()
     hood.SetI(I);
     hood.SetD(D);
 
-    hood.SetTarget(HOOD_POSITION::BOTTOM);
+    hood.SetTarget(Hood::POSITION::BOTTOM);
     hood.SetOutputRange(-MAX_SPEED, MAX_SPEED);
-    hood.SetPositionRange(HOOD_POSITION::BATTER, HOOD_POSITION::BOTTOM);
+    hood.SetPositionRange(Hood::POSITION::BATTER, Hood::POSITION::BOTTOM);
 }
 
-bool Hood::goToPosition(HOOD_POSITION pos, double tolerance)
+bool Hood::goToPosition(Hood::POSITION pos, double tolerance)
 {
     if(pos != position)
     {
@@ -103,7 +107,7 @@ bool Hood::goToPosition(HOOD_POSITION pos, double tolerance)
     //         lookup_table[1].y_val,
     //     "Invalid Table Search");
 
-    static_assert(ngr::is_close_to(std::midpoint(lookup_table[0].hood_val, lookup_table[1].hood_val), interpolate(std::midpoint(lookup_table[0].y_val, lookup_table[1].y_val), &lookup_table[0], &lookup_table[1])),
+    static_assert(ngr::isCloseTo(std::midpoint(lookup_table[0].hood_val, lookup_table[1].hood_val), interpolate(std::midpoint(lookup_table[0].y_val, lookup_table[1].y_val), &lookup_table[0], &lookup_table[1])),
                   "interpolation error");
 }
 
@@ -114,10 +118,10 @@ bool Hood::visionTrack(double tolerance)
     {
         // auto const cameratarget = result.GetBestTarget();
         double target = getTrackingValue(camera.getY());
-        hood.SetTarget(std::clamp(target, static_cast<double>(SAFE_TO_TURN), 0.0));
+        hood.SetTarget(std::clamp(target, static_cast<double>(Hood::POSITION::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }
-    goToPosition(HOOD_POSITION::TRAVERSE);
+    goToPosition(Hood::POSITION::TRAVERSE);
     return false;
 }
 
@@ -125,8 +129,8 @@ void Hood::manualPositionControl(double pos)
 {
     hood.SetTarget(ngr::scaleOutput(0,
                                     1,
-                                    HOOD_POSITION::TRAVERSE,
-                                    HOOD_POSITION::SAFE_TO_TURN,
+                                    Hood::POSITION::TRAVERSE,
+                                    Hood::POSITION::SAFE_TO_TURN,
                                     std::clamp(pos, 0.0, 1.0)));
 }
 

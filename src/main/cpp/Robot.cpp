@@ -9,6 +9,7 @@
 #include "Hood.hpp"
 #include "Hopper.hpp"
 #include "Intake.hpp"
+#include "Constants.hpp"
 #include <frc/Timer.h>
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
@@ -21,21 +22,21 @@ void Robot::SimulationPeriodic() {
 }
 */
 LimeLight camera {};
-double    adjustShooter       = .5;
-bool      overheatingFlashRed = true;
+double    adjust_shooter       = .5;
+bool      overheating_flash_red = true;
 //Average<20> averageCameraY;
 
 
 Robot::Robot()
 {
     // setup RobotStates
-    RobotState::IsEnabled                = [this]() { return IsEnabled(); };
-    RobotState::IsDisabled               = [this]() { return IsDisabled(); };
-    RobotState::IsAutonomous             = [this]() { return IsAutonomous(); };
-    RobotState::IsAutonomousEnabled      = [this]() { return IsAutonomousEnabled(); };
-    RobotState::IsOperatorControl        = [this]() { return IsOperatorControl(); };
-    RobotState::IsOperatorControlEnabled = [this]() { return IsOperatorControlEnabled(); };
-    RobotState::IsTest                   = [this]() { return IsTest(); };
+    RobotState::isEnabled                = [this]() { return IsEnabled(); };
+    RobotState::isDisabled               = [this]() { return IsDisabled(); };
+    RobotState::isAutonomous             = [this]() { return IsAutonomous(); };
+    RobotState::isAutonomousEnabled      = [this]() { return IsAutonomousEnabled(); };
+    RobotState::isOperatorControl        = [this]() { return IsOperatorControl(); };
+    RobotState::isOperatorControlEnabled = [this]() { return IsOperatorControlEnabled(); };
+    RobotState::isTest                   = [this]() { return IsTest(); };
 
 
     Climber::init();
@@ -46,10 +47,55 @@ Robot::Robot()
     Turret::init();
     ShooterWheel::init();
 
-    ShooterTempUpdate();
+    shooterTempUpdate();
 }
 
-void Robot::ThreeBall()
+namespace AUTO //In the future, might move all of this over to a seperate auton folder or something
+{
+    using namespace std::literals::chrono_literals;
+    namespace THREE_BALL
+    {
+
+        constexpr auto SPINUP_TIME      = 4s;
+        constexpr auto DRIVE_TIME       = 1.8s;
+        constexpr auto SHOOT_WAIT_TIME  = 2s;
+        constexpr auto SHOOT_TOTAL_TIME = SHOOT_WAIT_TIME + 3s;
+
+    } // namespace THREE_BALL
+
+    namespace FIVE_BALL
+    {
+        constexpr auto MOVE_TO_BALLS     = 2.3s;
+        constexpr auto MOVE_TO_GOAL_TIME = 1.75s;
+        constexpr auto SHOOT_WAIT_TIME   = 1s;
+        constexpr auto SHOOT_TOTAL_TIME  = SHOOT_WAIT_TIME + 1.5s;
+    } // namespace FIVE_BALL
+    namespace SIX_BALL
+    {
+        constexpr auto SPIN_UP_TIME      = 4.5s;
+        constexpr auto PICKUP_DRIVE_TIME = 2.8s;
+        constexpr auto SHOOT_TIME_1      = 1s;
+        constexpr auto TIME_BACKWARD     = 2.3s;
+        constexpr auto SHOOT_WAIT_TIME   = 1.5s;
+    } // namespace SIX_BALL
+
+
+    namespace EIGHT_BALL
+    {
+        constexpr auto WAIT_BETWEEN_TURNS  = 0.15s;
+        constexpr auto MOVE_STRAIGHT_BACK  = 1s;
+        constexpr auto MOVE_BACK_AND_TURN  = 1.1s;
+        constexpr auto PICKUP_SECOND_THREE = 1.4375s;
+        constexpr auto ALIGN_WITH_GOAL     = 0.8s;
+        constexpr auto SECOND_MOVE_TO_GOAL = 1.1s;
+        constexpr auto STOP_AND_AIM_TIME   = 0.4s;
+        constexpr auto SECOND_SHOOT_TIME   = 1.5s;
+        inline auto    keepAiming          = true;
+        //constexpr auto secondVolleyShooterY = .5;
+    } // namespace EIGHT_BALL
+} // namespace AUTO
+
+void Robot::threeBall()
 {
     using namespace AUTO::THREE_BALL;
 
@@ -68,22 +114,22 @@ void Robot::ThreeBall()
     while(IsAutonomous() && IsEnabled() && timer.Get() < SHOOT_TOTAL_TIME)
     {
         std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
+        if(aim(Turret::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
             Hopper::shoot();
     }
     Hopper::stop();
-    Turret::goToPosition(TURRET::POSITION::ZERO);
+    Turret::goToPosition(Turret::POSITION::ZERO);
     Drivetrain::stop();
 }
 
-void Robot::FiveBall()
+void Robot::fiveBall()
 {
     using namespace AUTO::FIVE_BALL;
     ngr::Timer timer;
 
     // drive back / intake
     Intake::deploy(true);
-    Intake::drive(INTAKE::DIRECTION::IN);
+    Intake::drive(Intake::DIRECTION::IN);
 
     // move to balls
     Drivetrain::autonDrive(0_mps * WHEELS::speed_mult,
@@ -91,7 +137,7 @@ void Robot::FiveBall()
                             -180_deg);
     std::this_thread::sleep_for(MOVE_TO_BALLS);
     Drivetrain::stop();
-    Intake::drive(INTAKE::DIRECTION::OFF);
+    Intake::drive(Intake::DIRECTION::OFF);
 
     // Everytime we see sleep_for() we can try to reduce this
     std::this_thread::sleep_for(AUTO::EIGHT_BALL::WAIT_BETWEEN_TURNS);
@@ -102,7 +148,7 @@ void Robot::FiveBall()
                             0_deg);
     std::this_thread::sleep_for(MOVE_TO_GOAL_TIME);
     Drivetrain::stop();
-    Intake::drive(INTAKE::DIRECTION::IN);
+    Intake::drive(Intake::DIRECTION::IN);
 
     // shoot
     timer.Reset();
@@ -111,14 +157,14 @@ void Robot::FiveBall()
     while(IsAutonomous() && IsEnabled() && timer.Get() < SHOOT_TOTAL_TIME)
     {
         std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::FRONT) && timer.Get() > SHOOT_WAIT_TIME)
+        if(aim(Turret::POSITION::FRONT) && timer.Get() > SHOOT_WAIT_TIME)
             Hopper::shoot();
     }
     Hopper::stop();
 }
 
 
-void Robot::SixBall()
+void Robot::sixBall()
 {
     using namespace AUTO::SIX_BALL;
     ngr::Timer timer;
@@ -126,12 +172,12 @@ void Robot::SixBall()
 
     // drive back / intake
     Intake::deploy(true);
-    Intake::drive(INTAKE::DIRECTION::IN);
+    Intake::drive(Intake::DIRECTION::IN);
 
     timer.Reset();
     timer.Start();
     while(timer.Get() < SPIN_UP_TIME)
-        aim(TURRET::POSITION::BACK);
+        aim(Turret::POSITION::BACK);
 
     // std::this_thread::sleep_for(SPIN_UP_TIME);
 
@@ -144,7 +190,7 @@ void Robot::SixBall()
     while(timer.Get() < SHOOT_TIME_1 && IsAutonomous() && IsEnabled())
     {
         std::this_thread::sleep_for(10ms);
-        if(aim(TURRET::POSITION::BACK))
+        if(aim(Turret::POSITION::BACK))
             Hopper::shoot();
     }
     Hopper::stop();
@@ -175,7 +221,7 @@ void Robot::SixBall()
         while(IsAutonomous() && IsEnabled())
         {
             std::this_thread::sleep_for(10ms);
-            if(aim(TURRET::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
+            if(aim(Turret::POSITION::BACK) && timer.Get() > SHOOT_WAIT_TIME)
                 Hopper::shoot();
         }
     } };
@@ -186,12 +232,12 @@ void Robot::SixBall()
 }
 
 
-void Robot::EightBall()
+void Robot::eightBall()
 {
     using namespace AUTO::EIGHT_BALL;
     ngr::Timer timer;
 
-    FiveBall(); //Pickup 2, shoot first 5
+    fiveBall(); //Pickup 2, shoot first 5
 
     //Drive straight backwards
     Drivetrain::autonDrive(0_mps,
@@ -214,7 +260,7 @@ void Robot::EightBall()
                             30_deg);
     std::this_thread::sleep_for(PICKUP_SECOND_THREE);
     Drivetrain::stop();
-    Intake::drive(INTAKE::DIRECTION::OFF);
+    Intake::drive(Intake::DIRECTION::OFF);
 
     std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
 
@@ -240,8 +286,8 @@ void Robot::EightBall()
         while(IsAutonomous() && IsEnabled() && timer.Get() < (SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME + SECOND_SHOOT_TIME))
         {
             std::this_thread::sleep_for(10ms);
-            Intake::drive(INTAKE::DIRECTION::IN);
-            if(aim(TURRET::POSITION::FRONT) && timer.Get() >= SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME)
+            Intake::drive(Intake::DIRECTION::IN);
+            if(aim(Turret::POSITION::FRONT) && timer.Get() >= SECOND_MOVE_TO_GOAL + STOP_AND_AIM_TIME)
                 Hopper::shoot();
         }
     } };
@@ -256,7 +302,7 @@ void Robot::EightBall()
     if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
           Hood::manualPositionControl(secondVolleyShooterY); && readyToShoot;
     else
-        Hood::goToPosition(HOOD_POSITION::TRAVERSE);
+        Hood::goToPosition(Hood::POSITION::TRAVERSE);
    
     std::this_thread::sleep_for(STOP_AND_AIM_TIME);
     timer.Reset();
@@ -278,7 +324,7 @@ void Robot::EightBall()
     aim_and_shoot.join();
 
     //Just to make sure the intake doesn't hit limelight again...
-    Turret::goToPosition(TURRET::POSITION::ZERO);
+    Turret::goToPosition(Turret::POSITION::ZERO);
     Hopper::stop();
 }
 
@@ -308,17 +354,17 @@ void Robot::AutonomousInit()
 
     Drivetrain::goToZero();
     std::this_thread::sleep_for(0.25s);
-    // ThreeBall();
-    //SixBall();
-    //FiveBall();
-    EightBall();
+    // threeBall();
+    //sixBall();
+    //fiveBall();
+    eightBall();
 
     run_shooter_wheel_and_index_balls.join();
 }
 
 void Robot::AutonomousPeriodic()
 {
-    ShooterTempUpdate();
+    shooterTempUpdate();
 }
 
 void Robot::TeleopInit()
@@ -328,7 +374,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-    ShooterTempUpdate();
+    shooterTempUpdate();
 
     if(BUTTON::oStick.GetThrottle() > 0)
     {
@@ -338,12 +384,12 @@ void Robot::TeleopPeriodic()
     {
         ShooterWheel::stop();
     }
-    // printf("speed: %f\n", ShooterWheel::get_speed());
-    ButtonManager();
+    // printf("speed: %f\n", ShooterWheel::getSpeed());
+    buttonManager();
 
     //("\n CamY: %f\tAngle: %f", averageCameraY(Hood::getCameraY()), Hood::getAngle());
     //printf("\n CamY: %f\tAngle: %f", Hood::getCameraY(), Hood::getAngle());
-    //printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
+    //printf("\n Shooter Temp: %f", ShooterWheel::getTemp());
 }
 void Robot::TestInit()
 {
@@ -351,7 +397,7 @@ void Robot::TestInit()
 
 void Robot::TestPeriodic()
 {
-    ShooterTempUpdate();
+    shooterTempUpdate();
     if(BUTTON::RUMBLE)
     {
         BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, .7);
@@ -367,27 +413,27 @@ void Robot::TestPeriodic()
     /*
     ShooterWheel::bangbang();
     printf("CamY: %f\tAngle: %f", Hood::getCameraY(), Hood::getAngle());
-    printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
+    printf("\n Shooter Temp: %f", ShooterWheel::getTemp());
     //Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
 
     if(BUTTON::SHOOTER::ADJUST_SHOOTER_UP.getRawButtonPressed())
     {
-        adjustShooter += 0.01;
-        if(adjustShooter > 1)
-            adjustShooter = 1;
+        adjust_shooter += 0.01;
+        if(adjust_shooter > 1)
+            adjust_shooter = 1;
     }
     else if(BUTTON::SHOOTER::ADJUST_SHOOTER_DOWN.getRawButtonPressed())
     {
-        adjustShooter -= 0.01;
-        if(adjustShooter < 0)
-            adjustShooter = 0;
+        adjust_shooter -= 0.01;
+        if(adjust_shooter < 0)
+            adjust_shooter = 0;
     }
 
-    if(adjustShooter > 1)
-        adjustShooter = 1;
-    if(adjustShooter < 0)
-        adjustShooter = 0;
-    Hood::manualPositionControl(adjustShooter);
+    if(adjust_shooter > 1)
+        adjust_shooter = 1;
+    if(adjust_shooter < 0)
+        adjust_shooter = 0;
+    Hood::manualPositionControl(adjust_shooter);
 
     Intake::deploy(true);
     auto targetLocked = Turret::visionTrack(TURRET::BACK);
@@ -434,65 +480,65 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-    ShooterTempUpdate();
+    shooterTempUpdate();
     //printf("\n CamY: %f\tAngle: %f", averageCameraY(Hood::getCameraY()), Hood::getAngle());
     //printf("\n CamY: %f\tAngle: %f", Hood::getCameraY(), Hood::getAngle());
-    //printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
+    //printf("\n Shooter Temp: %f", ShooterWheel::getTemp());
 }
 
-void Robot::ButtonManager()
+void Robot::buttonManager()
 {
-    bool targetLocked = false;
-    bool deployIntake = false;
+    bool target_locked = false;
+    bool deploy_intake = false;
     if(BUTTON::SHOOTER::AIM_FRONT)
     {
-        deployIntake = true;
-        targetLocked = aim(TURRET::POSITION::FRONT);
+        deploy_intake = true;
+        target_locked = aim(Turret::POSITION::FRONT);
     }
     else if(BUTTON::SHOOTER::AIM_BACK)
     {
-        deployIntake = true;
-        targetLocked = aim(TURRET::POSITION::BACK);
+        deploy_intake = true;
+        target_locked = aim(Turret::POSITION::BACK);
     }
     else if(BUTTON::SHOOTER::BATTERSHOT)
     {
-        deployIntake = true;
+        deploy_intake = true;
 
         // turret_in_pos is true when it's safe to deploy hood
-        bool const turret_in_pos = Turret::goToPosition(TURRET::POSITION::FRONT,
-                                                        ngr::fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
+        bool const turret_in_pos = Turret::goToPosition(Turret::POSITION::FRONT,
+                                                        ngr::fabs(Turret::POSITION::FRONT - Turret::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
         if(turret_in_pos)
-            targetLocked = Hood::goToPosition(HOOD_POSITION::BATTER);
+            target_locked = Hood::goToPosition(Hood::POSITION::BATTER);
         else
-            Hood::goToPosition(HOOD_POSITION::TRAVERSE);
+            Hood::goToPosition(Hood::POSITION::TRAVERSE);
     }
     else if(BUTTON::SHOOTER::AIM_SIDE)
     {
-        deployIntake = true;
-        targetLocked = Hood::goToPosition(HOOD_POSITION::MIDPOINT);
+        deploy_intake = true;
+        target_locked = Hood::goToPosition(Hood::POSITION::MIDPOINT);
     }
     else
     {
-        deployIntake = false;
-        if(Hood::goToPosition(HOOD_POSITION::BOTTOM, ngr::fabs(HOOD_POSITION::SAFE_TO_TURN)))
-            Turret::goToPosition(TURRET::POSITION::ZERO);
+        deploy_intake = false;
+        if(Hood::goToPosition(Hood::POSITION::BOTTOM, ngr::fabs(Hood::POSITION::SAFE_TO_TURN)))
+            Turret::goToPosition(Turret::POSITION::ZERO);
     }
 
-    Intake::deploy(BUTTON::INTAKE::DEPLOY || deployIntake);
+    Intake::deploy(BUTTON::INTAKE::DEPLOY || deploy_intake);
 
     if(BUTTON::SHOOTER::SHOOT.getRawButtonReleased())
         Hopper::stop();
-    if(targetLocked && BUTTON::SHOOTER::SHOOT)
+    if(target_locked && BUTTON::SHOOTER::SHOOT)
         Hopper::shoot();
     else if(! BUTTON::SHOOTER::SHOOT)
         Hopper::index();
 
     if(BUTTON::INTAKE::INTAKE)
-        Intake::drive(INTAKE::DIRECTION::IN);
+        Intake::drive(Intake::DIRECTION::IN);
     else if(BUTTON::INTAKE::RETRACT)
-        Intake::drive(INTAKE::DIRECTION::OUT);
+        Intake::drive(Intake::DIRECTION::OUT);
     else
-        Intake::drive(INTAKE::DIRECTION::OFF);
+        Intake::drive(Intake::DIRECTION::OFF);
 
     Climber::buttonManager();
 
@@ -535,29 +581,29 @@ void Robot::ButtonManager()
     // printf("rotate: %f\n", rotate);
 }
 
-bool Robot::aim(TURRET::POSITION direction)
+bool Robot::aim(Turret::POSITION direction)
 {
     if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
         return Hood::visionTrack() && readyToShoot;
-    Hood::goToPosition(HOOD_POSITION::TRAVERSE);
+    Hood::goToPosition(Hood::POSITION::TRAVERSE);
     return false;
 }
-bool Robot::ShooterTempUpdate()
+bool Robot::shooterTempUpdate()
 {
-    frc::SmartDashboard::PutNumber("Shooter Temp", ShooterWheel::get_temp());
-    printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
-    if(ShooterWheel::get_temp() > 70)
+    frc::SmartDashboard::PutNumber("Shooter Temp", ShooterWheel::getTemp());
+    printf("\n Shooter Temp: %f", ShooterWheel::getTemp());
+    if(ShooterWheel::getTemp() > 70)
     {
         // oscillating between green & red to grab attention
-        if(overheatingFlashRed)
+        if(overheating_flash_red)
         {
             frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", false);
-            overheatingFlashRed = false;
+            overheating_flash_red = false;
         }
         else
         {
             frc::SmartDashboard::PutBoolean("Shooter (not) Overheating", true);
-            overheatingFlashRed = true;
+            overheating_flash_red = true;
         }
         // BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, .7);
         // BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, .7);
@@ -568,7 +614,7 @@ bool Robot::ShooterTempUpdate()
         // BUTTON::ps5.SetRumble(BUTTON::ps5.kLeftRumble, 0);
         // BUTTON::ps5.SetRumble(BUTTON::ps5.kRightRumble, 0);
     }
-    return ShooterWheel::get_temp() > 70;
+    return ShooterWheel::getTemp() > 70;
 }
 
 #ifndef RUNNING_FRC_TESTS

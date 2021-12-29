@@ -1,5 +1,4 @@
-#ifndef __WHEEL_H__
-#define __WHEEL_H__
+#pragma once
 
 #include "Constants.hpp"
 #include <complex>
@@ -42,8 +41,7 @@ public:
 
     // void        zeroEncoder();
     void        printAngle();
-    float_t     get_angle();
+    float_t     getAngle();
     std::thread drive(frc::SwerveModuleState const& state);
     void stop();
 };
-#endif // __WHEEL_H__

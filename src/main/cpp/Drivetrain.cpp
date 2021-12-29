@@ -10,6 +10,10 @@
 #include <array>
 #include <thread>
 
+/******************************************************************/
+/*                          Non-constant Vars                     */
+/******************************************************************/
+
 inline static std::array<std::unique_ptr<Wheel>, 4> wheels {
     std::make_unique<Wheel>(WHEELS::WHEEL_1),
     std::make_unique<Wheel>(WHEELS::WHEEL_2),
@@ -100,7 +104,7 @@ void Drivetrain::autonDrive(units::meters_per_second_t dx, units::meters_per_sec
         drive_thread.join();    // wait for drivethread to finish
     auton_stop_flag = false;    // reset stop flag
     drive_thread    = std::thread { [dx, dy, direction]() {
-        while(! auton_stop_flag && RobotState::IsAutonomousEnabled())
+        while(! auton_stop_flag && RobotState::isAutonomousEnabled())
         {
             faceDirection(dx, dy, direction);
             std::this_thread::sleep_for(20ms); // don't hog the cpu

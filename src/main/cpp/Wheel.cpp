@@ -3,6 +3,19 @@
 #include <thread>
 
 #include <frc/kinematics/SwerveDriveKinematics.h>
+
+/******************************************************************/
+/*                             Constants                          */
+/******************************************************************/
+
+constexpr double K_ENCODER_TICKS_PER_ROTATION = 2048;
+constexpr double DRIVER_RATIO             = 1 * 8.16 * K_ENCODER_TICKS_PER_ROTATION; //Previous value was .25 instead of .1
+constexpr double TURNING_RATIO            = 1;                                   //4096.0/360;//.125 * 12.8 * 2048 / 360;
+
+
+/******************************************************************/
+/*                      Non Static Functions                      */
+/******************************************************************/
 Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
     : driver { wheel_info.driver }
     , turner { wheel_info.turner }
@@ -45,7 +58,7 @@ Wheel::Wheel(WHEELS::WheelInfo const& wheel_info)
 }
 
 
-Wheel::float_t Wheel::get_angle()
+Wheel::float_t Wheel::getAngle()
 {
     return direction.GetAbsolutePosition(); // return turner encoder converted to radians
 }
@@ -53,35 +66,35 @@ Wheel::float_t Wheel::get_angle()
 std::thread Wheel::drive(frc::SwerveModuleState const& state)
 {
     return std::thread { [this, state] {
-        auto const currentRotation = frc::Rotation2d(units::degree_t(direction.GetAbsolutePosition()));
-        auto const [speed, angle]  = frc::SwerveModuleState::Optimize(
+        auto const current_rotation = frc::Rotation2d(units::degree_t(direction.GetAbsolutePosition()));
+        auto const [speed, angle]   = frc::SwerveModuleState::Optimize(
             state,
-            currentRotation);
+            current_rotation);
 
         // Find the difference between our current rotational position + our new rotational position
-        frc::Rotation2d rotationDelta = angle - currentRotation;
+        frc::Rotation2d rotation_delta = angle - current_rotation;
 
         // Find the new absolute position of the module based on the difference in rotation
-        double const deltaTicks = (rotationDelta.Degrees().to<double>() / 360) * WHEELS::kEncoderTicksPerRotation;
+        double const delta_ticks = (rotation_delta.Degrees().to<double>() / 360) * K_ENCODER_TICKS_PER_ROTATION;
         // Convert the CANCoder from it's position reading back to ticks
-        double const currentTicks = direction.GetPosition() / .0878;
-        double const desiredTicks = currentTicks + deltaTicks;
+        double const current_ticks = direction.GetPosition() / .0878;
+        double const desired_ticks = current_ticks + delta_ticks;
 
         //  double const velocity = speed.to<double>();
 
-        driver.Set(ControlMode::Velocity, speed.to<double>() * radius.to<double>() * WHEELS::driver_ratio);
-        turner.Set(ControlMode::Position, desiredTicks);
+        driver.Set(ControlMode::Velocity, speed.to<double>() * radius.to<double>() * DRIVER_RATIO);
+        turner.Set(ControlMode::Position, desired_ticks);
         if(id == 0)
         {
             printf("v: %5.0f\tr: %5.0f\tdt: %5.0f\tc: %5.0f\ta: %5i\tc: %5i\tdir: %5.0f\trad: %f\n",
-            speed.to<double>() * radius.to<double>() * WHEELS::driver_ratio,
-            desiredTicks,
-            deltaTicks,
-            currentTicks,
-            static_cast<int>(angle.Degrees())/360,
-            static_cast<int>(currentRotation.Degrees())/360,
-            direction.GetAbsolutePosition(),
-            radius.to<double>());
+                   speed.to<double>() * radius.to<double>() * DRIVER_RATIO,
+                   desired_ticks,
+                   delta_ticks,
+                   current_ticks,
+                   static_cast<int>(angle.Degrees()) / 360,
+                   static_cast<int>(current_rotation.Degrees()) / 360,
+                   direction.GetAbsolutePosition(),
+                   radius.to<double>());
         }
     } };
 }
@@ -93,5 +106,5 @@ void Wheel::stop()
 
 void Wheel::printAngle()
 {
-    std::cout << "Angle: " << get_angle() << std::endl;
+    std::cout << "Angle: " << getAngle() << std::endl;
 }
