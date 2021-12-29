@@ -56,7 +56,7 @@ void Robot::ThreeBall()
     ngr::Timer timer;
 
     std::this_thread::sleep_for(SPINUP_TIME);
-    Drivetrain::auton_drive(-0.35_mps * WHEELS::speed_mult,
+    Drivetrain::autonDrive(-0.35_mps * WHEELS::speed_mult,
                             0_mps * WHEELS::speed_mult,
                             -180_deg);
     std::this_thread::sleep_for(DRIVE_TIME);
@@ -86,7 +86,7 @@ void Robot::FiveBall()
     Intake::drive(INTAKE::DIRECTION::IN);
 
     // move to balls
-    Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
+    Drivetrain::autonDrive(0_mps * WHEELS::speed_mult,
                             -0.35_mps * WHEELS::speed_mult,
                             -180_deg);
     std::this_thread::sleep_for(MOVE_TO_BALLS);
@@ -97,7 +97,7 @@ void Robot::FiveBall()
     std::this_thread::sleep_for(AUTO::EIGHT_BALL::WAIT_BETWEEN_TURNS);
 
     // move to goal
-    Drivetrain::auton_drive(-.175_mps * WHEELS::speed_mult,
+    Drivetrain::autonDrive(-.175_mps * WHEELS::speed_mult,
                             .3_mps * WHEELS::speed_mult,
                             0_deg);
     std::this_thread::sleep_for(MOVE_TO_GOAL_TIME);
@@ -154,14 +154,14 @@ void Robot::SixBall()
     timer.Start();
     while(timer.Get() < PICKUP_DRIVE_TIME && IsAutonomous() && IsEnabled())
     {
-        Drivetrain::auton_drive(0_mps,
+        Drivetrain::autonDrive(0_mps,
                                 -0.45_mps * WHEELS::speed_mult,
                                 0_rad);
         std::this_thread::sleep_for(20ms); // don't spam the CAN network
     }
 
     // turn and move back toward goal
-    Drivetrain::auton_drive(-0.15_mps * WHEELS::speed_mult, ////////////////////////////////////////////////////
+    Drivetrain::autonDrive(-0.15_mps * WHEELS::speed_mult, ////////////////////////////////////////////////////
                             0.45_mps * WHEELS::speed_mult,  ////////////////////////////////////////////////////////
                             0_rad);
     std::this_thread::sleep_for(TIME_BACKWARD);
@@ -194,13 +194,13 @@ void Robot::EightBall()
     FiveBall(); //Pickup 2, shoot first 5
 
     //Drive straight backwards
-    Drivetrain::auton_drive(0_mps,
+    Drivetrain::autonDrive(0_mps,
                             -0.35_mps * WHEELS::speed_mult,
                             0_deg);
     std::this_thread::sleep_for(MOVE_STRAIGHT_BACK);
 
     //Continues driving back but begins to turn and move to the left
-    Drivetrain::auton_drive(-0.1_mps * WHEELS::speed_mult,
+    Drivetrain::autonDrive(-0.1_mps * WHEELS::speed_mult,
                             -0.35_mps,
                             30_deg);
     std::this_thread::sleep_for(MOVE_BACK_AND_TURN);
@@ -209,7 +209,7 @@ void Robot::EightBall()
     std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
 
     //Now begins going forward & faster to the left, picking up three
-    Drivetrain::auton_drive(-0.14168_mps * WHEELS::speed_mult,
+    Drivetrain::autonDrive(-0.14168_mps * WHEELS::speed_mult,
                             0.224_mps,
                             30_deg);
     std::this_thread::sleep_for(PICKUP_SECOND_THREE);
@@ -219,7 +219,7 @@ void Robot::EightBall()
     std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
 
     //Move to the right to avoid pole
-    Drivetrain::auton_drive(0.3_mps * WHEELS::speed_mult,
+    Drivetrain::autonDrive(0.3_mps * WHEELS::speed_mult,
                             0_mps,
                             0_deg);
     std::this_thread::sleep_for(ALIGN_WITH_GOAL);
@@ -228,7 +228,7 @@ void Robot::EightBall()
     std::this_thread::sleep_for(WAIT_BETWEEN_TURNS);
 
     //Now drive straight forward to the goal
-    Drivetrain::auton_drive(0_mps * WHEELS::speed_mult,
+    Drivetrain::autonDrive(0_mps * WHEELS::speed_mult,
                             0.25_mps,
                             0_deg);
 
@@ -284,10 +284,10 @@ void Robot::EightBall()
 
 void Robot::AutonomousInit()
 {
-    Drivetrain::reset_gyro();
+    Drivetrain::resetGyro();
     using namespace std::literals::chrono_literals;
 
-    // Drivetrain::auton_drive(0_mps,
+    // Drivetrain::autonDrive(0_mps,
     //                         -0.25_mps * WHEELS::speed_mult,
     //                         0_deg);
     // std::this_thread::sleep_for(2s);
@@ -306,7 +306,7 @@ void Robot::AutonomousInit()
     } };
     Intake::deploy(true);
 
-    Drivetrain::gotoZero();
+    Drivetrain::goToZero();
     std::this_thread::sleep_for(0.25s);
     // ThreeBall();
     //SixBall();
@@ -415,17 +415,17 @@ void Robot::TestPeriodic()
 
 
     // if(BUTTON::ps5.GetRawButton(4))
-    //     Drivetrain::face_direction( units::meters_per_second_t(0), units::meters_per_second_t(.2), 0_deg );
+    //     Drivetrain::faceDirection( units::meters_per_second_t(0), units::meters_per_second_t(.2), 0_deg );
     // else if(BUTTON::ps5.GetRawButton(2))
-    //     Drivetrain::face_direction( units::meters_per_second_t(0), units::meters_per_second_t(-.2), 0_deg );
+    //     Drivetrain::faceDirection( units::meters_per_second_t(0), units::meters_per_second_t(-.2), 0_deg );
     // else Drivetrain::stop();
     // else
     // if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
-    //     Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
+    //     Drivetrain::faceDirection(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
     // if(BUTTON::DRIVETRAIN::ROTATE_BACK)
-    //     Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
+    //     Drivetrain::faceDirection(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
     // if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
-    //     Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
+    //     Drivetrain::faceClosest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
 }
 
 void Robot::DisabledInit()
@@ -514,19 +514,19 @@ void Robot::ButtonManager()
         rotate = 0;
 
     // if(BUTTON::DRIVETRAIN::ZERO)
-    //     Drivetrain::gotoZero();
+    //     Drivetrain::goToZero();
     // else if(BUTTON::DRIVETRAIN::REVERSE)
-    //     Drivetrain::goto180();
+    //     Drivetrain::goTo180();
     // else
 
     if(BUTTON::DRIVETRAIN::ROTATE_FRONT)
-        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
+        Drivetrain::faceDirection(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 0_deg);
     // if(BUTTON::DRIVETRAIN::ROTATE_BACK)
-    //     Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
+    //     Drivetrain::faceDirection(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 180_deg);
     // else if(BUTTON::DRIVETRAIN::ROTATE_TO_CLOSEST)
-    //     Drivetrain::face_closest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
+    //     Drivetrain::faceClosest(units::meters_per_second_t { x }, units::meters_per_second_t { y });
     else if(BUTTON::DRIVETRAIN::ROTATE_CLIMB)
-        Drivetrain::face_direction(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 67.5_deg);
+        Drivetrain::faceDirection(units::meters_per_second_t { x }, units::meters_per_second_t { y }, 67.5_deg);
     // }
     else
         Drivetrain::drive(frc::ChassisSpeeds { units::meters_per_second_t { x },

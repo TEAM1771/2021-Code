@@ -1,5 +1,7 @@
 #include "Climber.hpp"
 #include "Constants.hpp"
+#include "PID_CANSparkMax.hpp"
+
 
 //Constants
 
