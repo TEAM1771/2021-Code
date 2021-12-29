@@ -93,28 +93,13 @@ namespace CAMERA
     constexpr double X_OFFSET = 3.75; //4.2517710;
 } // namespace CAMERA
 
-namespace HOOD
-{
-    constexpr can_adr PORT = 7;
-
-    constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
-
-    constexpr double P = 0.1;
-    constexpr double I = 0.0;
-    constexpr double D = 0.0;
-
-    constexpr double MAX_SPEED = 0.8;
-
-    typedef enum {
-        BOTTOM       = 0,
-        TRAVERSE     = -9,
-        SAFE_TO_TURN = -38,
-        MIDPOINT     = -26,
-        BATTER       = -89
-    } POSITION;
-
-    constexpr double TOLERANCE = 1;
-} // namespace HOOD
+typedef enum {
+    BOTTOM       = 0,
+    TRAVERSE     = -9,
+    SAFE_TO_TURN = -38,
+    MIDPOINT     = -26,
+    BATTER       = -89
+} HOOD_POSITION;
 
 namespace TURRET
 {

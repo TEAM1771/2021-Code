@@ -4,19 +4,21 @@
 
 namespace Hood
 {
-    //public function definitions
+    constexpr double TOLERANCE = 1;
+
+    //Public Function Definitions
     void init();
 
     /// returns true if tolerance is met
-    bool goToPosition(HOOD::POSITION position, double tolerance = HOOD::TOLERANCE);
+    bool goToPosition(HOOD_POSITION position, double tolerance = TOLERANCE);
 
     /// returns true if tolerance is met
-    bool visionTrack(double tolerance = HOOD::TOLERANCE);
+    bool visionTrack(double tolerance = TOLERANCE);
 
     /// used for tuning interpolation tables
     void manualPositionControl(double position);
 
-    void   print_angle();
-    double get_angle();
-    double get_camera_Y();
+    void   printAngle();
+    double getAngle();
+    double getCameraY();
 } // namespace Hood

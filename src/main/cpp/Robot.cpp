@@ -256,7 +256,7 @@ void Robot::EightBall()
     if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
           Hood::manualPositionControl(secondVolleyShooterY); && readyToShoot;
     else
-        Hood::goToPosition(HOOD::POSITION::TRAVERSE);
+        Hood::goToPosition(HOOD_POSITION::TRAVERSE);
    
     std::this_thread::sleep_for(STOP_AND_AIM_TIME);
     timer.Reset();
@@ -341,8 +341,8 @@ void Robot::TeleopPeriodic()
     // printf("speed: %f\n", ShooterWheel::get_speed());
     ButtonManager();
 
-    //("\n CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
-    //printf("\n CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
+    //("\n CamY: %f\tAngle: %f", averageCameraY(Hood::getCameraY()), Hood::getAngle());
+    //printf("\n CamY: %f\tAngle: %f", Hood::getCameraY(), Hood::getAngle());
     //printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
 }
 void Robot::TestInit()
@@ -366,7 +366,7 @@ void Robot::TestPeriodic()
 
     /*
     ShooterWheel::bangbang();
-    printf("CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
+    printf("CamY: %f\tAngle: %f", Hood::getCameraY(), Hood::getAngle());
     printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
     //Hood::manualPositionControl(BUTTON::oStick.GetThrottle());
 
@@ -435,8 +435,8 @@ void Robot::DisabledInit()
 void Robot::DisabledPeriodic()
 {
     ShooterTempUpdate();
-    //printf("\n CamY: %f\tAngle: %f", averageCameraY(Hood::get_camera_Y()), Hood::get_angle());
-    //printf("\n CamY: %f\tAngle: %f", Hood::get_camera_Y(), Hood::get_angle());
+    //printf("\n CamY: %f\tAngle: %f", averageCameraY(Hood::getCameraY()), Hood::getAngle());
+    //printf("\n CamY: %f\tAngle: %f", Hood::getCameraY(), Hood::getAngle());
     //printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
 }
 
@@ -462,19 +462,19 @@ void Robot::ButtonManager()
         bool const turret_in_pos = Turret::goToPosition(TURRET::POSITION::FRONT,
                                                         ngr::fabs(TURRET::POSITION::FRONT - TURRET::POSITION::SAFE_TO_DEPLOY_HOOD_FRONT));
         if(turret_in_pos)
-            targetLocked = Hood::goToPosition(HOOD::POSITION::BATTER);
+            targetLocked = Hood::goToPosition(HOOD_POSITION::BATTER);
         else
-            Hood::goToPosition(HOOD::POSITION::TRAVERSE);
+            Hood::goToPosition(HOOD_POSITION::TRAVERSE);
     }
     else if(BUTTON::SHOOTER::AIM_SIDE)
     {
         deployIntake = true;
-        targetLocked = Hood::goToPosition(HOOD::POSITION::MIDPOINT);
+        targetLocked = Hood::goToPosition(HOOD_POSITION::MIDPOINT);
     }
     else
     {
         deployIntake = false;
-        if(Hood::goToPosition(HOOD::POSITION::BOTTOM, ngr::fabs(HOOD::POSITION::SAFE_TO_TURN)))
+        if(Hood::goToPosition(HOOD_POSITION::BOTTOM, ngr::fabs(HOOD_POSITION::SAFE_TO_TURN)))
             Turret::goToPosition(TURRET::POSITION::ZERO);
     }
 
@@ -539,7 +539,7 @@ bool Robot::aim(TURRET::POSITION direction)
 {
     if(auto [is_tracking, readyToShoot] = Turret::visionTrack(direction); is_tracking)
         return Hood::visionTrack() && readyToShoot;
-    Hood::goToPosition(HOOD::POSITION::TRAVERSE);
+    Hood::goToPosition(HOOD_POSITION::TRAVERSE);
     return false;
 }
 bool Robot::ShooterTempUpdate()
