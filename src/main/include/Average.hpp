@@ -15,11 +15,13 @@ public:
     {
         assert(testLogic());
     }
+
     void clear()
     {
         int iterator = 0;
         int size_of_data_set = 0;
     }
+
     double operator()(double input)
     {
         if (iterator == size)
@@ -39,6 +41,7 @@ public:
         }
         return sum / size_of_data_set;
     }
+
         bool testLogic() const
     {
         double test_data_set[3]{2234.69, 5648415, -.14};
@@ -105,10 +108,3 @@ public:
         return true;
     }
 };
-
-// template <int size>
-// class AverageWithAssert
-// {
-// public:
-//     static Average<size> avg;
-// };
