@@ -1,5 +1,6 @@
 #include "Hood.hpp"
 #include "LimeLight.hpp"
+#include "ngr.hpp"
 // #include "Average.hpp"
 
 #include <PID_CANSparkMax.hpp>

@@ -11,6 +11,7 @@
 #include "Intake.hpp"
 #include "Buttons.hpp"
 #include "Wheel.hpp"
+#include "ngr.hpp"
 #include <frc/Timer.h>
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
