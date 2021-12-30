@@ -5,7 +5,7 @@
 namespace RollingAvg
 {
     template <int max_size>
-    auto avg = [data_set = std::array<double, max_size>(), i = 0, current_size = 0](double input) mutable -> double {
+    auto avg = [data_set = std::array<double, max_size>(), i = 0, current_size = 0](double const& input) mutable -> double {
         if(i == max_size)
             i = 0;
         if(current_size < max_size)
@@ -15,7 +15,7 @@ namespace RollingAvg
     };
 
     template <int max_size>
-    constexpr auto constexprAvg = [data_set = std::array<double, max_size>(), i = 0, current_size = 0](double input) mutable -> double {
+    constexpr auto constexprAvg = [data_set = std::array<double, max_size>(), i = 0, current_size = 0](double const& input) mutable -> double {
         if(i == max_size)
             i = 0;
         if(current_size < max_size)
