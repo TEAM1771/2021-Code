@@ -1,5 +1,9 @@
 #pragma once
+
 #include "JoystickButton.hpp"
+#include <frc/Joystick.h>
+
+using namespace std::literals::chrono_literals;
 
 using can_adr = int;
 
