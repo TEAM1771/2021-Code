@@ -10,6 +10,7 @@
 #include "Hopper.hpp"
 #include "Intake.hpp"
 #include "Buttons.hpp"
+#include "Wheel.hpp"
 #include <frc/Timer.h>
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
