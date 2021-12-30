@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Constants.hpp"
-
 namespace Hood
 {
     constexpr double TOLERANCE = 1;

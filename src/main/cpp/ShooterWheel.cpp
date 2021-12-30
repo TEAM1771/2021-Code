@@ -1,9 +1,9 @@
 #include "ShooterWheel.hpp"
-#include "Constants.hpp"
 
 #include <rev/CANSparkMax.h>
 #include <rev/CANEncoder.h>
 
+using can_adr = int;
 /******************************************************************/
 /*                             Constants                          */
 /******************************************************************/

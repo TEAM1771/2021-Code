@@ -1,9 +1,9 @@
 #include "Wheel.hpp"
-#include <iomanip>
-#include <thread>
 
+// #include <rev/CANSparkMax.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 
+#include <iomanip>
 /******************************************************************/
 /*                             Constants                          */
 /******************************************************************/

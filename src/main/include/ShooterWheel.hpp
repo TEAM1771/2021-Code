@@ -1,7 +1,4 @@
 #pragma once
-
-#include "Constants.hpp"
-
 namespace ShooterWheel
 {
     void init();

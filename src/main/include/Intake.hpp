@@ -1,5 +1,3 @@
-#include "Constants.hpp"
-
 namespace Intake
 {
     enum class DIRECTION {
