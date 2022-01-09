@@ -9,5 +9,5 @@
 -  Use PascalCase for classes & namespaces
 -  Constant variables & namespaces containing exclusively constant variables may be ALL_UPPER_CASE
 -  When making .cpp files, put includes at the top, then constant variables, then normal private variables, and finally function declarations
-- When #including files, put local files in quotes at the top of the file, followed by frc libraries using angular brackets (<>), and finall put any STL libraries (array, thread, iostream, etc.) below that.
+- When #including files, put local files in quotes at the top of the file, followed by frc libraries using angular brackets (<>), and finally put any STL libraries (array, thread, iostream, etc.) below that.
 - Keep comments short and sweet. If you comment out a large section, either move it into a seperate .old file or simply delete it (provided it was in a previous commit, it can easily be recovered later)
