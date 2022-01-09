@@ -82,10 +82,12 @@ namespace WHEELS
     WheelInfo const WHEEL_3 { 50, 51, 13, { -11_in, 11_in }, 4_in, 0_deg };  // 360-83.9
     WheelInfo const WHEEL_4 { 60, 61, 14, { -11_in, -11_in }, 4_in, 0_deg }; // 75
 
-
-    constexpr double kEncoderTicksPerRotation = 2048;
-    constexpr double driver_ratio             = 8.16 * kEncoderTicksPerRotation; //Previous value was .25 instead of .1
-    constexpr double turning_ratio            = 1;                               //4096.0/360;//.125 * 12.8 * 2048 / 360;
+    constexpr double kEncoderTicksPerRotation         = 2048;
+    constexpr double gear_ratio                       = 8.16;                                //Wheel radius is 8.16 * the motor radius
+    constexpr double encoder_ratio                    = kEncoderTicksPerRotation / (2 * pi); //Number of ticks per radian
+    constexpr double kEncoderTicksPerWheelRadian      = gear_ratio * encoder_ratio;          //Total amount of ticks per wheel radian
+    constexpr double convertToTicksPer100Milliseconds = .1;                                  //Ticks / sec * .1 = Ticks / 100 milliseconds
+    constexpr double turning_ratio                    = 1;                                   //4096.0/360;//.125 * 12.8 * 2048 / 360;
 
     constexpr double speed_mult = 1; // hacky way to deal with joysticks
 } // namespace WHEELS
