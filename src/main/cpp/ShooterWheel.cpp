@@ -19,6 +19,7 @@ void ShooterWheel::init()
 
 void ShooterWheel::bangbang() //original code with commented code removed
 {
+    return;
     shooter_1.SetOpenLoopRampRate(0);
 
 

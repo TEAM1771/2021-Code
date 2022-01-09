@@ -30,9 +30,10 @@ inline static frc::SwerveDriveKinematics<4> const m_kinematics {
     *wheels[3]
 };
 
-inline static frc::SwerveDriveOdometry const m_odometry { m_kinematics, Drivetrain::get_heading() };
-
 inline static std::unique_ptr<AHRS> navx { std::make_unique<AHRS>(frc::SPI::Port::kMXP) };
+
+inline static frc::SwerveDriveOdometry m_odometry { m_kinematics, Drivetrain::get_heading() };
+
 
 using namespace DRIVETRAIN::HOLONOMIC;
 inline static frc::HolonomicDriveController controller {
@@ -55,6 +56,10 @@ void Drivetrain::init()
     reset_gyro();
 }
 
+frc::Pose2d Drivetrain::get_odometry_pose() {
+    return m_odometry.GetPose();
+}
+
 void Drivetrain::reset_gyro()
 {
     navx->ZeroYaw();
@@ -68,7 +73,7 @@ double Drivetrain::get_angle()
 frc::Rotation2d Drivetrain::get_heading()
 {
     // return { units::degree_t { -get_angle() } };
-    return navx->GetRotation2d();
+    return frc::Rotation2d{ units::degree_t { get_angle() } };
 }
 
 void Drivetrain::drive(frc::ChassisSpeeds const& field_speeds)
@@ -95,6 +100,7 @@ void Drivetrain::drive(wpi::array<frc::SwerveModuleState, 4> const& module_state
 
 void Drivetrain::trajectory_drive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation)
 {
+    std::cout << "Driving based on inputted trajectory";
     drive(controller.Calculate(m_odometry.GetPose(), state, rotation));
 }
 
@@ -104,16 +110,20 @@ bool trajectory_stop_flag = false;
 
 void Drivetrain::trajectory_auton_drive(frc::Trajectory const& traj, frc::Rotation2d const& faceAngle)
 {
+    std::cout << "Interpreting trajectory";
     trajectory_stop_flag = true;     // stop previous thread (this is only here as a safety feature in case method gets called twice)
     if(trajectory_thread.joinable())
         trajectory_thread.join();   
     trajectory_stop_flag = false;
-    trajectory_thread    = std::thread { [traj&, faceAngle&] () {
-        m_odometry.resetPosition(traj.Sample(units::time::second_t{1}), get_heading());
+    trajectory_thread    = std::thread { [&traj, &faceAngle] () {
+        std::cout << "Beginning trajectory sampling";
+        m_odometry.ResetPosition(traj.Sample(units::time::second_t{0}).pose, get_heading());
         frc::Timer trajTimer;
         trajTimer.Start();
+        int trajectory_samples = 0;
         while(!trajectory_stop_flag && RobotState::IsAutonomousEnabled() && trajTimer.Get() <= traj.TotalTime().to<double>())
         {
+            std::cout << "Current trajectory sample value: " << ++trajectory_samples; 
             auto const sample = traj.Sample(units::time::second_t{trajTimer.Get()});
             trajectory_drive(sample, faceAngle);
             std::this_thread::sleep_for(10ms); //Needs to be as small as possible to get the most accurate tracking of the traj

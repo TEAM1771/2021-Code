@@ -10,6 +10,7 @@ namespace Drivetrain
     void                                 init();
     double                               get_angle(); // pull from rio
     frc::Rotation2d                      get_heading();
+    frc::Pose2d                          get_odometry_pose();
     void                                 print();
     void                                 drive(frc::ChassisSpeeds const& field_speeds);
     void                                 drive(wpi::array<frc::SwerveModuleState, 4> const& states);
