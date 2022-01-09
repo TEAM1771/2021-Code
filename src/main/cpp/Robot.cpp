@@ -291,7 +291,7 @@ void Robot::TestTrajectory()
     config.SetKinematics<4>(const_cast<frc::SwerveDriveKinematics<4>&>(Drivetrain::get_kinematics()));
     // auto startPos = frc::Pose2d(0_m, 0_m, frc::Rotation2d(0));
     frc::Pose2d const startPos;
-    frc::Pose2d const endPos{3_m, 3_m, 180_deg};
+    frc::Pose2d const endPos{3_m, 3_m, 0_deg};
     std::vector<frc::Translation2d> interiorPos{
         frc::Translation2d{1.5_m, 1_m},
         frc::Translation2d{2_m, 2.5_m}

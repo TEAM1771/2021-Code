@@ -104,18 +104,19 @@ bool trajectory_stop_flag = false;
 
 void Drivetrain::trajectory_auton_drive(frc::Trajectory const& traj, frc::Rotation2d const& faceAngle)
 {
-    trajectory_stop_flag = true;     // stop previous thread
-    if(trajectory_thread.joinable()) // verify drive thread was running, should only happen on first run
-        trajectory_thread.join();    // wait for drivethread to finish
-    trajectory_stop_flag = false;    // reset stop flag
-    trajectory_thread    = std::thread { [traj, faceAngle] () {
+    trajectory_stop_flag = true;     // stop previous thread (this is only here as a safety feature in case method gets called twice)
+    if(trajectory_thread.joinable())
+        trajectory_thread.join();   
+    trajectory_stop_flag = false;
+    trajectory_thread    = std::thread { [traj&, faceAngle&] () {
+        m_odometry.resetPosition(traj.Sample(units::time::second_t{1}), get_heading());
         frc::Timer trajTimer;
         trajTimer.Start();
-        while(! trajectory_stop_flag && RobotState::IsAutonomousEnabled() && trajTimer.Get() <= traj.TotalTime().to<double>())
+        while(!trajectory_stop_flag && RobotState::IsAutonomousEnabled() && trajTimer.Get() <= traj.TotalTime().to<double>())
         {
             auto const sample = traj.Sample(units::time::second_t{trajTimer.Get()});
             trajectory_drive(sample, faceAngle);
-            std::this_thread::sleep_for(20ms); // don't hog the cpu
+            std::this_thread::sleep_for(10ms); //Needs to be as small as possible to get the most accurate tracking of the traj
         }
         face_direction(0_mps, 0_mps, faceAngle.Degrees());
     } };
