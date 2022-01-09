@@ -1,6 +1,7 @@
-#include "drivetrain.hpp"
-#include <frc/kinematics/ChassisSpeeds.h>
-#include <frc/kinematics/SwerveModuleState.h>
+#include "Drivetrain.hpp"
+//#include <frc/kinematics/ChassisSpeeds.h> Replaced by next line
+// #include <frc/kinematics/SwerveModuleState.h> Replaced by next line
+#include <frc/kinematics/SwerveDriveOdometry.h>
 
 #include "Twist.hpp"
 #include "Wheel.hpp"
@@ -11,6 +12,7 @@
 #include <thread>
 #include <iostream>
 #include <memory>
+#include <frc/controller/HolonomicDriveController.h>
 
 // #include <cmath>
 
@@ -30,6 +32,20 @@ inline static frc::SwerveDriveKinematics<4> const m_kinematics {
 
 inline static std::unique_ptr<AHRS> navx { std::make_unique<AHRS>(frc::SPI::Port::kMXP) };
 
+inline static frc::SwerveDriveOdometry m_odometry { m_kinematics, Drivetrain::get_heading() };
+
+
+using namespace DRIVETRAIN::HOLONOMIC;
+inline static frc::HolonomicDriveController controller {
+    frc2::PIDController { xKP, 0, 0 },
+    frc2::PIDController { yKP, 0, 0 },
+    frc::ProfiledPIDController<units::radian> { zKP, 0, 0, frc::TrapezoidProfile<units::radian>::Constraints { maxVelocity, maxAcceleration } }
+};
+
+/*
+    void initDriveController(double xErrorCorrection, double yErrorCorrection,
+    double zErrorCorrection, double maxRotationalVelocity, double maxRotationalAcceleration);
+*/
 
 /******************************************************************/
 /*                      Non Static Functions                      */
@@ -40,6 +56,10 @@ void Drivetrain::init()
     reset_gyro();
 }
 
+frc::Pose2d Drivetrain::get_odometry_pose() {
+    return m_odometry.GetPose();
+}
+
 void Drivetrain::reset_gyro()
 {
     navx->ZeroYaw();
@@ -47,15 +67,21 @@ void Drivetrain::reset_gyro()
 
 double Drivetrain::get_angle()
 {
-    return -navx->GetAngle() + 90;
+    return -navx->GetAngle() + 90; // This should be replaced with - 90 and we should fix all the auton_drive methods
 }
 
-void Drivetrain::drive(frc::ChassisSpeeds const& feild_speeds)
+frc::Rotation2d Drivetrain::get_heading()
+{
+    // return { units::degree_t { -get_angle() } };
+    return frc::Rotation2d{ units::degree_t { get_angle() } };
+}
+
+void Drivetrain::drive(frc::ChassisSpeeds const& field_speeds)
 {
     auto const speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-        feild_speeds.vx,
-        feild_speeds.vy,
-        feild_speeds.omega,
+        field_speeds.vx,
+        field_speeds.vy,
+        field_speeds.omega,
         frc::Rotation2d { units::degree_t { get_angle() } });
     auto const module_states = m_kinematics.ToSwerveModuleStates(speeds);
     drive(module_states);
@@ -72,17 +98,60 @@ void Drivetrain::drive(wpi::array<frc::SwerveModuleState, 4> const& module_state
         ts.join();
 }
 
+void Drivetrain::trajectory_drive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation)
+{
+    std::cout << "Driving based on inputted trajectory";
+    drive(controller.Calculate(m_odometry.GetPose(), state, rotation));
+}
+
+inline static std::thread trajectory_thread;
+
+bool trajectory_stop_flag = false;
+
+void Drivetrain::trajectory_auton_drive(frc::Trajectory const& traj, frc::Rotation2d const& faceAngle)
+{
+    std::cout << "Interpreting trajectory";
+    trajectory_stop_flag = true;     // stop previous thread (this is only here as a safety feature in case method gets called twice)
+    if(trajectory_thread.joinable())
+        trajectory_thread.join();   
+    trajectory_stop_flag = false;
+    trajectory_thread    = std::thread { [&traj, &faceAngle] () {
+        std::cout << "Beginning trajectory sampling";
+        m_odometry.ResetPosition(traj.Sample(units::time::second_t{0}).pose, get_heading());
+        frc::Timer trajTimer;
+        trajTimer.Start();
+        int trajectory_samples = 0;
+        while(!trajectory_stop_flag && RobotState::IsAutonomousEnabled() && trajTimer.Get() <= traj.TotalTime().to<double>())
+        {
+            std::cout << "Current trajectory sample value: " << ++trajectory_samples; 
+            auto const sample = traj.Sample(units::time::second_t{trajTimer.Get()});
+            trajectory_drive(sample, faceAngle);
+            std::this_thread::sleep_for(10ms); //Needs to be as small as possible to get the most accurate tracking of the traj
+        }
+        face_direction(0_mps, 0_mps, faceAngle.Degrees());
+    } };
+}
+
+frc::SwerveDriveKinematics<4> const& Drivetrain::get_kinematics()
+{
+    return m_kinematics;
+}
+
+void Drivetrain::update_odometry()
+{
+    m_odometry.Update(get_heading(), wheels[0]->get_state(), wheels[1]->get_state(), wheels[2]->get_state(), wheels[3]->get_state());
+}
 
 void Drivetrain::face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta)
 {
     auto const currentRotation = units::degree_t { get_angle() };
 
-    int const errorTheta      = ((currentRotation - theta).to<int>()%360-180-90)%360;
-    auto const rotateP         = 1.25;
-    auto       pRotation       = errorTheta * rotateP;
+    int const  errorTheta = ((currentRotation - theta).to<int>() % 360 - 180 - 90) % 360;
+    auto const rotateP    = 1.25;
+    auto       pRotation  = errorTheta * rotateP;
     if(ngr::fabs(pRotation) > 35)
-         pRotation = 35 * ((pRotation > 0)?1:-1);
-    drive(frc::ChassisSpeeds{ dx, dy, units::degrees_per_second_t{pRotation} });
+        pRotation = 35 * ((pRotation > 0) ? 1 : -1);
+    drive(frc::ChassisSpeeds { dx, dy, units::degrees_per_second_t { pRotation } });
 }
 
 void Drivetrain::face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy)
@@ -91,7 +160,7 @@ void Drivetrain::face_closest(units::meters_per_second_t dx, units::meters_per_s
     auto const errorTheta      = (ngr::fabs(currentRotation) <= 90)
                                 ? currentRotation
                                 : currentRotation - 180;
-    face_direction(dx, dy, units::degree_t {errorTheta});
+    face_direction(dx, dy, units::degree_t { errorTheta });
 }
 
 inline static std::thread drive_thread;
@@ -115,11 +184,11 @@ void Drivetrain::auton_drive(units::meters_per_second_t dx, units::meters_per_se
 void Drivetrain::stop()
 {
     auton_stop_flag = true;
-        // note this takes advantage of the fact that
-        // the thread starts with the wheel instructions
-        // and therefore we dont need to wait for it to
-        // finish the loop as long as it won't tell the
-        // wheels to do anything
+    // note this takes advantage of the fact that
+    // the thread starts with the wheel instructions
+    // and therefore we dont need to wait for it to
+    // finish the loop as long as it won't tell the
+    // wheels to do anything
     std::this_thread::sleep_for(5ms); // make sure it has time to stop the thread
     for(auto&& wheel : wheels)
         wheel->stop();

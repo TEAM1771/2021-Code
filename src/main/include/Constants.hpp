@@ -9,6 +9,8 @@
 #include <rev/CANSparkMax.h>
 
 #include <frc/geometry/Transform2d.h>
+#include <units/angular_velocity.h>
+#include <units/angular_acceleration.h>
 
 using can_adr = int;
 
@@ -79,7 +81,6 @@ namespace WHEELS
     WheelInfo const WHEEL_2 { 40, 41, 12, { 11_in, 11_in }, 4_in, 0_deg };   // 15
     WheelInfo const WHEEL_3 { 50, 51, 13, { -11_in, 11_in }, 4_in, 0_deg };  // 360-83.9
     WheelInfo const WHEEL_4 { 60, 61, 14, { -11_in, -11_in }, 4_in, 0_deg }; // 75
-
 
     constexpr double kEncoderTicksPerRotation         = 2048;
     constexpr double gear_ratio                       = 8.16;                                //Wheel radius is 8.16 * the motor radius
@@ -224,6 +225,19 @@ namespace INTAKE
     constexpr double IN_SPEED  = -1;
     constexpr double OUT_SPEED = 1;
 } // namespace INTAKE
+
+namespace DRIVETRAIN
+{
+    namespace HOLONOMIC
+    {
+        constexpr int                                 xKP             = 1;                    // 1 meter in X direction for every meter of error
+        constexpr int                                 yKP             = 1;                    // same for y
+        constexpr int                                 zKP             = 1;                    // for z
+        constexpr units::radians_per_second_t         maxVelocity     = 6.28_rad / 1_s;       // Max Velocity of 1 rotation/sec
+        constexpr units::radians_per_second_squared_t maxAcceleration = 3.14_rad / 1_s / 1_s; //max acceleration of pi / second^2
+
+    } // namespace HOLONOMIC
+} // namespace DRIVETRAIN
 
 namespace AUTO
 {

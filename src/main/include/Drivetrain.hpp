@@ -2,23 +2,30 @@
 #define __DRIVETRAIN_H__
 
 #include <frc/kinematics/SwerveDriveKinematics.h>
+#include <frc/geometry/Rotation2d.h>
+#include <frc/trajectory/Trajectory.h>
 
 namespace Drivetrain
 {
-    void   init();
-    double get_angle(); // pull from rio
-    void   print();
-    void   drive(frc::ChassisSpeeds const& feild_speeds);
-    void   drive(wpi::array<frc::SwerveModuleState, 4> const& states);
-    void   gotoZero();
-    void   goto180();
-    void   PrintWheelAngle(int);
-    void   reset_gyro();
-    void   face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
-    void   face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy);
-    
-    void auton_drive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction);
-    void stop();
+    void                                 init();
+    double                               get_angle(); // pull from rio
+    frc::Rotation2d                      get_heading();
+    frc::Pose2d                          get_odometry_pose();
+    void                                 print();
+    void                                 drive(frc::ChassisSpeeds const& field_speeds);
+    void                                 drive(wpi::array<frc::SwerveModuleState, 4> const& states);
+    void                                 trajectory_drive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation);
+    void                                 trajectory_auton_drive(frc::Trajectory const& traj, frc::Rotation2d const& faceAngle);
+    frc::SwerveDriveKinematics<4> const& get_kinematics();
+    void                                 update_odometry();
+    void                                 gotoZero();
+    void                                 goto180();
+    void                                 PrintWheelAngle(int);
+    void                                 reset_gyro();
+    void                                 face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
+    void                                 face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy);
+    void                                 auton_drive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction);
+    void                                 stop();
 } // namespace Drivetrain
 
 #endif // __DRIVETRAIN_H__

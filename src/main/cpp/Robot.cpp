@@ -12,6 +12,10 @@
 #include <frc/Timer.h>
 #include <frc/smartdashboard/smartdashboard.h>
 #include <memory>
+#include <frc/trajectory/TrajectoryConfig.h>
+#include <frc/trajectory/Trajectory.h>
+#include <frc/trajectory/TrajectoryGenerator.h>
+#include <iostream>
 
 /* This section of code is used with PhotonLib Example 3 but idk where to put it in the actual code
 Source: https://docs.photonvision.org/en/latest/docs/examples/simaimandrange.html
@@ -47,6 +51,8 @@ Robot::Robot()
     ShooterWheel::init();
 
     ShooterTempUpdate();
+    auto pose = Drivetrain::get_odometry_pose();
+    std::cout << "Odometry Pose, X: " << pose.X() << ", Y: " << pose.Y() << ", Z: " << pose.Rotation().Degrees();
 }
 
 void Robot::ThreeBall()
@@ -282,10 +288,36 @@ void Robot::EightBall()
     Hopper::stop();
 }
 
+void Robot::TestTrajectory()
+{
+    auto pose = Drivetrain::get_odometry_pose();
+    std::cout << "Odometry Pose, X: " << pose.X() << ", Y: " << pose.Y() << ", Z: " << pose.Rotation().Degrees();
+    std::cout << "Creating trajectory";
+    auto config = frc::TrajectoryConfig(0.35_mps, 2_mps / 1_s);
+    config.SetKinematics<4>(const_cast<frc::SwerveDriveKinematics<4>&>(Drivetrain::get_kinematics()));
+    // auto startPos = frc::Pose2d(0_m, 0_m, frc::Rotation2d(0));
+    frc::Pose2d const               startPos { 0_m, 0_m, 180_deg };
+    frc::Pose2d const               endPos { 1_m, 1_m, 180_deg };
+    std::vector<frc::Translation2d> interiorPos {
+        //     frc::Translation2d{.5_m, .25_m},
+        //     frc::Translation2d{.7_m, .5_m}
+    };
+
+    auto traj = frc::TrajectoryGenerator::GenerateTrajectory(startPos, interiorPos, endPos, config);
+    std::cout << "Passing trajectory to auton drive";
+    Drivetrain::trajectory_auton_drive(traj, frc::Rotation2d { 180_deg });
+}
+
 void Robot::AutonomousInit()
 {
+    auto pose = Drivetrain::get_odometry_pose();
+    std::cout << "Odometry Pose, X: " << pose.X() << ", Y: " << pose.Y() << ", Z: " << pose.Rotation().Degrees();
     Drivetrain::reset_gyro();
     using namespace std::literals::chrono_literals;
+
+    std::cout << "Started Autonomous";
+
+    TestTrajectory();
 
     // Drivetrain::auton_drive(0_mps,
     //                         -0.25_mps * WHEELS::speed_mult,
@@ -293,7 +325,8 @@ void Robot::AutonomousInit()
     // std::this_thread::sleep_for(2s);
     // Drivetrain::stop();
     // return;
-
+    std::cout << "Ending Autonomous";
+    return;
     // Start BangBang and indexer
     std::thread run_shooter_wheel_and_index_balls { [this] {
         using namespace std::literals::chrono_literals;
@@ -329,6 +362,8 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
     ShooterTempUpdate();
+
+    Drivetrain::update_odometry();
 
     if(BUTTON::oStick.GetThrottle() > 0)
     {
@@ -545,7 +580,7 @@ bool Robot::aim(TURRET::POSITION direction)
 bool Robot::ShooterTempUpdate()
 {
     frc::SmartDashboard::PutNumber("Shooter Temp", ShooterWheel::get_temp());
-    printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
+    // printf("\n Shooter Temp: %f", ShooterWheel::get_temp());
     if(ShooterWheel::get_temp() > 70)
     {
         // oscillating between green & red to grab attention
