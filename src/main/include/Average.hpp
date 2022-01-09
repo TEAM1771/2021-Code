@@ -4,28 +4,31 @@
 
 namespace RollingAvg
 {
-    template <int max_size>
-    auto avg = [data_set = std::array<double, max_size>(), i = 0, current_size = 0](double const& input) mutable -> double {
-        if(i == max_size)
-            i = 0;
-        if(current_size < max_size)
-            current_size++;
-        data_set[i++] = input;
-        return std::accumulate(data_set.begin(), data_set.end(), 0.0) / current_size;
-    };
+    template <int size>
+    auto average()
+    {
+        return [vals = std::array<double, size>(), idx = 0u, size = 0ull](double const& data) mutable {
+            vals[idx++] = data;
+            idx %= vals.size();
+            size++;
+            if(size < vals.size()) [[unlikely]]
+                return std::accumulate(std::begin(vals), std::next(std::begin(vals), size), 0.0) / size;
+            return std::accumulate(std::begin(vals), std::end(vals), 0.0) / vals.size();
+        };
+    }
 
-    template <int max_size>
-    constexpr auto constexprAvg = [data_set = std::array<double, max_size>(), i = 0, current_size = 0](double const& input) mutable -> double {
-        if(i == max_size)
-            i = 0;
-        if(current_size < max_size)
-            current_size++;
-        data_set[i++] = input;
-        double sum    = 0.00;
-        for(int i = 0; i < current_size; i++)
-            sum += data_set[i];
-        return sum / current_size;
-    };
+    template <int size>
+    constexpr auto average_constexpr()
+    {
+        return [vals = std::array<double, size>(), idx = 0u, size = 0ull](double const& data) mutable {
+            vals[idx++] = data;
+            idx %= vals.size();
+            size++;
+            for(int i = 0; i < size; i++)
+                sum += data_set[i];
+            return sum / size;
+        };
+    }
 
     bool           testLogic();
     constexpr bool testConstexprLogic();

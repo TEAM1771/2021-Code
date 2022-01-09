@@ -3,10 +3,10 @@
 
 constexpr bool RollingAvg::testConstexprLogic()
 {
-    auto average = constexprAvg<3>;
+    auto avg = average_constexpr<3>();
     for(int i = 0; i < 10; i++)
     {
-        double observed_value = average(i);
+        double observed_value = avg(i);
         double expected_value = (i == 0) ? 0 : (i == 1) ? 0.5
                                                         : (i - 1);
         if(observed_value != expected_value)
@@ -19,11 +19,11 @@ static_assert(RollingAvg::testConstexprLogic());
 
 bool RollingAvg::testLogic()
 {
-    auto average = avg<3>;
+    auto avg = average<3>();
     std::cout << "\n\nTesting RollingAverage (non constexpr version) logic!\n\n";
     for(int i = 0; i < 10; i++)
     {
-        double observed_value = average(i);
+        double observed_value = avg(i);
         double expected_value = (i == 0) ? 0 : (i == 1) ? 0.5
                                                         : (i - 1);
         std::cout << "Iterator: " << i << ", Observed: " << observed_value << ", Expected: " << expected_value << '\n';
