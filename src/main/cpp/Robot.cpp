@@ -51,8 +51,6 @@ Robot::Robot()
     ShooterWheel::init();
 
     ShooterTempUpdate();
-    auto pose = Drivetrain::get_odometry_pose();
-    std::cout << "Odometry Pose, X: " << pose.X() << ", Y: " << pose.Y() << ", Z: " << pose.Rotation().Degrees();
 }
 
 void Robot::ThreeBall()
@@ -290,14 +288,13 @@ void Robot::EightBall()
 
 void Robot::TestTrajectory()
 {
-    auto pose = Drivetrain::get_odometry_pose();
-    std::cout << "Odometry Pose, X: " << pose.X() << ", Y: " << pose.Y() << ", Z: " << pose.Rotation().Degrees();
+    Drivetrain::printOdometryPose();
     std::cout << "Creating trajectory";
     auto config = frc::TrajectoryConfig(0.35_mps, 2_mps / 1_s);
     config.SetKinematics<4>(const_cast<frc::SwerveDriveKinematics<4>&>(Drivetrain::get_kinematics()));
     // auto startPos = frc::Pose2d(0_m, 0_m, frc::Rotation2d(0));
-    frc::Pose2d const               startPos { 0_m, 0_m, 180_deg };
-    frc::Pose2d const               endPos { 1_m, 1_m, 180_deg };
+    frc::Pose2d const               startPos;
+    frc::Pose2d const               endPos { 1_m, 1_m, 0_deg };
     std::vector<frc::Translation2d> interiorPos {
         //     frc::Translation2d{.5_m, .25_m},
         //     frc::Translation2d{.7_m, .5_m}
@@ -305,13 +302,12 @@ void Robot::TestTrajectory()
 
     auto traj = frc::TrajectoryGenerator::GenerateTrajectory(startPos, interiorPos, endPos, config);
     std::cout << "Passing trajectory to auton drive";
-    Drivetrain::trajectory_auton_drive(traj, frc::Rotation2d { 180_deg });
+    Drivetrain::trajectoryAutonDrive(traj, frc::Rotation2d { 0_deg });
 }
 
 void Robot::AutonomousInit()
 {
-    auto pose = Drivetrain::get_odometry_pose();
-    std::cout << "Odometry Pose, X: " << pose.X() << ", Y: " << pose.Y() << ", Z: " << pose.Rotation().Degrees();
+    Drivetrain::printOdometryPose();
     Drivetrain::reset_gyro();
     using namespace std::literals::chrono_literals;
 

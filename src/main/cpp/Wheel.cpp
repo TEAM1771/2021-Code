@@ -52,7 +52,7 @@ Wheel::float_t Wheel::get_angle()
 
 frc::SwerveModuleState Wheel::get_state()
 {
-    return {units::meters_per_second_t{driver.GetSelectedSensorVelocity() * 10 * radius.to<double>() * WHEELS::driver_ratio}, frc::Rotation2d{units::degree_t{get_angle()}}};
+    return {(((driver.GetSelectedSensorVelocity() / 10) / WHEELS::k_encoder_ticks_per_rotation) * radius.to<units::meter_t>()), frc::Rotation2d{units::degree_t{get_angle()}}};
 }
 
 std::thread Wheel::drive(frc::SwerveModuleState const& state)
@@ -67,7 +67,7 @@ std::thread Wheel::drive(frc::SwerveModuleState const& state)
         frc::Rotation2d rotationDelta = angle - currentRotation;
 
         // Find the new absolute position of the module based on the difference in rotation
-        double const deltaTicks = (rotationDelta.Degrees().to<double>() / 360) * WHEELS::kEncoderTicksPerRotation;
+        double const deltaTicks = (rotationDelta.Degrees().to<double>() / 360) * WHEELS::k_encoder_ticks_per_rotation;
         // Convert the CANCoder from it's position reading back to ticks
         double const currentTicks = direction.GetPosition() / .0878;
         double const desiredTicks = currentTicks + deltaTicks;
@@ -80,7 +80,7 @@ std::thread Wheel::drive(frc::SwerveModuleState const& state)
         if(id == 0)
         {
             printf("v: %5.0f\tr: %5.0f\tdt: %5.0f\tc: %5.0f\ta: %5i\tc: %5i\tdir: %5.0f\trad: %f\n",
-                   speed.to<double>() * radius.to<double>() * WHEELS::driver_ratio,
+                   speed / radius.to<units::meter_t>() * WHEELS::kEncoderTicksPerWheelRadian * WHEELS::convertToTicksPer100Milliseconds,
                    desiredTicks,
                    deltaTicks,
                    currentTicks,

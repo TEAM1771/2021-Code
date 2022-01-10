@@ -56,7 +56,8 @@ void Drivetrain::init()
     reset_gyro();
 }
 
-frc::Pose2d Drivetrain::get_odometry_pose() {
+frc::Pose2d Drivetrain::getOdometryPose()
+{
     return m_odometry.GetPose();
 }
 
@@ -67,13 +68,12 @@ void Drivetrain::reset_gyro()
 
 double Drivetrain::get_angle()
 {
-    return -navx->GetAngle() + 90; // This should be replaced with - 90 and we should fix all the auton_drive methods
+    return -navx->GetAngle() - 90; // I changed this from +90 so all auton drive methods are now broken
 }
 
 frc::Rotation2d Drivetrain::get_heading()
 {
-    // return { units::degree_t { -get_angle() } };
-    return frc::Rotation2d{ units::degree_t { get_angle() } };
+    return { units::degree_t { get_angle() } };
 }
 
 void Drivetrain::drive(frc::ChassisSpeeds const& field_speeds)
@@ -98,7 +98,7 @@ void Drivetrain::drive(wpi::array<frc::SwerveModuleState, 4> const& module_state
         ts.join();
 }
 
-void Drivetrain::trajectory_drive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation)
+void Drivetrain::trajectoryDrive(frc::Trajectory::State const& state, frc::Rotation2d const& rotation)
 {
     std::cout << "Driving based on inputted trajectory";
     drive(controller.Calculate(m_odometry.GetPose(), state, rotation));
@@ -108,24 +108,24 @@ inline static std::thread trajectory_thread;
 
 bool trajectory_stop_flag = false;
 
-void Drivetrain::trajectory_auton_drive(frc::Trajectory const& traj, frc::Rotation2d const& faceAngle)
+void Drivetrain::trajectoryAutonDrive(frc::Trajectory const& traj, frc::Rotation2d const& faceAngle)
 {
     std::cout << "Interpreting trajectory";
-    trajectory_stop_flag = true;     // stop previous thread (this is only here as a safety feature in case method gets called twice)
+    trajectory_stop_flag = true; // stop previous thread (this is only here as a safety feature in case method gets called twice)
     if(trajectory_thread.joinable())
-        trajectory_thread.join();   
+        trajectory_thread.join();
     trajectory_stop_flag = false;
-    trajectory_thread    = std::thread { [&traj, &faceAngle] () {
+    trajectory_thread    = std::thread { [&traj, &faceAngle]() {
         std::cout << "Beginning trajectory sampling";
-        m_odometry.ResetPosition(traj.Sample(units::time::second_t{0}).pose, get_heading());
+        m_odometry.ResetPosition(traj.Sample(units::time::second_t { 0 }).pose, get_heading());
         frc::Timer trajTimer;
         trajTimer.Start();
-        int trajectory_samples = 0;
-        while(!trajectory_stop_flag && RobotState::IsAutonomousEnabled() && trajTimer.Get() <= traj.TotalTime().to<double>())
+        int trajectory_samples= 0;
+        while(! trajectory_stop_flag && RobotState::IsAutonomousEnabled() && trajTimer.Get() <= traj.TotalTime().to<double>())
         {
-            std::cout << "Current trajectory sample value: " << ++trajectory_samples; 
-            auto const sample = traj.Sample(units::time::second_t{trajTimer.Get()});
-            trajectory_drive(sample, faceAngle);
+            std::cout << "Current trajectory sample value: " << ++trajectory_samples;
+            auto const sample = traj.Sample(units::time::second_t { trajTimer.Get() });
+            trajectoryDrive(sample, faceAngle);
             std::this_thread::sleep_for(10ms); //Needs to be as small as possible to get the most accurate tracking of the traj
         }
         face_direction(0_mps, 0_mps, faceAngle.Degrees());
@@ -144,9 +144,8 @@ void Drivetrain::update_odometry()
 
 void Drivetrain::face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta)
 {
-    auto const currentRotation = units::degree_t { get_angle() };
 
-    int const  errorTheta = ((currentRotation - theta).to<int>() % 360 - 180 - 90) % 360;
+    int const  errorTheta = (theta - units::degree_t {get_angle()}).to<int>() % 360; //This needs to be tested next
     auto const rotateP    = 1.25;
     auto       pRotation  = errorTheta * rotateP;
     if(ngr::fabs(pRotation) > 35)
@@ -221,4 +220,10 @@ void Drivetrain::gotoZero()
 void Drivetrain::PrintWheelAngle(int wheelid)
 {
     wheels[wheelid]->printAngle();
+}
+
+void Drivetrain::printOdometryPose()
+{
+    auto pose = m_odometry.GetPose();
+    std::cout << "Odometry Pose, X: " << pose.X() << ", Y: " << pose.Y() << ", Z: " << pose.Rotation().Degrees();
 }
