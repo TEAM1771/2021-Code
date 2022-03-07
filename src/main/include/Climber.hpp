@@ -1,13 +1,16 @@
 #pragma once
 
-#include "Constants.hpp"
-#include "PID_CANSparkMax.hpp"
-
 namespace Climber
 {
+    enum POSITION {
+        DOWN = 50,
+        UP   = 802,
+        ZERO = 0
+    };
+    //Function Declarations
     void init();
-    void set(CLIMBER::POSITION position);
-    void ButtonManager();
+    void set(POSITION position);
+    void buttonManager();
     void joystickControl(double);
     void printStatus();
 } // namespace Climber

@@ -3,11 +3,11 @@
 // allows functions outside of robot to know if the robot is enabled and more
 namespace RobotState
 {
-    inline std::function<bool()> IsEnabled;
-    inline std::function<bool()> IsDisabled;
-    inline std::function<bool()> IsAutonomous;
-    inline std::function<bool()> IsAutonomousEnabled;
-    inline std::function<bool()> IsOperatorControl;
-    inline std::function<bool()> IsOperatorControlEnabled;
-    inline std::function<bool()> IsTest;
+    inline std::function<bool()> isEnabled;
+    inline std::function<bool()> isDisabled;
+    inline std::function<bool()> isAutonomous;
+    inline std::function<bool()> isAutonomousEnabled;
+    inline std::function<bool()> isOperatorControl;
+    inline std::function<bool()> isOperatorControlEnabled;
+    inline std::function<bool()> isTest;
 }

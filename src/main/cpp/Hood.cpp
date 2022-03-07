@@ -1,18 +1,34 @@
 #include "Hood.hpp"
-//#include "PhotonVision.hpp"
 #include "LimeLight.hpp"
-//#include "Average.hpp"
-#include <algorithm>
-#include <cmath>
-#include <vector>
+#include "ngr.hpp"
+// #include "Average.hpp"
+
 #include <PID_CANSparkMax.hpp>
-// #include <PhotonCamera.h> I think I included the right file above
 
 extern LimeLight camera; // From Robot.cpp
-//Average<3>   averageInputCameraY;
 
-static inline PID_CANSparkMax hood { HOOD::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
-static inline HOOD::POSITION  position = HOOD::POSITION::BOTTOM;
+using can_adr = int;
+/******************************************************************/
+/*                             Constants                          */
+/******************************************************************/
+const can_adr PORT = 7;
+
+const auto IDLE_MODE = rev::CANSparkMax::IdleMode::kBrake;
+
+const double P = 0.1;
+const double I = 0.0;
+const double D = 0.0;
+
+const double MAX_SPEED = 0.8;
+
+// Average<10>   averageInputCameraY;
+
+/******************************************************************/
+/*                          Non-constant Vars                     */
+/******************************************************************/
+
+static inline PID_CANSparkMax hood { PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+static inline Hood::POSITION  position = Hood::POSITION::BOTTOM;
 
 /******************************************************************/
 /*                      Non Static Functions                      */
@@ -21,19 +37,19 @@ static inline HOOD::POSITION  position = HOOD::POSITION::BOTTOM;
 void Hood::init()
 {
     hood.RestoreFactoryDefaults();
-    hood.SetIdleMode(HOOD::IDLE_MODE);
+    hood.SetIdleMode(IDLE_MODE);
     hood.SetSmartCurrentLimit(20);
 
-    hood.SetP(HOOD::P);
-    hood.SetI(HOOD::I);
-    hood.SetD(HOOD::D);
+    hood.SetP(P);
+    hood.SetI(I);
+    hood.SetD(D);
 
-    hood.SetTarget(HOOD::POSITION::BOTTOM);
-    hood.SetOutputRange(-HOOD::MAX_SPEED, HOOD::MAX_SPEED);
-    hood.SetPositionRange(HOOD::POSITION::BATTER, HOOD::POSITION::BOTTOM);
+    hood.SetTarget(Hood::POSITION::BOTTOM);
+    hood.SetOutputRange(-MAX_SPEED, MAX_SPEED);
+    hood.SetPositionRange(Hood::POSITION::BATTER, Hood::POSITION::BOTTOM);
 }
 
-bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
+bool Hood::goToPosition(Hood::POSITION pos, double tolerance)
 {
     if(pos != position)
     {
@@ -60,7 +76,8 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
         { -3.6, -21.118952 }
     };
 
-    if (yval < -3.6) {
+    if(yval < -3.6)
+    {
         yval = -3.6;
     }
 
@@ -92,7 +109,7 @@ bool Hood::goToPosition(HOOD::POSITION pos, double tolerance)
     //         lookup_table[1].y_val,
     //     "Invalid Table Search");
 
-    static_assert(ngr::is_close_to(std::midpoint(lookup_table[0].hood_val, lookup_table[1].hood_val), interpolate(std::midpoint(lookup_table[0].y_val, lookup_table[1].y_val), &lookup_table[0], &lookup_table[1])),
+    static_assert(ngr::isCloseTo(std::midpoint(lookup_table[0].hood_val, lookup_table[1].hood_val), interpolate(std::midpoint(lookup_table[0].y_val, lookup_table[1].y_val), &lookup_table[0], &lookup_table[1])),
                   "interpolation error");
 }
 
@@ -103,10 +120,10 @@ bool Hood::visionTrack(double tolerance)
     {
         // auto const cameratarget = result.GetBestTarget();
         double target = getTrackingValue(camera.getY());
-        hood.SetTarget(std::clamp(target, static_cast<double>(HOOD::SAFE_TO_TURN), 0.0));
+        hood.SetTarget(std::clamp(target, static_cast<double>(Hood::POSITION::SAFE_TO_TURN), 0.0));
         return std::fabs(target - hood.encoder.GetPosition()) < tolerance;
     }
-    goToPosition(HOOD::POSITION::TRAVERSE);
+    goToPosition(Hood::POSITION::TRAVERSE);
     return false;
 }
 
@@ -114,22 +131,22 @@ void Hood::manualPositionControl(double pos)
 {
     hood.SetTarget(ngr::scaleOutput(0,
                                     1,
-                                    HOOD::POSITION::TRAVERSE,
-                                    HOOD::POSITION::SAFE_TO_TURN,
+                                    Hood::POSITION::TRAVERSE,
+                                    Hood::POSITION::SAFE_TO_TURN,
                                     std::clamp(pos, 0.0, 1.0)));
 }
 
-void Hood::print_angle()
+void Hood::printAngle()
 {
     printf("hood angle: %f\n", hood.encoder.GetPosition());
 }
 
-double Hood::get_angle()
+double Hood::getAngle()
 {
     return hood.encoder.GetPosition();
 }
 
-double Hood::get_camera_Y()
+double Hood::getCameraY()
 {
     // auto const result       = camera.GetLatestResult();
     // auto const cameratarget = result.GetBestTarget();

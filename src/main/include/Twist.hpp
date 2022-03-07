@@ -1,7 +1,5 @@
-#ifndef __TWIST_H__
-#define __TWIST_H__
+#pragma once
 
-#include "Constants.hpp"
 #include <cmath>
 #include <iostream>
 
@@ -28,5 +26,3 @@ struct Twist_R
         return out << "[" << tw.dx << ',' << tw.dy << ',' << tw.dtheta <<']';
     }
 };
-
-#endif // __TWIST_H__

@@ -4,9 +4,25 @@
 #include <frc/Solenoid.h>
 #include <rev/CANSparkMax.h>
 
-inline static frc::Solenoid    intakeair { INTAKE::PCM_PORT };
-inline static bool             intakeDeployed = false;
-inline static rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+using can_adr = int;
+/******************************************************************/
+/*                             Constants                          */
+/******************************************************************/
+const can_adr PCM_PORT = 1;
+const can_adr PORT     = 22;
+
+const auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
+
+
+const double IN_SPEED  = -1;
+const double OUT_SPEED = 1;
+
+/******************************************************************/
+/*                          Non-constant Vars                     */
+/******************************************************************/
+inline static frc::Solenoid    intake_air { PCM_PORT };
+inline static bool             intake_deployed = false;
+inline static rev::CANSparkMax wheels { PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
 
 /******************************************************************/
 /*                      Non Static Functions                      */
@@ -14,22 +30,22 @@ inline static rev::CANSparkMax wheels { INTAKE::PORT, rev::CANSparkMaxLowLevel::
 
 void Intake::init()
 {
-    wheels.SetIdleMode(INTAKE::IDLE_MODE);
+    wheels.SetIdleMode(IDLE_MODE);
     wheels.SetSmartCurrentLimit(20);
 }
 
-void Intake::drive(INTAKE::DIRECTION mode)
+void Intake::drive(Intake::DIRECTION mode)
 {
     switch(mode)
     {
-    case INTAKE::DIRECTION::IN:
-        wheels.Set(INTAKE::IN_SPEED);
+    case Intake::DIRECTION::IN:
+        wheels.Set(IN_SPEED);
         break;
-    case INTAKE::DIRECTION::OFF:
+    case Intake::DIRECTION::OFF:
         wheels.Set(0);
         break;
-    case INTAKE::DIRECTION::OUT:
-        wheels.Set(INTAKE::OUT_SPEED);
+    case Intake::DIRECTION::OUT:
+        wheels.Set(OUT_SPEED);
         break;
     default:
         std::cerr << "Invalad Intake Direction\n";
@@ -38,11 +54,11 @@ void Intake::drive(INTAKE::DIRECTION mode)
 
 void Intake::deploy(bool val)
 {
-    intakeair.Set(val);
-    intakeDeployed = val;
+    intake_air.Set(val);
+    intake_deployed = val;
 }
 
 bool Intake::isIntakeDown()
 {
-    return intakeDeployed;
+    return intake_deployed;
 }

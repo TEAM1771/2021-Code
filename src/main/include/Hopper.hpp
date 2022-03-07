@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Constants.hpp"
-#include "ShooterWheel.hpp"
-
 namespace Hopper
 {
     void init();

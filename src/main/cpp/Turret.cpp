@@ -1,16 +1,39 @@
 #include "Turret.hpp"
-#include <cmath>
 //#include "PhotonVision.hpp"
 #include "LimeLight.hpp"
-
+#include "ngr.hpp"
 #include "PID_CANSparkMax.hpp"
 
+#include <cmath>
+
+
+/******************************************************************/
+/*                             Constants                          */
+/******************************************************************/
+constexpr double CAMERA_X_OFFSET = 3.75; //4.2517710;
+
+constexpr int PORT = 6;
+
+constexpr auto IDLE_MODE = rev::CANSparkMax::IdleMode::kCoast;
+
+//TOLERANCE is in .hpp file
+
+constexpr double TICKS_PER_REVOLUTION = 212; // replace me with correct, number. this should be close if not exact
+constexpr double TICKS_PER_RADIAN     = 21;  //TICKS_PER_REVOLUTION / (2 * pi);
+
+constexpr double TRAVERSE_SPEED = .7;
+
+constexpr double P = 0.1;
+constexpr double I = 0.0;
+constexpr double D = 0.0;
+/******************************************************************/
+/*                          Non-constant Vars                     */
+/******************************************************************/
 extern LimeLight camera; //camera from Robot.cpp
 
-inline static PID_CANSparkMax  turretTurnyTurny { TURRET::PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
-inline static TURRET::POSITION position = TURRET::POSITION::ZERO;
+inline static PID_CANSparkMax  turretTurnyTurny { PORT, rev::CANSparkMaxLowLevel::MotorType::kBrushless };
+inline static Turret::POSITION position = Turret::POSITION::ZERO;
 inline static bool             tracking = false;
-
 /******************************************************************/
 /*                      Non Static Functions                      */
 /******************************************************************/
@@ -19,19 +42,19 @@ void Turret::init()
 {
     turretTurnyTurny.RestoreFactoryDefaults();
 
-    turretTurnyTurny.SetIdleMode(TURRET::IDLE_MODE);
+    turretTurnyTurny.SetIdleMode(IDLE_MODE);
 
     turretTurnyTurny.SetSmartCurrentLimit(20);
 
-    turretTurnyTurny.SetP(TURRET::P);
-    turretTurnyTurny.SetI(TURRET::I);
-    turretTurnyTurny.SetD(TURRET::D);
-    turretTurnyTurny.SetOutputRange(-TURRET::TRAVERSE_SPEED, TURRET::TRAVERSE_SPEED);
-    turretTurnyTurny.SetPositionRange(TURRET::POSITION::MAX_LEFT, TURRET::POSITION::MAX_RIGHT);
-    turretTurnyTurny.SetTarget(TURRET::POSITION::ZERO);
+    turretTurnyTurny.SetP(P);
+    turretTurnyTurny.SetI(I);
+    turretTurnyTurny.SetD(D);
+    turretTurnyTurny.SetOutputRange(-TRAVERSE_SPEED, TRAVERSE_SPEED);
+    turretTurnyTurny.SetPositionRange(Turret::POSITION::MAX_LEFT, Turret::POSITION::MAX_RIGHT);
+    turretTurnyTurny.SetTarget(Turret::POSITION::ZERO);
 }
 
-bool Turret::goToPosition(TURRET::POSITION pos, double tolerance)
+bool Turret::goToPosition(Turret::POSITION pos, double tolerance)
 {
     if(pos != position)
     {
@@ -44,7 +67,7 @@ bool Turret::goToPosition(TURRET::POSITION pos, double tolerance)
     return std::fabs(turretTurnyTurny.encoder.GetPosition() - pos) < tolerance;
 }
 
-// Turret::visionState Turret::visionTrack_v1(TURRET::POSITION initPosition, double tolerance)
+// Turret::visionState Turret::visionTrack_v1(Turret::POSITION initPosition, double tolerance)
 // {
 //     if(! tracking) // move to initPosition
 //     {
@@ -54,7 +77,7 @@ bool Turret::goToPosition(TURRET::POSITION pos, double tolerance)
 
 //     if(camera.hasTarget())
 //     {
-//         double const xOffset = camera.getX() + CAMERA::X_OFFSET;
+//         double const xOffset = camera.getX() + CAMERA_X_OFFSET;
 //         double const output  = xOffset / 35;
 //         turretTurnyTurny.Set(output);
 //         return { true, fabs(xOffset) < tolerance };
@@ -63,22 +86,22 @@ bool Turret::goToPosition(TURRET::POSITION pos, double tolerance)
 //     return { false, false };
 // }
 
-Turret::visionState Turret::visionTrack(TURRET::POSITION initPosition, double tolerance)
+Turret::visionState Turret::visionTrack(Turret::POSITION initPosition, double tolerance)
 {
     if(! tracking) // move to initPosition
     {
         tracking = goToPosition(initPosition);
         return { false, false };
     }
-// 
+    //
     // photonlib::PhotonPipelineResult result = camera.GetLatestResult();
 
     if(camera.hasTarget())
     {
         // auto const target = result.GetBestTarget();
-        double const xOffsetDeg = camera.getX() + CAMERA::X_OFFSET;
+        double const xOffsetDeg = camera.getX() + CAMERA_X_OFFSET;
         double const xOffsetRad = ngr::deg2rad(xOffsetDeg);
-        double const xOffset    = xOffsetRad * TURRET::TICKS_PER_RADIAN;
+        double const xOffset    = xOffsetRad * TICKS_PER_RADIAN;
 
         double const xPosition = turretTurnyTurny.encoder.GetPosition();
         double const xTarget   = xPosition + xOffset;
@@ -102,8 +125,8 @@ void Turret::manualPositionControl(double pos)
     turretTurnyTurny.SetTarget(ngr::scaleOutput(
                                    -1,
                                    1,
-                                   TURRET::POSITION::MAX_LEFT,
-                                   TURRET::POSITION::MAX_RIGHT,
+                                   POSITION::MAX_LEFT,
+                                   POSITION::MAX_RIGHT,
                                    std::clamp(pos, -1.0, 1.0)),
                                rev::ControlType::kPosition);
 }

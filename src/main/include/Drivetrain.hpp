@@ -1,24 +1,21 @@
-#ifndef __DRIVETRAIN_H__
-#define __DRIVETRAIN_H__
+#pragma once
 
 #include <frc/kinematics/SwerveDriveKinematics.h>
 
 namespace Drivetrain
 {
     void   init();
-    double get_angle(); // pull from rio
+    double getAngle(); // pull from rio
     void   print();
     void   drive(frc::ChassisSpeeds const& feild_speeds);
     void   drive(wpi::array<frc::SwerveModuleState, 4> const& states);
-    void   gotoZero();
-    void   goto180();
-    void   PrintWheelAngle(int);
-    void   reset_gyro();
-    void   face_direction(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
-    void   face_closest(units::meters_per_second_t dx, units::meters_per_second_t dy);
+    void   goToZero();
+    void   goTo180();
+    void   printWheelAngle(int);
+    void   resetGyro();
+    void   faceDirection(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t theta);
+    void   faceClosest(units::meters_per_second_t dx, units::meters_per_second_t dy);
     
-    void auton_drive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction);
+    void autonDrive(units::meters_per_second_t dx, units::meters_per_second_t dy, units::degree_t direction);
     void stop();
 } // namespace Drivetrain
-
-#endif // __DRIVETRAIN_H__

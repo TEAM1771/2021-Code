@@ -1,34 +1,36 @@
 #pragma once
-#include <iostream>
-#include <vector>
+#include <array>
+#include <numeric>
 
-template <int size>
-class Average
-{   //Class since we might use this multiple times & it needs a static dataSet
-    //    std::vector<double> dataSet;
-    //    std::vector<double>::iterator iterator = dataSet.end();
-    double dataSet[size];
-    int    iterator      = 0;
-    int    sizeOfDataSet = 0;
-
-public:
-    constexpr double operator()(double input)
+namespace RollingAvg
+{
+    template <int size>
+    auto average()
     {
-        if(iterator == size)
-        {
-            iterator = 0;
-        }
-        if(sizeOfDataSet < size)
-        {
-            sizeOfDataSet++;
-        }
-        dataSet[iterator] = input;
-        iterator++;
-        double sum = 0;
-        for(int i = 0; i < sizeOfDataSet; i++)
-        {
-            sum += dataSet[i];
-        }
-        return sum / sizeOfDataSet;
+        return [vals = std::array<double, size>(), idx = 0u, size = 0ull](double const& data) mutable {
+            vals[idx++] = data;
+            idx %= vals.size();
+            size++;
+            if(size < vals.size()) [[unlikely]]
+                return std::accumulate(std::begin(vals), std::next(std::begin(vals), size), 0.0) / size;
+            return std::accumulate(std::begin(vals), std::end(vals), 0.0) / vals.size();
+        };
     }
-};
+
+    template <int size>
+    constexpr auto average_constexpr()
+    {
+        return [vals = std::array<double, size>(), idx = 0u, size = 0ull](double const& data) mutable {
+            vals[idx++] = data;
+            idx %= vals.size();
+            size++;
+            for(int i = 0; i < size; i++)
+                sum += data_set[i];
+            return sum / size;
+        };
+    }
+
+    bool           testLogic();
+    constexpr bool testConstexprLogic();
+
+} // namespace RollingAvg

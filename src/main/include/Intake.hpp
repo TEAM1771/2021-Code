@@ -1,9 +1,13 @@
-#include "Constants.hpp"
-
 namespace Intake
 {
+    enum class DIRECTION {
+        OUT,
+        OFF,
+        IN
+    };
+
     void init();
-    void drive(INTAKE::DIRECTION mode);
+    void drive(DIRECTION mode);
     void deploy(bool val);
 
     [[nodiscard]] bool isIntakeDown();

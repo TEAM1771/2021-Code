@@ -13,18 +13,18 @@ Climber::Climber()
     climber_1.SetI(CLIMBER::I);
     climber_1.SetD(CLIMBER::D);
     climber_1.SetOutputRange(-CLIMBER::MAX_OUTPUT, CLIMBER::MAX_OUTPUT);
-    climber_2.SetPositionRange(CLIMBER::POSITION::ZERO, CLIMBER::POSITION::UP);
-    climber_1.SetTarget(CLIMBER::POSITION::ZERO);
+    climber_2.SetPositionRange(Climber::POSITION::ZERO, Climber::POSITION::UP);
+    climber_1.SetTarget(Climber::POSITION::ZERO);
 
     climber_2.SetP(CLIMBER::P);
     climber_2.SetI(CLIMBER::I);
     climber_2.SetD(CLIMBER::D);
     climber_2.SetOutputRange(-CLIMBER::MAX_OUTPUT, CLIMBER::MAX_OUTPUT);
-    climber_2.SetPositionRange(-CLIMBER::POSITION::UP, CLIMBER::POSITION::ZERO);
-    climber_2.SetTarget(CLIMBER::POSITION::ZERO);
+    climber_2.SetPositionRange(-Climber::POSITION::UP, Climber::POSITION::ZERO);
+    climber_2.SetTarget(Climber::POSITION::ZERO);
 }
 
-void Climber::set(CLIMBER::POSITION position)
+void Climber::set(Climber::POSITION position)
 {
     climber_1.SetTarget(position, rev::ControlType::kPosition);
     climber_2.SetTarget(-position, rev::ControlType::kPosition);
@@ -49,8 +49,8 @@ void Climber::ButtonManager()
     if(BUTTON::CLIMBER::RAISE && BUTTON::oStick.GetThrottle() < 0)
     {
         hasBeenPressed = true;
-        set(CLIMBER::POSITION::UP);
+        set(Climber::POSITION::UP);
     }
     else if(hasBeenPressed)
-        set(CLIMBER::POSITION::DOWN);
+        set(Climber::POSITION::DOWN);
 }
